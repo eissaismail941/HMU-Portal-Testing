@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fafbfa">
+  <meta name="referrer" content="no-referrer">
+  <title>Student Academic Space | HMU Portal Design Test</title>
+  <meta name="description" content="Separate Phase 11 visual test of Hawler Medical University's academic student portal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Inter:wght@400;500;600;650;700;750;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="student-design-test.css">
+  <script src="student.js" defer></script>
+  <script src="student-design-test.js" defer></script>
+</head>
+<body>
+<div class="portal-shell">
+  <header class="site-head">
+    <div class="site-head-inner">
+      <a href="index.html" class="brand" aria-label="HMU Portal homepage">
+        <span class="brand-mark" aria-hidden="true">HMU</span>
+        <span class="brand-text"><strong>Hawler Medical University</strong><small>HMU <span aria-hidden="true">/</span> ACADEMIC PORTAL</small></span>
+      </a>
+      <div class="head-right">
+        <span class="env-tag"><span class="env-dot"></span> STUDENT PILOT</span>
+        <div class="head-menu-wrap">
+          <button class="head-menu-trigger" type="button" id="hmu-menu-toggle" aria-haspopup="true" aria-controls="hmu-menu" aria-expanded="false" aria-label="Open menu">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
+          </button>
+          <div id="hmu-menu" class="head-menu" hidden>
+            <div class="head-menu-label">HMU PORTAL</div>
+            <a href="index.html">Portal homepage <span aria-hidden="true">↗</span></a>
+            <button type="button" id="menu-resources">My resources <span aria-hidden="true">↗</span></button>
+            <button type="button" id="menu-account">Account &amp; security <span aria-hidden="true">↗</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-shell">
+    <section class="loading-shell" id="loading">
+      <div class="loading-center" role="status" aria-live="polite"><div class="spinner" aria-hidden="true"></div><h2>Checking your session</h2><p>Restoring your academic access securely.</p></div>
+    </section>
+
+    <section class="login-wrap" id="login" hidden>
+      <div class="login-layout">
+        <div class="login-editorial">
+          <div class="overline"><span class="eyebrow-rule"></span> HMU · COLLEGE OF MEDICINE</div>
+          <h1>Your academic<br>space, <em>thoughtfully<br>connected.</em></h1>
+          <p>One calm place for your courses, lecture notes and study resources.</p>
+          <div class="editorial-foot"><span class="tiny-blue"></span> Secure student access · Phase 11 test</div>
+        </div>
+        <div class="card login-card">
+          <div class="login-card-head"><span class="small-monogram">HMU</span><span class="section-tag">STUDENT ACCESS</span></div>
+          <h2>Sign in</h2>
+          <p class="lead">Continue to the academic stage assigned to your account.</p>
+          <form id="login-form" class="stack">
+            <div class="field"><label for="email">Email address</label><input id="email" class="input" type="email" placeholder="Student email address" autocomplete="username" required></div>
+            <div class="field"><label for="password">Password</label><div class="pwrow"><input id="password" class="input" type="password" placeholder="Your student password" autocomplete="current-password" required><button type="button" class="button small-button" id="show-password">Show</button></div></div>
+            <button class="button primary large full" type="submit" id="login-button">Sign in to portal <span aria-hidden="true">→</span></button>
+          </form>
+          <div class="status" id="login-status" role="status" aria-live="polite"></div>
+          <p class="login-footnote">Controlled testing accounts only. No live university lectures are included in this pilot.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="locked card" id="activate" hidden>
+      <div class="overline">STUDENT ACCESS · FIRST SIGN IN</div>
+      <h1>Activate your account</h1>
+      <p class="lead">Enter the one-time activation code given privately by your administrator.</p>
+      <div class="note">Your test email is not independently verified by the university. This remains a controlled two-account pilot.</div>
+      <form id="activate-form" class="stack constrained" style="margin-top:26px">
+        <div class="field"><label for="activation-code">One-time activation code</label><input id="activation-code" class="input activation-input" type="text" placeholder="XXXX-XXXX-XXXX" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" required></div>
+        <button id="activate-button" class="button primary" type="submit">Activate test account <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="status" id="activate-status" role="status" aria-live="polite"></div>
+      <div class="action-row"><button type="button" class="button subtle-button" id="activation-signout">Sign out</button></div>
+    </section>
+
+    <section class="locked card" id="disabled" hidden>
+      <div class="overline">ACCOUNT ACCESS</div>
+      <h1>Account access unavailable</h1>
+      <p class="lead">Your test account is currently disabled. Contact the Super Admin to restore pilot access.</p>
+      <button id="disabled-signout" class="button">Sign out</button>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="dashboard-topline">
+        <div class="breadcrumb">HMU <span>/</span> College of Medicine <span>/</span> Student space</div>
+        <div class="identity-area"><span id="who" class="email">Not signed in</span><button class="quiet-signout" type="button" id="top-signout">Sign out</button></div>
+      </div>
+
+      <div class="dashboard-head">
+        <div><div class="overline"><span class="eyebrow-rule"></span> YOUR ACADEMIC SPACE</div><h1>Welcome to your<br><em>academic resources.</em></h1><p>Everything you need for your assigned stage, thoughtfully in one place.</p></div>
+        <div class="stage-stamp"><div class="stage-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c0 3 10 3 10 0v-5"/><path d="M21 8v6"/></svg></div><div><small>ACTIVE ACADEMIC STAGE</small><strong id="stat-stage">—</strong></div></div>
+      </div>
+
+      <nav class="tabs" aria-label="Student sections">
+        <button type="button" data-tab="overview" class="active">Overview</button>
+        <button type="button" data-tab="academic">My academic stage</button>
+        <button type="button" data-tab="library">Lecture library</button>
+        <button type="button" data-tab="security">Account &amp; security</button>
+      </nav>
+      <div id="main-status" class="status main-status" role="status" aria-live="polite"></div>
+
+      <section class="section-panel" data-page="overview">
+        <div class="section-heading"><div><span class="overline">01 / YOUR PROFILE</span><h2>My academic space</h2><p>Assigned automatically by your university administrator.</p></div></div>
+        <div class="profile-grid">
+          <div class="profile-item"><div class="profile-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 21h18M5 21V6l7-3 7 3v15M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg></div><div><small>COLLEGE</small><strong>Medicine</strong></div></div>
+          <div class="profile-item"><div class="profile-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></div><div><small>ACADEMIC STAGE</small><strong id="overview-stage">Assigned</strong></div></div>
+          <div class="profile-item"><div class="profile-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 18a4 4 0 0 1 8 0M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 19a5 5 0 0 1 5-5M22 19a5 5 0 0 0-5-5"/></svg></div><div><small>STUDENT GROUP</small><strong id="stat-group">—</strong></div></div>
+        </div>
+        <div class="academic-intro-card">
+          <div><span class="overline">YOUR RESOURCES</span><h3>A simpler way to learn.</h3><p>Explore your assigned blocks, find lectures and access test PDFs through a protected academic library.</p><button class="button primary" type="button" id="go-academic">Browse lecture library <span aria-hidden="true">→</span></button></div>
+          <div class="intro-preview" aria-hidden="true"><div class="preview-top"><span class="preview-icon">▤</span><span>ACADEMIC LIBRARY</span></div><div class="preview-title">Your lectures, organised.</div><div class="preview-line"><span class="preview-file-icon">PDF</span><span>Lecture resources</span><i></i></div><div class="preview-line muted"><span class="preview-file-icon">PDF</span><span>Study materials</span><i></i></div></div>
+        </div>
+        <div class="security-note"><div class="security-note-top"><span class="shield-mini">✓</span><strong>Your academic access</strong></div><p id="scope-note">Checking your assigned stage…</p><button type="button" class="text-button" id="check-other">Verify that other stages are blocked <span aria-hidden="true">→</span></button><div class="status" id="check-status" role="status" aria-live="polite"></div></div>
+      </section>
+
+      <section class="section-panel" data-page="academic" hidden>
+        <div class="section-heading"><div><span class="overline">02 / ACADEMIC PATH</span><h2 id="academic-title">Your stage</h2><p id="academic-description">Your content is assigned by the university.</p></div><button type="button" class="button" id="academic-to-library">View lecture library <span aria-hidden="true">→</span></button></div>
+        <div id="academic-blocks" class="academic-blocks"></div>
+        <div class="note" style="margin-top:26px">These cards are an overview. Use the Lecture library to browse the PDFs in the private Phase 9 test bucket.</div>
+      </section>
+
+      <section class="section-panel" data-page="library" hidden>
+        <div class="section-heading"><div><span class="overline">03 / ACADEMIC RESOURCES</span><h2 id="p9-heading">Your lecture library</h2><p>Find private test PDFs by academic block and subject. Server-side permissions apply to every file.</p></div></div>
+        <div class="resource-panel">
+          <div class="resource-controls">
+            <div class="field"><label for="p9-block">Academic block</label><select id="p9-block" class="input" disabled><option>Loading your stage…</option></select></div>
+            <div class="field"><label for="p9-search">Search lectures or subjects</label><div class="search-wrap"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.2 4.2"/></svg><input id="p9-search" class="input" type="search" placeholder="Search lecture library"></div></div>
+          </div>
+          <div class="resource-toolbar"><div><strong>Lecture resources</strong><small id="p9-count" class="p9-count">—</small></div><button class="button" type="button" id="p9-refresh"><span aria-hidden="true">↻</span> Refresh PDFs</button></div>
+          <div id="p9-status" class="status" role="status" aria-live="polite"></div>
+          <div id="p9-files" class="p9-file-list"><div class="p9-empty">Checking your academic library…</div></div>
+          <button type="button" class="button more-button" id="p9-more" hidden>Load more lectures <span aria-hidden="true">↓</span></button>
+          <div id="p9-ready" class="p9-ready" hidden></div>
+        </div>
+        <div class="note note-foot">This is an isolated testing environment. Group-specific file restrictions are not yet implemented. Files already downloaded cannot be recalled.</div>
+      </section>
+
+      <section class="section-panel" data-page="security" hidden>
+        <div class="section-heading"><div><span class="overline">04 / ACCOUNT</span><h2>Account &amp; security</h2><p id="account-email">Your verified pilot student profile</p></div></div>
+        <div class="account-box"><div class="note warn">Changing this password updates your real Supabase pilot account. Do not reuse your student ID or any password used elsewhere.</div>
+          <form id="change-form" class="stack constrained" style="margin-top:26px">
+            <div class="field"><label for="current-password">Current password</label><input id="current-password" class="input" type="password" autocomplete="current-password" required></div>
+            <div class="field"><label for="new-password">New password</label><input id="new-password" class="input" type="password" minlength="12" autocomplete="new-password" placeholder="At least 12 characters" required></div>
+            <div class="field"><label for="confirm-password">Confirm new password</label><input id="confirm-password" class="input" type="password" autocomplete="new-password" required></div>
+            <button type="submit" class="button primary" id="change-button">Update my password <span aria-hidden="true">→</span></button>
+          </form><div class="status" id="change-status" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner">
+    <div class="footer-top"><div class="footer-brand"><div class="footer-mark">HMU</div><div><strong>Hawler Medical University</strong><span>Academic Resources Portal</span></div></div><div class="footer-links"><a href="index.html">Portal home</a><a href="admin.html">Administration</a><span>Student pilot</span></div></div>
+    <div class="footer-bottom"><span>© 2026 · Hawler Medical University</span><span>Independent test website · Live MedHub unchanged</span></div>
+  </div></footer>
+</div>
+</body>
+</html>

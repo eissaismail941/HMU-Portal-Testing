@@ -1,51 +1,34 @@
-HMU Academic Portal — PHASE 10 REAL TEST WEBSITE
-================================================
+HMU ACADEMIC PORTAL - PHASE 11 STUDENT DESIGN TEST
 
-WHAT YOU HAVE
-- index.html            Premium, responsive homepage with student and admin entrances.
-- student.html          Real Phase 8 student login, activation, stage, group and private Phase 9 R2 PDFs.
-- admin.html            Existing working Phase 8 admin functions and Phase 6 R2 upload/library.
-- site.css              Homepage design.
-- student.css/js        Original working Phase 9 student page code separated into assets.
-- admin.css/js          Original working Phase 8 admin page code separated into assets.
-- portal-overrides.css  Small navigation additions linking back to the new homepage.
+This uses the user's uploaded HMU-Student-Portal-Keyboard-Fixed.html as the visual reference:
+minimalist academic layout, soft neutral background, modern typographic hierarchy,
+compact campus/academic identity, simple content cards, calm transitions, and clean footer.
+It is a new student-page design, not a replacement of the original source file.
 
-CRITICAL: THIS IS A TEST ENVIRONMENT
-- Site files are separate from your current MedHub repository and original index.html.
-- It REUSES existing TEST Workers, Supabase project Auth, pilot table and R2 PRIVATE sandbox bucket.
-- That means changing test accounts or test R2 files affects those existing pilot services.
-- Only two controlled test student accounts are supported. Do not use real HMU student credentials or upload an actual student roster.
-- This is an independent prototype, not an officially deployed HMU service.
-- You do not need to create, rotate, or expose any Supabase keys. Publishable key alone appears in browser JS.
+IMPORTANT: DO NOT CHANGE YOUR EXISTING MEDHUB REPOSITORY.
 
-BEST DEPLOYMENT: A NEW GITHUB REPOSITORY
-1. In GitHub create a NEW PUBLIC repo named HMU-Portal-Testing.
-2. Upload ALL 10 files from this extracted folder to the ROOT of that NEW repo.
-   Do not upload the ZIP by itself; GitHub Pages needs the actual HTML/CSS/JS files.
-3. In repo Settings → Pages, choose Deploy from a branch → main → /(root), Save.
-4. Open https://eissaismail941.github.io/HMU-Portal-Testing/
-5. Student: use one of the existing two PILOT accounts. Admin: use the existing real Super Admin pilot account.
-6. Keep the existing MedHub repository, index.html, admin files, PDF endpoints, and old test Workers unchanged.
+UPLOAD ONLY THESE THREE NEW FILES to the ROOT of the existing SEPARATE
+HMU-Portal-Testing GitHub repository:
+  1. student-design-test.html
+  2. student-design-test.css
+  3. student-design-test.js
 
-WHY THE NEW REPO WORKS
-Both GitHub Pages repositories are served under the SAME hostname: https://eissaismail941.github.io
-The test Workers' allowed Origin remains the same, so a different repository path does not require Worker CORS changes.
+The new page REUSES the ALREADY WORKING student.js file from Phase 10,
+which must remain in the repository root. Do not replace that JS file.
+The new page also reuses the existing Cloudflare Phase 8 and Phase 9 test Workers.
 
-DO NOT HOST THE FILES ON A DIFFERENT DOMAIN without first reviewing Worker origin restrictions.
-Local file:// URLs can preview the homepage but cannot securely log in to the Worker APIs (different origin).
+TEST URL (after upload):
+https://eissaismail941.github.io/HMU-Portal-Testing/student-design-test.html
 
-TEST CHECKS
-[ ] Homepage loads and navigation works
-[ ] Stage 1 account displays Stage 1 only
-[ ] Stage 2 account displays Stage 2 private PDFs
-[ ] Open PDF works from private sandbox R2
-[ ] Student disables and cannot access PDFs
-[ ] Student enables and access returns
-[ ] Super Admin academic library upload and directory still work
+The original 'student.html' and 'index.html' are not modified.
+Your real MedHub production site is not modified.
+Only TWO controlled Supabase test student accounts are supported.
+The page is NOT ready for public university deployment.
 
-PRODUCTION LIMITATIONS
-- Student ID as initial password is only used for controlled pilot. Production requires verified identities, secure initial credentials, anti-abuse controls and account recovery.
-- Pilot is limited to College of Medicine and two test students.
-- Existing Phase 8 admin and Phase 9 student features are reused, not fully redesigned.
-- Full security audit, load testing, and private-file policy review are needed for rollout.
-- Same Supabase and R2 sandbox services as earlier pilots. Front-end files alone are isolated.
+NOTES:
+- Login, activation, refresh-token handling, account disabling, password changes,
+  and private PDF listing/download are all implemented in the existing student.js.
+- Because that JS controls security-sensitive operations, do NOT duplicate a new auth
+  implementation in the visual design scripts.
+- Never put the Supabase secret key in HTML/CSS/JS or screenshots.
+- If the page is blank, verify that 'student.js' is also in the GitHub repository ROOT.
