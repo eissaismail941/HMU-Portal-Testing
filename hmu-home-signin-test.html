@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8f9f8"><meta name="referrer" content="no-referrer">
+<meta name="description" content="Independent HMU Academic Portal prototype – test accounts only.">
+<title>Sign in | HMU Academic Portal · Design Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="hmu-home-crest.png">
+<link rel="stylesheet" href="hmu-home-original.css">
+</head><body>
+<section aria-labelledby="hmu-signin-title" id="hmu-welcome-page">
+<div class="hmu7-container">
+<header class="hmu7-topbar">
+<div class="hmu7-brand">
+<span class="hmu7-logo"><img alt="Hawler Medical University crest" loading="eager" src="hmu-home-crest.png"/></span>
+<span><span class="hmu7-brand-name" style="display:block">Hawler Medical University</span><span class="hmu7-brand-sub" style="display:block">Academic Portal</span></span>
+</div>
+<div class="hmu7-topright">
+<div class="hmu7-menu-wrap">
+<button aria-controls="hmu-menu-panel" aria-expanded="false" aria-label="Open portal menu" class="hmu7-menu-button" id="hmu-menu-toggle" type="button">
+<span aria-hidden="true" class="hmu7-menu-lines"><i></i><i></i><i></i></span>
+</button>
+<div class="hmu7-menu-panel" hidden="" id="hmu-menu-panel">
+<button class="hmu7-menu-link" data-action="about" type="button"><span class="hmu7-menu-icon">i</span><span>About the portal</span></button>
+<button class="hmu7-menu-link" id="hmu-menu-focus" type="button"><span class="hmu7-menu-icon">•</span><span>Sign in</span></button>
+<button class="hmu7-menu-link" id="hmu-menu-help" type="button"><span class="hmu7-menu-icon">?</span><span>Account help</span></button>
+</div>
+</div>
+</div>
+</header>
+<main class="hmu7-main">
+<div class="hmu7-center-scene">
+<span aria-hidden="true" class="hmu7-glow hmu7-glow-a"></span>
+<span aria-hidden="true" class="hmu7-glow hmu7-glow-b"></span>
+<span aria-hidden="true" class="hmu7-orbit hmu7-orbit-a"></span>
+<span aria-hidden="true" class="hmu7-orbit hmu7-orbit-b"></span>
+<span aria-hidden="true" class="hmu7-orbit hmu7-orbit-c"></span>
+<span aria-hidden="true" class="hmu7-grid"></span>
+<div class="hmu7-form-wrap">
+<section aria-labelledby="hmu-signin-title" class="hmu7-panel">
+<div class="hmu7-panel-badge">HMU Academic Portal · Pilot</div>
+<h2 id="hmu-signin-title">Sign in</h2>
+<p class="hmu7-panel-desc">Sign in with your assigned account. Your academic workspace opens automatically.</p>
+<form class="hmu7-form" id="hmu-signin-form">
+<label class="hmu7-field" for="hmu-signin-email"><span>Email address</span><span class="hmu7-input-wrap"><svg aria-hidden="true" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" viewbox="0 0 24 24" width="18"><rect height="14" rx="3" width="18" x="3" y="5"></rect><path d="m4 7 8 6 8-6"></path></svg><input autocapitalize="none" autocomplete="username" id="hmu-signin-email" inputmode="email" name="email" placeholder="Enter your account email" required="" spellcheck="false" type="email"/></span></label>
+<label class="hmu7-field" for="hmu-signin-password"><span>Password</span><span class="hmu7-input-wrap"><svg aria-hidden="true" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.65" viewbox="0 0 24 24" width="18"><rect height="11" rx="2.5" width="14" x="5" y="10"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><input autocomplete="current-password" id="hmu-signin-password" name="password" placeholder="Enter your password" required="" type="password"/><button aria-label="Show password" class="hmu7-show" id="hmu-toggle-password" type="button">Show</button></span></label>
+<div class="hmu7-form-options"><span class="hmu7-helptext">For students and administrators</span><button class="hmu7-help-link" id="hmu-forgot-password" type="button">Need help?</button></div>
+<p aria-live="polite" class="hmu7-error" id="hmu-signin-status" role="alert"></p>
+<button class="hmu7-submit" id="hmu-signin-submit" type="submit"><span>Sign in to portal</span><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" viewbox="0 0 24 24" width="17"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></button>
+</form>
+<div class="hmu7-panel-bottom">Your role and academic stage are checked securely after sign-in. <strong>No manual stage selection.</strong></div>
+
+</section>
+</div>
+</div>
+</main>
+<footer class="hmu7-footer">
+<div class="hmu7-footer-inner">
+<div class="hmu7-footer-brand">Hawler Medical University <span>/ Academic Portal</span></div>
+<div class="hmu7-footer-meta"><span>© 2026 HMU</span><span aria-hidden="true" class="dot"></span><button data-action="about" type="button">About portal</button><span aria-hidden="true" class="dot"></span><span>Designed by <strong>Eissa Ismail</strong></span></div>
+</div>
+</footer>
+</div>
+</section>
+<script src="hmu-home-auth.js" defer></script>
+</body></html>
