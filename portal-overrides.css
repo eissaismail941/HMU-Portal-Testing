@@ -1,0 +1,7 @@
+/* Phase 10 shared additions. Existing verified account and library functionality is preserved. */
+.portal-back{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;font-weight:750;font-size:12px;color:#536681;border:1px solid #e3e9f1;padding:9px 12px;background:#fff;border-radius:12px;white-space:nowrap;transition:background .22s ease,transform .22s ease,color .22s ease,border-color .22s ease}
+.portal-back:hover{background:#f2f7ff;color:#1677ff;border-color:#bdd7ff;transform:translateY(-1px)}
+.portal-back:focus-visible{outline:3px solid #9fcbff;outline-offset:2px}
+.portal-back-admin{margin:19px 18px 8px;display:flex;text-decoration:none}
+button,a,select,input{ -webkit-tap-highlight-color:transparent }
+@media(max-width:640px){.portal-back{font-size:11px;padding:8px 10px}.portal-back-admin{margin:12px 10px 5px}}

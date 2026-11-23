@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Independent test environment for Hawler Medical University academic portal, College of Medicine.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>HMU Academic Portal — Test Environment</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="page">
+<header class="site-head">
+  <div class="wrap head-content">
+    <a class="brand" href="index.html" aria-label="HMU Academic Portal homepage">
+      <div class="crest" aria-hidden="true">HMU</div>
+      <div class="brand-names"><span class="brand-title">Hawler Medical University</span><span class="brand-sub">Academic portal · Pilot</span></div>
+    </a>
+    <nav class="head-actions" aria-label="Main navigation">
+      <a class="nav-link" href="#workspaces">Workspaces</a>
+      <a class="nav-link" href="#about">About this test</a>
+      <span class="env">Testing environment</span>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="wrap hero" aria-labelledby="welcome-title">
+    <div class="hero-copy">
+      <div class="eyebrow">College of Medicine · Erbil</div>
+      <h1 id="welcome-title">Your academic space, <em>thoughtfully connected.</em></h1>
+      <p>A calm, focused place for learning and academic administration. Access your own study materials or manage university resources through one thoughtfully designed experience.</p>
+      <div class="hero-actions"><a class="action primary" href="student.html">Student sign in <span class="arrow" aria-hidden="true">↗</span></a><a class="action secondary" href="admin.html">Administration <span class="arrow" aria-hidden="true">↗</span></a></div>
+      <div class="pilot-note"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4 7v5c0 5 3 8 8 9 5-1 8-4 8-9V7l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg> A limited pilot. Existing MedHub lectures and production pages are unchanged.</div>
+    </div>
+    <div class="preview" aria-label="Illustrative preview of the test student dashboard">
+      <div class="preview-top"><div class="preview-brand"><span class="tinylogo">HMU</span> Academic space</div><span class="preview-chip">PORTAL PREVIEW</span></div>
+      <div class="preview-body">
+        <div class="preview-kicker">Student dashboard · Interface illustration</div>
+        <h3>Everything in its place.</h3>
+        <p class="preview-description">Clear access to the academic content assigned to you.</p>
+        <div class="mini-stats">
+          <div class="mini-stat"><small>College</small><b>Medicine</b></div><div class="mini-stat"><small>Academic stage</small><b>Stage 2</b></div><div class="mini-stat"><small>Group</small><b>Group 3</b></div>
+        </div>
+        <div class="preview-panel"><div><strong>Your academic library</strong><span>Private access</span></div>
+          <div class="file-line"><span class="file-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><path d="M8 3h7l5 5v13H4V3h4Z"/><path d="M15 3v5h5M8 13h8M8 17h8"/></svg></span><span class="file-copy"><b>Lecture resources</b><small>Available by assigned stage</small></span><span class="file-right">PDF</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="wrap section" id="workspaces" aria-labelledby="spaces-title">
+    <div class="section-head"><div><div class="eyebrow">Select your workspace</div><h2 id="spaces-title">The right place for your role.</h2><p>Two connected experiences. Each designed with a clear purpose.</p></div><div class="section-aside">College of Medicine · Test accounts only</div></div>
+    <div class="roles">
+      <a class="role" href="student.html" aria-label="Open student portal sign-in"><div class="role-top"><span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="m2 9 10-5 10 5-10 5L2 9ZM6 11.3v5c4 3 8 3 12 0v-5M22 9v7"/></svg></span><span class="role-tag">For students</span></div><h3>Student portal</h3><p>Sign in securely. View your assigned stage and group, open lecture PDFs and access the private study library.</p><div class="role-bottom">Enter student space <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div></a>
+      <a class="role" href="admin.html" aria-label="Open administration portal sign-in"><div class="role-top"><span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span class="role-tag">For administrators</span></div><h3>Administration</h3><p>Manage test academic resources, administrator assignments, and controlled student accounts according to your role.</p><div class="role-bottom">Enter administration <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div></a>
+    </div>
+  </section>
+  <section class="wrap info" id="about" aria-labelledby="about-title"><div><div class="eyebrow">A careful first step</div><h2 id="about-title">Designed to be tested before rollout.</h2><p>This independent pilot uses the existing, tested Supabase student accounts and a private Cloudflare R2 sandbox. Only controlled test accounts are supported. This site is not an official HMU university service.</p></div><div class="info-grid"><div class="info-row"><span>Academic scope</span><strong>Medicine pilot</strong></div><div class="info-row"><span>Student access</span><strong>Stage-based authorization</strong></div><div class="info-row"><span>Document storage</span><strong>Private R2 test bucket</strong></div><div class="info-row"><span>Deployment status</span><strong class="testing">Under testing</strong></div></div></section>
+</main>
+</div>
+<footer class="footer"><div class="wrap footer-main"><div><h2 class="footer-title">HMU Academic Portal</h2><p class="footer-meta">A considered academic platform prototype for Hawler Medical University. Developed independently for evaluation, testing, and future refinement.</p></div><div class="footer-col"><b>Academic access</b><a href="student.html">Student portal</a><a href="admin.html">Administration</a><a href="#workspaces">Workspaces</a></div><div class="footer-col"><b>Project</b><span>College of Medicine pilot</span><a href="#about">Testing information</a><span>Erbil · Kurdistan Region, Iraq</span></div></div><div class="footer-bottom wrap"><span>© 2026 HMU Academic Portal prototype. Independent test environment.</span><span>Made for careful testing · No production lecture changes</span></div></footer>
+</body>
+</html>

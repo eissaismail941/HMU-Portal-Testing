@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f9fc">
+<meta name="referrer" content="no-referrer">
+<title>Administration | HMU Academic Portal · Test</title>
+
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="portal-overrides.css">
+</head>
+<body>
+<div id="app" class="shell">
+  <aside class="sidebar">
+<a class="portal-back portal-back-admin" href="index.html" aria-label="Return to test portal homepage">← Portal home</a>
+    <div class="brand"><div class="seal" aria-hidden="true">HMU</div><div class="brand-text"><div class="brand-title">Hawler Medical University</div><span class="brand-sub">HMU Academic Portal · Test administration</span></div></div>
+    <div><div class="aside-caption">MEDICINE · TEST WORKSPACE</div><nav class="nav" aria-label="Sandbox navigation">
+      <button type="button" class="current" data-go="overview" aria-label="Overview"><span class="nav-ico">▦</span><span class="nav-name">Overview</span></button>
+      <button type="button" data-go="workspace" aria-label="Academic library"><span class="nav-ico">▤</span><span class="nav-name">Academic library</span></button>
+      <button type="button" data-go="administrators" aria-label="Administrator management" hidden><span class="nav-ico">♙</span><span class="nav-name">Administrators</span></button>
+      <button type="button" data-go="students" aria-label="Student management pilot" hidden><span class="nav-ico">▥</span><span class="nav-name">Students · pilot</span></button>
+      <button type="button" data-go="account" aria-label="Account and password"><span class="nav-ico">♙</span><span class="nav-name">Account & security</span></button>
+    </nav></div>
+    <div class="side-bottom"><strong>Isolated from production</strong>Phase 8 keeps academic PDFs in the private test R2 bucket. Student pilot accounts are real Supabase Auth users, limited to two controlled tests. The live student website is unchanged.</div>
+  </aside>
+  <main class="main">
+    <div class="topbar"><span class="top-label">HMU / Test Portal / Administration</span><div class="top-right"><span class="pill blue">TEST ONLY</span><span id="who" class="identity">Checking session…</span><span class="avatar" id="av">H</span></div></div>
+    <div class="work">
+      <section id="session-startup" class="session-startup" role="status" aria-live="polite" aria-label="Checking administrator session">
+        <div class="card session-startup-card">
+          <div class="session-loader" aria-hidden="true"></div>
+          <h2>Checking your session</h2>
+          <p>Verifying your administrator access securely.</p>
+        </div>
+      </section>
+      <section id="login-view" class="login-back" hidden>
+        <div class="card login-card">
+          <div class="login-mark">Authorised administrator access</div>
+          <h1>Administrator sign in</h1>
+          <p class="login-desc">Use the administrator email and initial password you created in Supabase. This page is separate from the live MedHub website.</p>
+          <div class="notice" style="margin-bottom:22px">Medicine first · Real Supabase sign-in · Isolated private R2 bucket</div>
+          <form id="login-form" class="login-form">
+            <div class="field"><label for="email">Email address</label><input id="email" class="input" type="email" autocomplete="username" placeholder="Administrator email" required></div>
+            <div class="field"><label for="password">Password</label><div class="pw-wrap"><input id="password" class="input" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" class="pw-toggle" data-toggle="password">Show</button></div></div>
+            <div class="status" id="login-status" role="status" aria-live="polite"></div>
+            <button type="submit" class="button primary full" id="sign-in">Sign in to test workspace <span>→</span></button>
+          </form>
+          <p class="login-tail">No invitation email is required for an already-created administrator account.</p>
+        </div>
+      </section>
+      <div id="dashboard" hidden>
+        <header class="intro"><div class="eyebrow">College of Medicine · Administration workspace</div><h1 id="view-heading">Administrator overview</h1><p id="view-description">Stage, block and subject management in a separate R2 test environment.</p></header>
+        <div id="global-status" class="status" role="status" aria-live="polite"></div>
+        <section class="view" data-view="overview">
+          <div class="grid3">
+            <div class="card stat"><div class="smallcap">Account</div><strong id="stat-role">—</strong><small>From Supabase admin_assignments</small></div>
+            <div class="card stat"><div class="smallcap">College</div><strong id="stat-college">—</strong><small>Medicine-only pilot</small></div>
+            <div class="card stat"><div class="smallcap">Status</div><strong id="stat-status">—</strong><small>Refreshed from Supabase</small></div>
+          </div>
+          <div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Your administrator permissions</h2><p class="subdesc">Checked using your signed-in Supabase account.</p></div><button class="button small" type="button" id="refresh-roles">↻ Refresh permissions</button></div><div class="divider"></div><div id="scope-contents" class="rights"></div><div id="last-checked" class="micro" style="margin-top:15px"></div></div>
+<div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Phase 8 · Real student-account pilot</h2><p class="subdesc">Your academic PDFs remain in the Phase 6 private R2 sandbox. Super Admins can manage up to two controlled test student accounts, while the academic test library stays in private R2.</p></div><span class="pill blue">UNIFIED TEST</span></div></div>
+          <div class="card pad section"><h2 class="section-title">Safe testing process</h2><p class="subdesc" style="margin-bottom:19px">Everything below is separate from the files students use.</p><div class="checklist">
+            <div class="checkitem"><span class="tick">✓</span><span><b>Real account sign-in.</b> The test verifies the initial password against Supabase Auth.</span></div>
+            <div class="checkitem"><span class="tick">✓</span><span><b>Role and stage check.</b> The assigned college, stage and active status are read from your existing database.</span></div>
+            <div class="checkitem"><span class="tick">✓</span><span><b>Real test uploads.</b> PDFs are stored in a separate private Cloudflare R2 bucket, not your production lecture storage.</span></div>
+            <div class="checkitem"><span class="tick dotwarn">!</span><span><b>Password changes are real.</b> Changing a password here changes the actual Supabase account password.</span></div>
+          </div>
+        </section>
+        <section class="view" data-view="workspace" hidden>
+          <div class="card pad">
+            <div class="row between wrap"><div><div class="eyebrow" style="margin-bottom:5px">Academic directory · Test only</div><h2 class="section-title">Manage test lecture PDFs</h2><p class="subdesc">Select your assigned stage, academic block, and subject. Only private test R2 data is changed.</p></div><span class="pill blue">PRIVATE TEST R2</span></div>
+            <div class="divider"></div>
+            <div class="academic-selectors">
+              <div class="field"><label for="stage">01 · Academic stage</label><select class="input" id="stage" aria-label="Academic stage"></select></div>
+              <div class="field"><label for="block">02 · Block</label><select class="input" id="block" aria-label="Academic block"></select></div>
+              <div class="field"><label for="subject">03 · Subject</label><select class="input" id="subject" aria-label="Subject"></select></div>
+            </div>
+            <p class="micro" id="catalog-caption" style="margin:12px 0 0">Loading current academic test catalog…</p>
+            <div class="section-divider"></div>
+            <div class="row between wrap"><div><h3 class="section-title" style="font-size:15px">Add a PDF</h3><p class="subdesc">The PDF will be filed under the selected stage, block, and subject.</p></div><span class="pill">20 MB maximum</span></div>
+            <form id="upload-form" class="stack" style="margin-top:18px">
+              <div class="upload-fields"><div class="field"><label for="title">Lecture title</label><input id="title" class="input" type="text" maxlength="160" minlength="2" placeholder="e.g. Introduction to Muscle Physiology" required></div><div class="field"><label for="kind">Resource type</label><select id="kind" class="input"><option>Lecture</option><option>SGL</option><option>LG</option><option>Lab</option><option>Practical</option><option>Theory</option></select></div></div>
+              <label class="upload-area" for="file"><span class="upload-symbol" aria-hidden="true">▧</span><strong>Choose a PDF for the test library</strong><small>Private Cloudflare R2 test storage · No student-visible files</small><input id="file" type="file" accept="application/pdf,.pdf" required></label>
+              <div class="row wrap"><button type="submit" class="button primary" id="save-pdf">Upload to private R2 <span aria-hidden="true">↗</span></button><span class="micro" id="upload-scope">Only authorised stages are accepted by the server</span></div>
+            </form>
+            <div id="workspace-warning" class="status" style="margin-top:15px" role="status" aria-live="polite"></div>
+          </div>
+          <div class="card section">
+            <div class="row between wrap" style="padding:20px 22px"><div><h2 class="section-title">Academic library</h2><p id="listing-label" class="subdesc">PDFs from your chosen block and subject</p></div><div class="row wrap"><span id="file-count" class="pill">—</span><button type="button" class="button small" id="reload-files">↻ Refresh</button></div></div>
+            <div class="table-scroller"><table class="file-table"><thead><tr><th>Lecture PDF</th><th>Subject</th><th>Added</th><th>Actions</th></tr></thead><tbody id="file-rows"><tr><td colspan="4" class="empty">Choose a stage and block.</td></tr></tbody></table></div>
+            <div id="load-more-area" style="padding:13px;text-align:center" hidden><button type="button" id="load-more" class="button small">Load more PDFs</button></div>
+          </div>
+          <div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Verify administrator boundaries</h2><p class="subdesc">Test server-side stage restrictions, not just the dropdown.</p></div><button class="button small" id="test-denied-stage" type="button">Verify other stage is blocked</button></div><div id="security-status" role="status" aria-live="polite" style="margin-top:13px"></div></div>
+        </section>
+
+        <!-- PHASE 7: existing Supabase administrator management, Super Admin only -->
+        <section class="view" data-view="administrators" hidden>
+          <div class="p7-intro"><div><div class="eyebrow">Super Admin workspace</div><h2 class="section-title" style="margin-top:7px">Accounts & permissions</h2><p class="subdesc">A unified view of existing Supabase assignments and direct account creation.</p></div><span class="pill blue">LIVE ADMIN ROLES</span></div>
+          <div class="p7-note warn section"><b>Important:</b> Administrator creation and activation here are <b>real changes to Supabase accounts and admin_assignments</b>, not a visual demo. They do not modify student accounts, live PDF files, or your original MedHub admin script. Only test with accounts you control.</div>
+          <div class="p7-stats"><div class="card"><div class="smallcap">Assignments</div><strong id="p7-total">—</strong><small>From the real directory</small></div><div class="card"><div class="smallcap">Active admins</div><strong id="p7-active">—</strong><small>Unique active accounts</small></div><div class="card"><div class="smallcap">Medicine stages</div><strong id="p7-coverage">—</strong><small>With active assignments</small></div></div>
+          <div class="card section">
+            <div class="row between wrap" style="padding:21px 22px"><div><h2 class="section-title">Administrator directory</h2><p class="subdesc">Verified through your existing Super Admin database functions.</p></div><button class="button small" type="button" id="p7-reload-admins">↻ Refresh directory</button></div>
+            <div class="p7-tools" style="padding:0 22px 17px"><input class="input p7-filter" id="p7-admin-search" type="search" placeholder="Search email or role" aria-label="Search administrator directory"><select class="input" id="p7-admin-status" style="width:190px"><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+            <div class="p7-overflow"><table class="p7-table"><thead><tr><th>Account</th><th>Role</th><th>College / stage</th><th>Status</th><th>Actions</th></tr></thead><tbody id="p7-admin-rows"><tr><td colspan="5" class="p7-zero">Open this section as Super Admin to load the directory.</td></tr></tbody></table></div>
+            <div id="p7-directory-status" role="status" aria-live="polite" style="padding:0 22px 16px"></div>
+          </div>
+          <div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Add a Medicine administrator</h2><p class="subdesc">No invitation email. An inactive Content Admin role is created first.</p></div><span class="pill">Super Admin only</span></div><div class="divider"></div>
+            <form id="p7-add-admin" class="p7-form">
+              <div class="field"><label for="p7-email">Administrator email</label><input type="email" class="input" id="p7-email" maxlength="254" placeholder="admin@example.edu" autocomplete="off" required></div>
+              <div class="field"><label for="p7-initial-password">Initial password</label><div class="p7-inline"><input type="password" class="input" id="p7-initial-password" minlength="12" maxlength="128" autocomplete="new-password" placeholder="At least 12 characters" required><button class="button small" type="button" id="p7-pw-show">Show</button></div></div>
+              <div class="field"><label for="p7-college">College</label><select class="input" id="p7-college" disabled><option>Medicine</option></select></div>
+              <div class="field"><label for="p7-stage">Stage</label><select class="input" id="p7-stage"><option value="1">Stage 1</option><option value="2">Stage 2</option><option value="3">Stage 3</option><option value="4">Stage 4</option><option value="5">Stage 5</option><option value="6">Stage 6</option></select></div>
+              <label class="p7-check p7-wide"><input type="checkbox" id="p7-confirm" required><span>I have verified this administrator. I will share the individual temporary password privately and approve the role separately.</span></label>
+              <div class="p7-wide"><button id="p7-create-button" class="button primary" type="submit">Create inactive administrator</button><div id="p7-create-status" role="status" aria-live="polite" style="margin-top:12px"></div></div>
+            </form>
+          </div>
+        </section>
+        <!-- Phase 8: pilot student accounts. These are REAL Supabase Auth writes, restricted to two controlled accounts. -->
+        <section class="view" data-view="students" hidden>
+          <div class="p7-intro"><div><div class="eyebrow">Medicine · Phase 8 controlled pilot</div><h2 class="section-title" style="margin-top:7px">Student account management</h2><p class="subdesc">Create and verify two test students before any university-wide rollout.</p></div><span class="pill blue">REAL TEST ACCOUNTS</span></div>
+          <div class="p7-note warn section"><b>Important:</b> This creates actual accounts in your existing <b>Supabase Auth project</b> and profiles in a <b>new, isolated pilot table</b>. No live lectures or existing student website files are changed. Use only email addresses and fictional student IDs you control. <b>Do not upload a university roster.</b></div>
+          <div class="p7-stats"><div class="card"><div class="smallcap">Pilot students</div><strong id="p8-student-count">—</strong><small>Maximum two test accounts</small></div><div class="card"><div class="smallcap">Activated</div><strong id="p8-student-active">—</strong><small>Completed one-time verification</small></div><div class="card"><div class="smallcap">Scope</div><strong>Medicine</strong><small>Stages 1–6 · Groups 1–8</small></div></div>
+          <div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Add a test student</h2><p class="subdesc">Super Admin assigns email, test student ID, stage and group. No invitation email.</p></div><span class="pill">2 ACCOUNT LIMIT</span></div><div class="divider"></div>
+            <form id="p8-add-student" class="p7-form">
+              <div class="field"><label for="p8-student-email">Test email address</label><input id="p8-student-email" type="email" class="input" maxlength="254" placeholder="An email address you control" autocomplete="off" required></div>
+              <div class="field"><label for="p8-student-id">Fictional student ID · Initial password</label><div class="p7-inline"><input id="p8-student-id" type="password" class="input" minlength="6" maxlength="24" pattern="[A-Za-z0-9-]{6,24}" placeholder="6–24 characters" autocomplete="new-password" required><button id="p8-show-id" type="button" class="button small">Show</button></div></div>
+              <div class="field"><label for="p8-student-stage">Academic stage</label><select class="input" id="p8-student-stage"><option value="1">Stage 1</option><option value="2" selected>Stage 2</option><option value="3">Stage 3</option><option value="4">Stage 4</option><option value="5">Stage 5</option><option value="6">Stage 6</option></select></div>
+              <div class="field"><label for="p8-student-group">Group</label><select class="input" id="p8-student-group"><option value="1">Group 1</option><option value="2">Group 2</option><option value="3">Group 3</option><option value="4">Group 4</option><option value="5">Group 5</option><option value="6">Group 6</option><option value="7">Group 7</option><option value="8">Group 8</option></select></div>
+              <label class="p7-check p7-wide"><input type="checkbox" id="p8-student-confirm" required><span>These are fictional test credentials and an email I control. I understand the account is real in Supabase Auth, and I'll share the one-time activation code privately.</span></label>
+              <div class="p7-wide"><button type="submit" class="button primary" id="p8-create-student">Create pending test student</button><div id="p8-student-create-status" role="status" aria-live="polite" style="margin-top:12px"></div></div>
+            </form>
+            <div id="p8-code-panel" class="p8-code-panel" hidden><div class="row between wrap"><div><b>One-time student activation code</b><p class="subdesc">Shown only now. Give it privately to the student after checking their identity. The student uses it once.</p></div><button class="button small" type="button" id="p8-copy-code">Copy code</button></div><div id="p8-activation-code" class="p8-code"></div><p class="p7-sample">This is not email verification. For the real university launch, independently verify ownership of university email addresses before activating accounts.</p></div>
+          </div>
+          <div class="card section"><div class="row between wrap" style="padding:20px 22px"><div><h2 class="section-title">Pilot student directory</h2><p class="subdesc">Real student profiles from the separate Supabase pilot table</p></div><button class="button small" type="button" id="p8-refresh-students">↻ Refresh</button></div>
+            <div class="p7-tools" style="padding:0 22px 16px"><input class="input p7-filter" id="p8-search-students" type="search" placeholder="Search test email" aria-label="Search pilot students"></div>
+            <div class="p7-overflow"><table class="p7-table"><thead><tr><th>Student</th><th>Stage / group</th><th>Status</th><th>Actions</th></tr></thead><tbody id="p8-student-rows"><tr><td class="p7-zero" colspan="4">Open as Super Admin to load test students.</td></tr></tbody></table></div>
+            <div id="p8-student-directory-status" role="status" aria-live="polite" style="padding:12px 20px 18px"></div>
+          </div>
+          <div class="card pad section"><div class="row between wrap"><div><h2 class="section-title">Test student sign-in</h2><p class="subdesc">Each student signs in with email + initial test ID, then enters their private activation code.</p></div><span class="pill blue">SEPARATE PAGE</span></div><p class="p7-sample">Students can change their password afterward. The pilot dashboard verifies their assigned stage; it does not give access to private production lectures.</p><a class="button primary" href="student.html" target="_blank" rel="noopener noreferrer">Open student test login ↗</a></div>
+        </section>
+
+        <section class="view" data-view="account" hidden>
+          <div class="card pad"><div class="row between wrap"><div><h2 class="section-title">Account information</h2><p class="subdesc">From your authenticated Supabase session.</p></div><button id="sign-out" class="button danger small" type="button">Sign out</button></div><div class="divider"></div><div class="account-profile"><div class="scope"><h3>Signed-in email</h3><p id="account-email" class="email-value">—</p></div><div class="scope"><h3>Account identifier</h3><p id="account-id" class="email-value">—</p></div></div></div>
+          <div class="card pad section"><h2 class="section-title">Change your password</h2><p class="subdesc">This changes your real Supabase administrator password, not just the sandbox.</p><div class="notice warn" style="margin:18px 0">Use a private password that other administrators do not know. After changing it, sign in using the new password.</div>
+            <form id="change-password" class="stack" style="max-width:560px"><div class="field"><label for="current-pw">Current password</label><input id="current-pw" class="input" type="password" autocomplete="current-password" required></div><div class="field"><label for="new-pw">New password</label><input id="new-pw" class="input" type="password" autocomplete="new-password" minlength="12" required><small>At least 12 characters.</small></div><div class="field"><label for="confirm-pw">Confirm new password</label><input id="confirm-pw" class="input" type="password" autocomplete="new-password" required></div><div id="pw-status" role="status" aria-live="polite"></div><button type="submit" id="change-btn" class="button primary" style="justify-self:start">Update password</button></form>
+          </div>
+        </section>
+        <p class="footer-note">Hawler Medical University · Medicine academic administration · Phase 8 pilot · No production lecture changes</p>
+        <dialog id="edit-dialog" class="edit-dialog" aria-labelledby="edit-heading">
+          <form method="dialog" id="edit-form" class="edit-inner"><div class="row between"><h2 class="section-title" id="edit-heading">Edit test lecture</h2><button type="button" class="button small quiet" id="edit-close" aria-label="Close">✕</button></div><p class="subdesc">Only the original uploader or Super Admin can modify this file.</p>
+            <div class="field" style="margin-top:20px"><label for="edit-title">Lecture title</label><input class="input" id="edit-title" maxlength="160" minlength="2" required></div>
+            <div class="field"><label for="edit-kind">Resource type</label><select id="edit-kind" class="input"><option>Lecture</option><option>SGL</option><option>LG</option><option>Lab</option><option>Practical</option><option>Theory</option></select></div>
+            <div id="edit-status" aria-live="polite"></div>
+            <div class="row wrap" style="justify-content:flex-end"><button type="button" class="button" id="edit-cancel">Cancel</button><button type="submit" class="button primary" id="edit-save">Save changes</button></div>
+          </form>
+        </dialog>
+        <dialog id="replace-dialog" class="edit-dialog" aria-labelledby="replace-heading"><form id="replace-form" class="edit-inner" method="dialog"><div class="row between"><h2 class="section-title" id="replace-heading">Replace test PDF</h2><button type="button" class="button small quiet" id="replace-close" aria-label="Close">✕</button></div><p class="subdesc">Replace the PDF content while keeping the lecture's academic location and title.</p><div class="field" style="margin-top:22px"><label for="replace-file">New PDF (up to 20 MB)</label><input id="replace-file" type="file" accept=".pdf,application/pdf" required></div><div id="replace-status" aria-live="polite"></div><div class="row wrap" style="justify-content:flex-end"><button type="button" class="button" id="replace-cancel">Cancel</button><button type="submit" id="replace-save" class="button primary">Replace PDF</button></div></form></dialog>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin.js" defer></script>
+</body>
+</html>
