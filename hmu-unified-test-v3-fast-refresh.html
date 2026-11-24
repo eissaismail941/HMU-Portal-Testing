@@ -17,7 +17,7 @@
  if(a.uiRole==='student'||a.uiRole==='content_admin'||a.uiRole==='stage_admin'||academic){document.documentElement.classList.add('hp-natural-restoring');setTimeout(()=>{if(document.documentElement.classList.contains('hp-natural-restoring'))document.documentElement.classList.add('hp-natural-slow');},2000);}
  if(a.expiresAt<=Date.now()+60000)return;
  const base='https://lxmxsymxmpulkkngjfjo.supabase.co', key='sb_publishable_-7LnL-kzS1omjDFD5va_0A_Tjdh3m8h';
- const request=(url,supabase=true)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);return fetch(url,{headers:{Accept:'application/json',Authorization:'Bearer '+a.access_token,...(supabase?{apikey:key}:{})},cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:c.signal}).then(async r=>{const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.message||data.error||data.msg||'Account verification failed (HTTP '+r.status+').');return {data};}).catch(error=>({error})).finally(()=>clearTimeout(t));};
+ const request=(url,supabase=true)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);return fetch(url,{headers:{Accept:'application/json',Authorization:'Bearer '+a.access_token,...(supabase?{apikey:key}:{})},cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:c.signal}).then(async r=>{const data=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(data.message||data.error||data.msg||'Account verification failed (HTTP '+r.status+').');e.status=r.status;e.code=data.code||data.error_code;throw e;}return {data};}).catch(error=>({error})).finally(()=>clearTimeout(t));};
  const q={id:a.user.id,token:a.access_token,grants:request(base+'/rest/v1/admin_assignments?select=role,college,stage,is_active&user_id=eq.'+encodeURIComponent(a.user.id))};
  // The student Worker verifies the bearer and returns its own authenticated profile.
  if(!a.uiRole||a.uiRole==='student')q.student=request('https://hmu-student-pilot-test.eissaismail941.workers.dev/api/v1/student/me',false);
@@ -1998,10 +1998,17 @@ html.hp-public-paint.hp-natural-slow #hp-student-refresh-status{display:block!im
 html.hp-public-paint .hp-workspace .block-card,html.hp-public-paint .hp-workspace .subject-card,html.hp-public-paint .hp-workspace .split-card{animation-play-state:running!important}
 html.hp-public-paint #hp-appbar .hp-account{visibility:hidden}
 html.hp-public-paint [inert]{pointer-events:none}
+
+/* Recovery UI is never shown during a successful refresh. */
+#hp-session-recovery[hidden]{display:none!important}
+#hp-session-recovery{position:fixed;inset:0;z-index:100000;background:rgba(245,248,251,.98);display:grid;place-items:center;padding:24px;font-family:Inter,system-ui,sans-serif}
+.hp-recovery-card{max-width:430px;width:100%;background:white;border:1px solid #e2e8ef;border-radius:22px;padding:30px;box-shadow:0 16px 44px rgba(15,23,42,.07);color:#142033}
+.hp-recovery-card h2{font:650 22px/1.3 Inter,system-ui,sans-serif;margin:0 0 10px}.hp-recovery-card p{font:400 14px/1.6 Inter,system-ui,sans-serif;color:#627386;margin:0 0 22px}.hp-recovery-actions{display:flex;gap:10px;flex-wrap:wrap}.hp-recovery-actions button{font:600 14px Inter,system-ui,sans-serif;padding:12px 16px;border-radius:10px;cursor:pointer;border:1px solid #dce3eb;color:#34455a;background:white}.hp-recovery-actions #hp-session-retry{background:#1677ff;color:white;border-color:#1677ff}
 </style>
 </head>
 
 <body class="hp-lock">
+<section id="hp-session-recovery" hidden role="dialog" aria-modal="true" aria-labelledby="hp-session-recovery-title"><div class="hp-recovery-card"><h2 id="hp-session-recovery-title">Could not reconnect</h2><p>Your session has been kept on this device. Retry to verify your account and return to your academic page.</p><div class="hp-recovery-actions"><button type="button" id="hp-session-retry">Try again</button><button type="button" id="hp-session-signout">Sign out</button></div></div></section>
 <div id="hp-student-refresh-status" role="status">Checking your session…</div>
 <div id="hp-restore-screen" aria-busy="true" inert>
  <header class="hp-r-top"><div class="hp-r-identity"><img src="/MedHub/reader/assets/hmu-logo.png" alt=""><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-r-account"><span class="hp-r-dot"></span><span class="hp-r-bar"></span></div></header>
@@ -4133,20 +4140,20 @@ function paintPublicAcademic(saved){
 
 function status(s){el('hp-status').textContent=s||'';}
 function setBusy(b){busy=b;el('hp-submit').disabled=b;el('hp-submit').textContent=b?'Verifying your account…':'Sign in to portal  →';}
-async function api(path,{method='GET',body,token}={}){const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);try{const r=await fetch(URL_BASE+path,{method,headers:{apikey:PUB,Accept:'application/json',...(token?{Authorization:'Bearer '+token}:{}),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:c.signal,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.message||d.msg||d.error_description||d.error||'Request failed (HTTP '+r.status+')');e.code=d.code;e.status=r.status;throw e;}return d;}catch(e){if(e.name==='AbortError')throw Error('The server timed out. Please try again.');throw e;}finally{clearTimeout(t);}}
+async function api(path,{method='GET',body,token}={}){const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);try{const r=await fetch(URL_BASE+path,{method,headers:{apikey:PUB,Accept:'application/json',...(token?{Authorization:'Bearer '+token}:{}),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:c.signal,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.message||d.msg||d.error_description||d.error||'Request failed (HTTP '+r.status+')');e.code=d.code||d.error_code;e.status=r.status;throw e;}return d;}catch(e){if(e.name==='AbortError')throw Error('The server timed out. Please try again.');throw e;}finally{clearTimeout(t);}}
 function store(){try{if(auth)sessionStorage.setItem(SESSION,JSON.stringify(auth));else sessionStorage.removeItem(SESSION);}catch{}}
 function setAuth(d){if(!d?.access_token||!d?.refresh_token||!d?.user?.id)throw Error('Invalid authentication response.');const uiRole=auth?.user?.id===d.user.id?auth.uiRole:undefined;auth={access_token:d.access_token,refresh_token:d.refresh_token,user:{id:d.user.id,email:d.user.email},expiresAt:Date.now()+(d.expires_in||3600)*1000,uiRole};store();}
-async function token(){if(!auth)throw Error('Please sign in again.');if(Date.now()<auth.expiresAt-60000)return auth.access_token;if(!refreshing){const old=auth;refreshing=(async()=>{const d=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:old.refresh_token}});if(auth!==old||d.user?.id!==old.user.id)throw Error('Session changed. Please sign in again.');setAuth(d);return auth.access_token;})().finally(()=>refreshing=null);}return refreshing;}
+async function token(force=false){if(!auth)throw Error('Please sign in again.');if(!force&&Date.now()<auth.expiresAt-60000)return auth.access_token;if(!refreshing){const old=auth;refreshing=(async()=>{let d;try{d=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:old.refresh_token}});}catch(e){e.refreshRequest=true;throw e;}if(auth!==old||d.user?.id!==old.user.id)throw Error('Session changed. Please sign in again.');setAuth(d);return auth.access_token;})().finally(()=>refreshing=null);}return refreshing;}
 const can=(c,s)=>scope.some(x=>x.college===c&&x.stage===s);
 const isSuper=()=>account?.role==='super_admin';
 const isAdmin=()=>account&&account.role!=='student';
 const hasSide=()=>isSuper()||!!(isAdmin()&&scope.length>1);
 function allScopes(){return colleges.flatMap(([c,,n])=>Array.from({length:n},(_,i)=>({college:c,stage:i+1})));}
 function loadGrants(t,id){return api('/rest/v1/admin_assignments?select=role,college,stage,is_active&user_id=eq.'+encodeURIComponent(id),{token:t});}
-async function resolveAccount(prefetchedGrants,studentCheck){const id=auth.user.id;const grants=prefetchedGrants??await loadGrants(await token(),id);if(!Array.isArray(grants))throw Error('Administrator permission verification failed.');const activeGrants=grants.filter(g=>g.is_active===true);if(activeGrants.some(g=>g.role==='super_admin'&&g.college==null&&g.stage==null)){account={role:'super_admin'};scope=allScopes();return;}const permitted=allScopes().filter(x=>activeGrants.some(g=>normalCollege(g.college)===x.college&&((g.role==='college_admin'&&g.stage==null)||(['stage_admin','content_admin'].includes(g.role)&&Number(g.stage)===x.stage))));if(permitted.length){account={role:['college_admin','stage_admin','content_admin'].find(r=>activeGrants.some(g=>g.role===r))};scope=permitted;return;}if(grants.length)throw Error('Your administrator assignment is inactive or not valid. Contact the Super Admin.');const checked=studentCheck?await studentCheck:null;if(checked?.error)throw checked.error;const result=checked?checked.data:await studentApi('/api/v1/student/me');const profile=result.student;if(result.ok!==true||!profile||profile.id!==id)throw Error('No verified student assignment was found.');if(profile.status==='pending_activation'){showActivation();return;}acceptStudent(profile);}
+async function resolveAccount(prefetchedGrants,studentCheck){const id=auth.user.id;const grants=prefetchedGrants??await loadGrants(await token(),id);if(!Array.isArray(grants))throw Error('Administrator permission verification failed.');const activeGrants=grants.filter(g=>g.is_active===true);if(activeGrants.some(g=>g.role==='super_admin'&&g.college==null&&g.stage==null)){account={role:'super_admin'};scope=allScopes();return;}const permitted=allScopes().filter(x=>activeGrants.some(g=>normalCollege(g.college)===x.college&&((g.role==='college_admin'&&g.stage==null)||(['stage_admin','content_admin'].includes(g.role)&&Number(g.stage)===x.stage))));if(permitted.length){account={role:['college_admin','stage_admin','content_admin'].find(r=>activeGrants.some(g=>g.role===r))};scope=permitted;return;}if(grants.length)throw accessDenied('Your administrator assignment is inactive or not valid. Contact the Super Admin.');const checked=studentCheck?await studentCheck:null;if(checked?.error)throw checked.error;const result=checked?checked.data:await studentApi('/api/v1/student/me');const profile=result.student;if(result.ok!==true||!profile||profile.id!==id)throw Error('No verified student assignment was found.');if(profile.status==='pending_activation'){showActivation();return;}acceptStudent(profile);}
 const STUDENT_API='https://hmu-student-pilot-test.eissaismail941.workers.dev';
-async function studentApi(path,body){const c=new AbortController(),timer=setTimeout(()=>c.abort(),18000);try{const r=await fetch(STUDENT_API+path,{method:body?'POST':'GET',headers:{Accept:'application/json',Authorization:'Bearer '+await token(),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:c.signal,cache:'no-store',credentials:'omit'});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Student account service returned HTTP '+r.status+'.');return d;}catch(e){if(e.name==='AbortError'||e instanceof TypeError)throw Error('Could not reach the student account service. Please try again or contact the administrator.');throw e;}finally{clearTimeout(timer);}}
-function acceptStudent(profile){if(profile.status!=='active')throw Error('Your student account is not active. Contact the Super Admin.');if(profile.id!==auth?.user?.id)throw Error('Student identity verification failed.');const c=normalCollege(profile.college),s=Number(profile.stage);if(!valid(c,s))throw Error('Your student profile has an invalid college or stage.');account={role:'student'};scope=[{college:c,stage:s}];}
+async function studentApi(path,body){const c=new AbortController(),timer=setTimeout(()=>c.abort(),18000);try{const r=await fetch(STUDENT_API+path,{method:body?'POST':'GET',headers:{Accept:'application/json',Authorization:'Bearer '+await token(),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:c.signal,cache:'no-store',credentials:'omit'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||'Student account service returned HTTP '+r.status+'.');e.status=r.status;e.code=d.code||d.error_code;if(r.status===403&&/does not have a pilot student profile|disabled by the Super Admin/i.test(e.message))e.accessDenied=true;throw e;}return d;}catch(e){if(e.name==='AbortError'||e instanceof TypeError)throw Error('Could not reach the student account service. Please try again or contact the administrator.');throw e;}finally{clearTimeout(timer);}}
+function acceptStudent(profile){if(profile.status!=='active')throw accessDenied('Your student account is not active. Contact the Super Admin.');if(profile.id!==auth?.user?.id)throw Error('Student identity verification failed.');const c=normalCollege(profile.college),s=Number(profile.stage);if(!valid(c,s))throw accessDenied('Your student profile has an invalid college or stage.');account={role:'student'};scope=[{college:c,stage:s}];}
 function showActivation(){el('hp-form').hidden=true;el('hp-activation').hidden=false;el('hp-login-title').textContent='Activate your account';el('hp-login-desc').textContent='Enter the one-time activation code provided by your administrator.';el('hp-password').value='';el('hp-activation-status').textContent='';}
 function resetActivation(){el('hp-form').hidden=false;el('hp-activation').hidden=true;el('hp-login-title').textContent='Sign in';el('hp-login-desc').textContent='Sign in with your university account. Your academic workspace opens automatically.';el('hp-code').value='';el('hp-activation-status').textContent='';}
 
@@ -4182,28 +4189,61 @@ function help(){el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('ari
 el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclick=()=>{el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('This is the HMU Academic Portal test. One account opens your assigned academic workspace automatically.');};el('hp-menu-toggle').onclick=()=>{el('hp-menu').hidden=!el('hp-menu').hidden;el('hp-menu-toggle').setAttribute('aria-expanded',String(!el('hp-menu').hidden));};el('hp-signout').onclick=()=>logout();el('hp-mobile-nav').onclick=()=>{const open=el('hp-sidebar').classList.toggle('open');el('hp-backdrop').hidden=!open;el('hp-mobile-nav').setAttribute('aria-expanded',String(open));};el('hp-backdrop').onclick=closeNav;el('hp-refresh-directory').onclick=directory;el('hp-dir-search').oninput=filterDirectory;el('hp-dir-filter').onchange=filterDirectory;
 // Single-stage administrators see their assigned stage first; an optional test management link stays in the header.
 const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Admin tools';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
+// A transient network or permission service error is NOT a sign-out.
+function accessDenied(message){const e=new Error(message);e.accessDenied=true;return e;}
+function terminalSessionError(e){
+  if(e.accessDenied)return true;
+  const code=String(e.code||'').toLowerCase();
+  if(['user_banned','user_not_found','session_not_found','session_expired'].includes(code))return true;
+  // Only explicit rejection of a refresh credential invalidates the saved session.
+  return !!e.refreshRequest&&(['refresh_token_not_found','invalid_grant'].includes(code)||([400,401].includes(e.status)&&/refresh token (?:not found|expired|revoked)|invalid refresh token(?!.*already used)/i.test(e.message||'')&&!/already used/i.test(e.message||'')));
+}
+function transientSessionError(e){return !terminalSessionError(e)&&(!e.status||[408,425,429,500,502,503,504].includes(e.status)||e.status>=500||e.status===401||e.code==='refresh_token_already_used');}
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function verifySavedSession(saved,early,force=false){
+  const t=await token(force),id=auth.user.id;
+  const reuse=early?.id===id&&early.token===t;
+  const unwrap=async p=>{const r=await p;if(r.error)throw r.error;return r.data;};
+  const whoPromise=(reuse?unwrap(early.who):api('/auth/v1/user',{token:t})).catch(e=>{e.identityRequest=true;throw e;});
+  const grantsPromise=reuse?unwrap(early.grants):loadGrants(t,id);
+  const studentCheck=(!saved.uiRole||saved.uiRole==='student')?(reuse&&early.student?early.student:studentApi('/api/v1/student/me').then(data=>({data}),error=>({error}))):null;
+  const [who,grants]=await Promise.all([whoPromise,grantsPromise]);
+  if(who.id!==id||auth?.user?.id!==id)throw accessDenied('Session no longer valid.');
+  await resolveAccount(grants,studentCheck);
+}
 (async()=>{
   const finish=()=>{clearPublicPaint();document.documentElement.classList.remove('hp-restoring','hp-natural-restoring','hp-natural-slow');};
   let saved=null;try{saved=JSON.parse(sessionStorage.getItem(SESSION)||'null');}catch{}
   if(!saved?.access_token||!saved?.refresh_token||!saved?.user?.id||!Number.isFinite(saved.expiresAt)){render(null);finish();return;}
-  setBusy(true);status('');
+  setBusy(true);status('');auth=saved;
+  try{paintPublicAcademic(saved);}catch(e){clearPublicPaint();render(null);}
+  let early=window.__hpEarly;delete window.__hpEarly;
+  let force=false,renewed=false;
   try{
-    auth=saved;try{paintPublicAcademic(saved);}catch(e){clearPublicPaint();render(null);}const t=await token(),id=auth.user.id;
-    // The saved role is only a prefetch hint, never a permission decision.
-    // Verify the real identity and role on the server before revealing anything.
-    const early=window.__hpEarly;delete window.__hpEarly;
-    const reuse=early?.id===id&&early.token===t;
-    const unwrap=async p=>{const r=await p;if(r.error)throw r.error;return r.data;};
-    const whoPromise=reuse?unwrap(early.who):api('/auth/v1/user',{token:t});
-    const grantsPromise=reuse?unwrap(early.grants):loadGrants(t,id);
-    const studentCheck=(!saved.uiRole||saved.uiRole==='student')?(reuse&&early.student?early.student:studentApi('/api/v1/student/me').then(data=>({data}),error=>({error}))):null;
-    const [who,grants]=await Promise.all([whoPromise,grantsPromise]);
-    if(who.id!==id||auth?.user?.id!==id)throw Error('Session no longer valid.');
-    await resolveAccount(grants,studentCheck);
+    for(let attempt=0;;attempt++){
+      try{await verifySavedSession(saved,early,force);break;}
+      catch(e){
+        if(terminalSessionError(e)||attempt>=2||!transientSessionError(e))throw e;
+        // A rejected access token may be expired; renew once, not on every reload.
+        force=e.identityRequest&&e.status===401&&!renewed;
+        if(force)renewed=true;
+        early=null;await pause(attempt===0?250:700);
+      }
+    }
     if(account)enter(true);else render(null);
-  }catch(e){await logout(false);status('Please sign in again. '+e.message);}
-  finally{setBusy(false);finish();}
+    finish();
+  }catch(e){
+    if(terminalSessionError(e)){await logout(false);status(e.accessDenied?e.message:'Your session has expired. Please sign in again.');finish();}
+    else{
+      // Keep the public preview inert and preserve sessionStorage and history.
+      // No private data or actions can be used until verification succeeds.
+      account=null;scope=[];document.documentElement.classList.add('hp-restoring');
+      el('hp-session-recovery').hidden=false;el('hp-session-retry').focus();
+    }
+  }finally{setBusy(false);}
 })();
+el('hp-session-retry').onclick=()=>location.reload();
+el('hp-session-signout').onclick=async()=>{el('hp-session-recovery').hidden=true;await logout();document.documentElement.classList.remove('hp-restoring','hp-natural-restoring','hp-natural-slow');};
 })();
 </script>
 
