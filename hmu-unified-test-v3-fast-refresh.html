@@ -2009,6 +2009,921 @@ html.hp-public-paint [inert]{pointer-events:none}
 .hp-v1-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.hp-v1-primary{border:1px solid #1677ff;background:#1677ff;color:white;border-radius:10px;padding:10px 15px;font:600 13px Inter,system-ui,sans-serif;cursor:pointer;min-height:40px}.hp-v1-primary:hover{background:#0969e3}.hp-v1-primary:disabled,.hp-v1-action:disabled{opacity:.5;cursor:not-allowed}.hp-v1-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 30px}.hp-v1-quick button{display:flex;gap:12px;align-items:center;text-align:left;background:white;border:1px solid #e3e7ed;border-radius:14px;padding:17px;color:#24384f;cursor:pointer;min-width:0}.hp-v1-quick button:hover{border-color:#a9cfff;background:#fbfdff}.hp-v1-quick .hp-svg{color:#1677ff}.hp-v1-quick strong,.hp-v1-quick small{display:block}.hp-v1-quick strong{font-size:13px;font-weight:650}.hp-v1-quick small{font-size:11px;color:#758397;line-height:1.5;margin-top:4px}.hp-v1-quick .hp-v1-arrow{margin-left:auto;color:#94a3b8}.hp-v1-kpi-note{display:block;color:#7b8797;font-size:11px;margin-top:7px}.hp-v1-panel{margin-bottom:17px}.hp-v1-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}.hp-v1-field{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:600;color:#42556b}.hp-v1-field input,.hp-v1-field select{min-height:44px;border:1px solid #dfe5ec;border-radius:9px;padding:10px 12px;background:#fff;color:#26374b;width:100%;font:400 14px Inter,system-ui,sans-serif}.hp-v1-full{grid-column:1/-1}.hp-v1-confirm{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.6;color:#52657b}.hp-v1-confirm input{margin:3px 0 0;accent-color:#1677ff}.hp-v1-muted{font-size:12px;color:#718196;line-height:1.6}.hp-v1-note{padding:13px 15px;border:1px solid #e1e8f2;border-radius:11px;background:#f6f9fd;color:#4a6481;font-size:12px;line-height:1.6;margin-bottom:16px}.hp-v1-error{color:#a03932!important}.hp-v1-code{padding:15px;border:1px solid #c4d9f4;border-radius:12px;background:#f5f9ff;margin:15px 0;overflow-wrap:anywhere}.hp-v1-code output{display:block;font:650 20px/1.6 ui-monospace,monospace;color:#145cba;letter-spacing:1px}.hp-v1-action{font:600 12px Inter,system-ui,sans-serif;border:1px solid #dfe5ec;border-radius:8px;background:#fff;color:#365b83;padding:8px 11px;cursor:pointer}.hp-v1-action:hover{background:#f2f7ff}.hp-v1-action.danger{color:#a33d38}.hp-status-tag.pending{color:#84611b;background:#fff5db}.hp-v1-directory-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.hp-v1-directory-head .hp-lead{margin-bottom:18px}.hp-v1-table-title{font-weight:550;color:#24384f}.hp-v1-status{min-height:18px;margin:10px 0;font-size:12px;color:#6c7b8c}.hp-with-side #hp-students{margin-left:var(--portal-side)}
 @media(max-width:900px){.hp-with-side #hp-students{margin-left:0}}@media(max-width:650px){.hp-v1-quick{grid-template-columns:1fr;gap:8px}.hp-v1-form{grid-template-columns:1fr}.hp-v1-directory-head .hp-v1-actions{width:100%}.hp-v1-quick button{padding:13px}.hp-v1-directory-head h1{margin-bottom:6px}}
 </style>
+<style id="hp-original-upload-css">
+/* MedHub admin: sign-in, account menu, upload sheet, lecture management.
+   White and blue to match the main site. */
+:root {
+    --mh-blue: #0057ff;
+    --mh-cyan: #0ea5e9;
+    --mh-ink: #0f172a;
+    --mh-body: #475569;
+    --mh-muted: #64748b;
+    --mh-line: #dce6f5;
+    --mh-mist: #f3f7ff;
+    --mh-ring: rgba(0, 87, 255, 0.22);
+    --mh-danger: #dc2626;
+    --mh-ok: #059669;
+    --mh-font: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mh-head: "Syne", "DM Sans", system-ui, sans-serif;
+}
+
+html.mh-lock,
+html.mh-lock body { overflow: hidden; }
+
+.mh-dialog, .mh-dialog *, .mh-dialog *::before, .mh-dialog *::after,
+.mh-fab, .mh-toast, .mh-acct, .mh-menu-layer, .mh-menu-layer *,
+.mh-toolbar, .mh-toolbar *, .mh-more, .mh-arrange, .mh-arrange * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mh-dialog [hidden], .mh-fab[hidden], .mh-acct[hidden], .mh-toolbar[hidden] { display: none !important; }
+
+/* ---------- Dialog shell ---------- */
+.mh-dialog {
+    margin: auto; /* the site's global reset removes the default centring */
+    padding: 0;
+    border: 0;
+    border-radius: 28px;
+    background: #fff;
+    color: var(--mh-ink);
+    font-family: var(--mh-font);
+    max-height: calc(100dvh - 32px);
+    overflow: hidden;
+    box-shadow: 0 30px 90px rgba(11, 23, 48, 0.28), 0 0 0 1px rgba(0, 87, 255, 0.06);
+}
+.mh-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: mh-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mh-dialog::backdrop {
+    background: rgba(11, 23, 48, 0.5);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+.mh-dialog h2 {
+    margin: 0;
+    font: 800 1.5rem/1.2 var(--mh-head);
+    letter-spacing: -0.01em;
+}
+.mh-dialog p { margin: 0; }
+.mh-dialog input, .mh-dialog select {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+.mh-icon-btn {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #eef3fb;
+    color: var(--mh-body);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.mh-icon-btn:hover { background: #e0eaf8; color: var(--mh-ink); }
+.mh-icon-btn:active { transform: scale(0.94); }
+.mh-icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.mh-icon-btn.mh-sm { width: 34px; height: 34px; }
+
+/* ---------- Sign in ---------- */
+.mh-login-dialog { width: min(420px, calc(100% - 32px)); padding: 32px 28px 28px; position: fixed; }
+.mh-login-dialog .mh-close { position: absolute; top: 16px; right: 16px; }
+.mh-badge {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(0, 87, 255, 0.12), rgba(14, 165, 233, 0.2));
+    color: var(--mh-blue);
+}
+.mh-badge.is-danger {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(248, 113, 113, 0.2));
+    color: var(--mh-danger);
+}
+.mh-lead { margin-top: 6px !important; color: var(--mh-muted); line-height: 1.55; }
+.mh-login-dialog form, .mh-account { margin-top: 22px; display: grid; gap: 16px; }
+
+.mh-account-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid var(--mh-line);
+    border-radius: 18px;
+    background: var(--mh-mist);
+}
+.mh-avatar {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mh-blue), var(--mh-cyan));
+    color: #fff;
+    font: 800 1.1rem var(--mh-head);
+}
+.mh-account-card strong { display: block; overflow-wrap: anywhere; font-size: 0.95rem; }
+.mh-account-card span { color: var(--mh-muted); font-size: 0.85rem; }
+.mh-actions { display: flex; gap: 10px; }
+.mh-actions .mh-btn { flex: 1; }
+
+/* ---------- Fields ---------- */
+.mh-field { display: grid; gap: 7px; min-width: 0; border: 0; padding: 0; margin: 0; }
+.mh-field > label, .mh-field > legend, .mh-flabel {
+    padding: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--mh-ink);
+}
+.mh-opt { margin-left: 6px; color: var(--mh-muted); font-weight: 500; }
+
+.mh-field input[type="text"],
+.mh-field input[type="email"],
+.mh-field input[type="password"],
+.mh-select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1.5px solid #d5e1f3;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--mh-ink);
+    font: 500 16px/1.4 var(--mh-font);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mh-select {
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+}
+.mh-field input::placeholder { color: #94a3b8; }
+.mh-field input:hover, .mh-select:hover { border-color: #b6c9ea; }
+.mh-field input:focus, .mh-select:focus { outline: 0; border-color: var(--mh-blue); box-shadow: 0 0 0 4px var(--mh-ring); }
+.mh-field input[aria-invalid="true"] { border-color: #f87171; box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.18); }
+.mh-field input:disabled, .mh-select:disabled { background: #f5f8fd; color: var(--mh-muted); }
+
+.mh-pw { position: relative; }
+.mh-pw input { padding-right: 52px !important; }
+.mh-pw button {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--mh-muted);
+    cursor: pointer;
+}
+.mh-pw button:hover { color: var(--mh-blue); }
+
+/* ---------- Buttons ---------- */
+.mh-btn {
+    min-height: 48px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 0;
+    border-radius: 14px;
+    font: 700 1rem var(--mh-font);
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s, background 0.2s;
+}
+.mh-btn:active { transform: scale(0.98); }
+.mh-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.mh-btn-primary {
+    background: linear-gradient(135deg, var(--mh-blue), var(--mh-cyan));
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(0, 87, 255, 0.24);
+}
+.mh-btn-primary:hover:not(:disabled) { box-shadow: 0 12px 28px rgba(0, 87, 255, 0.34); }
+.mh-btn-ghost { background: #eef3fb; color: #334155; }
+.mh-btn-ghost:hover:not(:disabled) { background: #e0eaf8; }
+.mh-btn-danger {
+    background: linear-gradient(135deg, #dc2626, #f43f5e);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(220, 38, 38, 0.24);
+}
+.mh-btn-danger:hover:not(:disabled) { box-shadow: 0 12px 28px rgba(220, 38, 38, 0.34); }
+
+.mh-spinner {
+    display: none;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: mh-spin 0.7s linear infinite;
+}
+.mh-spinner.is-dark { border-color: #cbd9f0; border-top-color: var(--mh-blue); }
+.mh-btn.is-busy .mh-spinner { display: block; }
+
+.mh-dialog :focus-visible { outline: 3px solid var(--mh-cyan); outline-offset: 2px; }
+.mh-field input:focus-visible { outline: 0; }
+
+/* ---------- Messages ---------- */
+.mh-alert {
+    padding: 12px 14px;
+    border: 1px solid;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    -webkit-user-select: text;
+    user-select: text;
+}
+.mh-alert[data-kind="error"] { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.mh-alert[data-kind="info"] { background: var(--mh-mist); border-color: var(--mh-line); color: #1e40af; }
+.mh-alert[data-kind="success"] { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+
+/* ---------- Dialog layout (sheet, edit, replace, confirm) ---------- */
+.mh-sheet { width: min(620px, calc(100% - 48px)); }
+.mh-sheet-form { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 0; }
+.mh-sheet-head { padding: 22px 24px 4px; }
+.mh-grab { display: none; width: 40px; height: 4px; margin: -8px auto 14px; border-radius: 4px; background: #cbd5e1; }
+.mh-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.mh-dest {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    max-width: 100%;
+    margin-top: 10px !important;
+    padding: 7px 12px 7px 10px;
+    border: 1px solid var(--mh-line);
+    border-radius: 999px;
+    background: var(--mh-mist);
+    color: var(--mh-blue);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+.mh-dest svg { flex: none; }
+.mh-dest span { overflow-wrap: anywhere; }
+.mh-dest span + span::before { content: "›"; margin-right: 6px; opacity: 0.55; }
+
+.mh-sheet-body {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 18px 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.mh-types { display: flex; flex-wrap: wrap; gap: 8px; }
+.mh-chip { position: relative; cursor: pointer; }
+.mh-chip input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.mh-chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1.5px solid #d5e1f3;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--mh-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.mh-chip:hover span { border-color: #9db8e6; }
+.mh-chip input:checked + span { background: var(--mh-blue); border-color: var(--mh-blue); color: #fff; }
+.mh-chip input:focus-visible + span { outline: 3px solid var(--mh-cyan); outline-offset: 2px; }
+
+.mh-drop {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 22px 16px;
+    border: 1.5px dashed #9db8e6;
+    border-radius: 20px;
+    background: var(--mh-mist);
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+.mh-drop:hover, .mh-drop.is-over { border-color: var(--mh-blue); background: #eaf2ff; }
+.mh-drop:focus-within { border-color: var(--mh-blue); box-shadow: 0 0 0 4px var(--mh-ring); }
+.mh-drop.has-file { border-style: solid; background: #fff; }
+.mh-drop.is-compact { grid-template-columns: auto 1fr; justify-items: start; text-align: left; align-items: center; column-gap: 12px; padding: 12px 14px; }
+.mh-drop.is-compact .mh-drop-icon { grid-row: span 2; width: 40px; height: 40px; margin: 0; border-radius: 13px; }
+.mh-drop-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 6px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0, 87, 255, 0.12), rgba(14, 165, 233, 0.2));
+    color: var(--mh-blue);
+}
+.mh-drop strong { max-width: 100%; overflow-wrap: anywhere; font-size: 0.95rem; }
+.mh-drop small { color: var(--mh-muted); font-size: 0.85rem; }
+.mh-drop input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.mh-note {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--mh-mist);
+    color: #1e40af;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+.mh-note svg { flex: none; margin-top: 1px; }
+.mh-note.is-danger { background: #fef2f2; color: #991b1b; }
+
+.mh-progress { display: grid; gap: 8px; font-size: 0.875rem; font-weight: 700; color: var(--mh-body); }
+.mh-bar { height: 8px; overflow: hidden; border-radius: 8px; background: #e6eefb; }
+.mh-bar span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--mh-blue), var(--mh-cyan));
+    transition: width 0.25s;
+}
+
+.mh-sheet-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px calc(16px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid #eaf0fa;
+    background: #fff;
+}
+
+/* ---------- Upload queue (several PDFs at once) ---------- */
+.mh-queue { display: grid; gap: 12px; }
+.mh-queue:empty { display: none; }
+.mh-qitem {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border: 1.5px solid var(--mh-line);
+    border-radius: 20px;
+    background: #fff;
+    transition: border-color 0.2s, background 0.2s;
+}
+.mh-qitem[data-state="uploading"], .mh-qitem[data-state="saving"] { border-color: #9db8e6; background: #fafcff; }
+.mh-qitem[data-state="done"] { border-color: #a7f3d0; background: #f6fffb; }
+.mh-qitem[data-state="error"] { border-color: #fecaca; background: #fffafa; }
+.mh-qhead { display: flex; align-items: center; gap: 10px; }
+.mh-qicon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(0, 87, 255, 0.12), rgba(14, 165, 233, 0.2));
+    color: var(--mh-blue);
+}
+.mh-qitem[data-state="done"] .mh-qicon { background: #d1fae5; color: var(--mh-ok); }
+.mh-qitem[data-state="error"] .mh-qicon { background: #fee2e2; color: var(--mh-danger); }
+.mh-qmeta { flex: 1; min-width: 0; display: grid; }
+.mh-qmeta strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; }
+.mh-qmeta small { color: var(--mh-muted); font-size: 0.8rem; }
+.mh-qrow { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 10px; }
+.mh-qprog { display: grid; gap: 6px; }
+.mh-qstate { font-size: 0.8125rem; font-weight: 700; color: var(--mh-body); overflow-wrap: anywhere; }
+.mh-qitem[data-state="done"] .mh-qstate { color: var(--mh-ok); }
+.mh-qitem[data-state="error"] .mh-qstate { color: #b91c1c; }
+.mh-qitem[data-state="done"] .mh-bar span { background: var(--mh-ok); }
+.mh-qitem[data-state="error"] .mh-bar span { background: var(--mh-danger); }
+.mh-summary { font-size: 0.875rem; font-weight: 700; color: var(--mh-body); text-align: center; }
+
+/* ---------- Preview dialog ---------- */
+.mh-preview { width: min(860px, calc(100% - 32px)); height: min(88dvh, 920px); }
+.mh-prev-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 20px 12px; }
+.mh-prev-head h2 { font-size: 1.15rem; overflow-wrap: anywhere; }
+.mh-prev-head p { margin-top: 4px; color: var(--mh-muted); font-size: 0.85rem; }
+.mh-prev-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 14px;
+    background: #e9eff9;
+    -webkit-overflow-scrolling: touch;
+}
+.mh-prev-body canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(11, 23, 48, 0.12);
+}
+.mh-prev-body iframe { display: block; width: 100%; height: 100%; min-height: 360px; border: 0; border-radius: 10px; background: #fff; }
+.mh-prev-wait {
+    min-height: 200px;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 12px;
+    color: var(--mh-muted);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+}
+.mh-prev-wait .mh-spinner { display: block; width: 28px; height: 28px; }
+.mh-prev-more { padding: 6px 0 14px; color: var(--mh-muted); font-size: 0.85rem; text-align: center; }
+.mh-prev-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid #eaf0fa;
+}
+
+/* ---------- Confirm dialog ---------- */
+.mh-confirm { width: min(420px, calc(100% - 32px)); padding: 28px 24px 22px; }
+.mh-confirm .mh-body { margin-top: 10px; display: grid; gap: 14px; }
+.mh-confirm-name {
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--mh-mist);
+    font-weight: 700;
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+}
+.mh-confirm .mh-actions { margin-top: 20px; }
+
+/* ---------- Floating add button ---------- */
+.mh-fab {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: max(22px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+    z-index: 900;
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mh-blue), var(--mh-cyan));
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgba(0, 87, 255, 0.38), 0 2px 6px rgba(0, 87, 255, 0.3);
+    animation: mh-fab-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.mh-fab svg { transition: transform 0.25s; }
+.mh-fab:hover { transform: scale(1.06); box-shadow: 0 18px 36px rgba(0, 87, 255, 0.45), 0 2px 6px rgba(0, 87, 255, 0.3); }
+.mh-fab:hover svg { transform: rotate(90deg); }
+.mh-fab:active { transform: scale(0.94); }
+.mh-fab:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px var(--mh-blue); }
+body.mh-has-fab #resources-page { padding-bottom: 130px; }
+
+/* ---------- Account chip (top right, only after sign-in) ---------- */
+.mh-acct {
+    position: fixed;
+    top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
+    right: max(14px, env(safe-area-inset-right, 0px));
+    z-index: 900;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mh-blue), var(--mh-cyan));
+    color: #fff;
+    font: 800 1rem var(--mh-head);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 87, 255, 0.3);
+    transition: transform 0.15s, box-shadow 0.2s;
+}
+.mh-acct:hover { box-shadow: 0 8px 22px rgba(0, 87, 255, 0.42); }
+.mh-acct:active { transform: scale(0.94); }
+.mh-acct:focus-visible { outline: 3px solid var(--mh-cyan); outline-offset: 2px; }
+
+/* ---------- Pop-over menu (⋮ and account) ---------- */
+.mh-menu-layer { position: fixed; inset: 0; z-index: 1500; font-family: var(--mh-font); }
+.mh-menu {
+    position: absolute;
+    width: 248px;
+    max-width: calc(100% - 16px);
+    padding: 8px;
+    border: 1px solid var(--mh-line);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--mh-ink);
+    box-shadow: 0 18px 50px rgba(11, 23, 48, 0.22);
+    animation: mh-pop 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mh-menu-head { display: flex; align-items: center; gap: 12px; padding: 10px 10px 12px; margin-bottom: 4px; border-bottom: 1px solid #eef3fb; }
+.mh-menu-head .mh-avatar { width: 38px; height: 38px; font-size: 1rem; }
+.mh-menu-head div { min-width: 0; display: grid; }
+.mh-menu-head strong { font-size: 0.9rem; overflow-wrap: anywhere; line-height: 1.3; }
+.mh-menu-head span { color: var(--mh-muted); font-size: 0.78rem; font-weight: 600; }
+.mh-menu-item {
+    width: 100%;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 13px;
+    background: transparent;
+    color: var(--mh-ink);
+    font: 600 0.95rem var(--mh-font);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.mh-menu-item svg { flex: none; color: var(--mh-muted); }
+.mh-menu-item:hover:not(:disabled) { background: var(--mh-mist); }
+.mh-menu-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.mh-menu-item.is-danger, .mh-menu-item.is-danger svg { color: var(--mh-danger); }
+.mh-menu-item.is-danger:hover:not(:disabled) { background: #fef2f2; }
+.mh-menu-note { padding: 10px 12px 8px; color: var(--mh-body); font-size: 0.84rem; line-height: 1.55; }
+.mh-menu :focus-visible { outline: 3px solid var(--mh-cyan); outline-offset: -1px; }
+
+/* ---------- Lecture cards (admin extras) ---------- */
+.resource-card > .mh-more {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f5fc;
+    color: var(--mh-body);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.resource-card > .mh-more:hover, .resource-card > .mh-more[aria-expanded="true"] { background: #e0eaf8; color: var(--mh-blue); }
+.resource-card > .mh-more:active { transform: scale(0.92); }
+.resource-card > .mh-more:focus-visible { outline: 3px solid var(--mh-cyan); outline-offset: 2px; }
+
+.mh-src {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    vertical-align: 1px;
+}
+.mh-src.is-up { background: #e6f0ff; color: var(--mh-blue); }
+.mh-src.is-orig { background: #f1f5f9; color: var(--mh-muted); }
+
+.mh-arrange {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 14px;
+    background: var(--mh-mist);
+    color: var(--mh-blue);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+.mh-arrange > div { display: flex; gap: 6px; }
+.mh-arrange button {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--mh-blue);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 87, 255, 0.14);
+    transition: transform 0.15s, opacity 0.2s;
+}
+.mh-arrange button:active:not(:disabled) { transform: scale(0.92); }
+.mh-arrange button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.resource-card.mh-new, .resource-card.mh-moved {
+    border-color: var(--mh-blue);
+    animation: mh-ring 1.6s ease-out 2;
+}
+
+/* ---------- Admin toolbar on the subject page ---------- */
+.mh-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 18px;
+    padding: 12px 14px 12px 16px;
+    border: 1px solid var(--mh-line);
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f7faff, #eef5ff);
+    font-family: var(--mh-font);
+}
+.mh-toolbar-text { min-width: 0; display: grid; gap: 2px; }
+.mh-toolbar-text strong { color: var(--mh-blue); font-size: 0.8rem; letter-spacing: 1.2px; text-transform: uppercase; }
+.mh-toolbar-text span { color: var(--mh-body); font-size: 0.85rem; line-height: 1.4; }
+.mh-chip-btn {
+    flex: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border: 1.5px solid #c9d9f3;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--mh-blue);
+    font: 700 0.9rem var(--mh-font);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.mh-chip-btn:hover:not(:disabled) { border-color: var(--mh-blue); }
+.mh-chip-btn[aria-pressed="true"] { background: var(--mh-blue); border-color: var(--mh-blue); color: #fff; }
+.mh-chip-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.mh-chip-btn:focus-visible { outline: 3px solid var(--mh-cyan); outline-offset: 2px; }
+
+/* ---------- Toast and load notice ---------- */
+.mh-toast {
+    position: fixed;
+    top: max(16px, calc(env(safe-area-inset-top, 0px) + 8px));
+    left: 50%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(440px, calc(100% - 32px));
+    padding: 13px 18px;
+    border-radius: 16px;
+    background: var(--mh-ink);
+    color: #fff;
+    font: 600 0.9rem/1.4 var(--mh-font);
+    box-shadow: 0 16px 40px rgba(11, 23, 48, 0.3);
+    opacity: 0;
+    transform: translate(-50%, -16px);
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.mh-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.mh-toast::before {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #38bdf8;
+}
+.mh-toast[data-kind="success"]::before { background: #34d399; }
+.mh-toast[data-kind="error"]::before { background: #f87171; }
+
+#mh-cloud-status { padding: 10px 18px; color: #64748b; font-size: 13px; text-align: center; }
+#mh-cloud-status:empty { display: none; }
+#mh-retry {
+    margin-left: 8px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--mh-blue);
+    color: #fff;
+    font: 700 13px var(--mh-font);
+    cursor: pointer;
+}
+
+/* ---------- Motion ---------- */
+@keyframes mh-pop { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+@keyframes mh-rise { from { transform: translateY(100%); } }
+@keyframes mh-spin { to { transform: rotate(360deg); } }
+@keyframes mh-fab-in { from { opacity: 0; transform: scale(0.4); } }
+@keyframes mh-ring {
+    0% { box-shadow: 0 0 0 0 rgba(0, 87, 255, 0.45); }
+    100% { box-shadow: 0 0 0 16px rgba(0, 87, 255, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-dialog[open], .mh-fab, .mh-menu, .resource-card.mh-new, .resource-card.mh-moved { animation: none; }
+    .mh-toast, .mh-bar span, .mh-fab, .mh-fab svg { transition: none; }
+}
+
+/* ---------- Tablets ---------- */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .mh-sheet { width: min(640px, calc(100% - 64px)); }
+    .mh-sheet-body { padding: 20px 28px; }
+    .mh-sheet-head { padding: 26px 28px 4px; }
+    .mh-sheet-foot { padding-left: 28px; padding-right: 28px; }
+}
+
+/* ---------- Phones: dialogs become bottom sheets ---------- */
+@media (max-width: 640px) {
+    .mh-sheet, .mh-preview {
+        width: 100%;
+        max-width: 100%;
+        max-height: 94dvh;
+        margin: auto 0 0;
+        border-radius: 28px 28px 0 0;
+    }
+    .mh-preview { height: 94dvh; }
+    .mh-sheet[open], .mh-preview[open], .mh-confirm[open] { animation: mh-rise 0.34s cubic-bezier(0.22, 1, 0.36, 1); }
+    .mh-confirm {
+        width: 100%;
+        max-width: 100%;
+        margin: auto 0 0;
+        border-radius: 28px 28px 0 0;
+        padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    }
+    .mh-grab { display: block; }
+    .mh-sheet-head { padding: 18px 20px 4px; }
+    .mh-sheet-body { padding: 16px 20px; }
+    .mh-sheet-foot { padding-left: 20px; padding-right: 20px; }
+    .mh-sheet-foot .mh-btn { flex: 1; padding: 0 12px; }
+    .mh-sheet-foot .mh-btn-primary { flex: 2; }
+    .mh-login-dialog { padding: 28px 22px 22px; }
+    .mh-prev-head { padding: 16px 16px 10px; }
+    .mh-prev-body { padding: 10px; }
+    .mh-prev-foot { padding-left: 16px; padding-right: 16px; }
+    .mh-prev-foot .mh-btn { flex: 1; }
+    .mh-toolbar { padding: 10px 12px 10px 14px; }
+
+    /* ⋮ menu: a bottom action sheet with a dimmed backdrop */
+    .mh-menu-layer { background: rgba(11, 23, 48, 0.4); }
+    .mh-menu {
+        top: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100%;
+        max-width: 100%;
+        padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+        border: 0;
+        border-radius: 28px 28px 0 0;
+        animation: mh-rise 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mh-menu::before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 4px;
+        margin: 2px auto 10px;
+        border-radius: 4px;
+        background: #cbd5e1;
+    }
+    .mh-menu-item { min-height: 52px; font-size: 1rem; }
+}
+
+@media (max-width: 400px) {
+    .mh-qrow { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- Premium lecture-type dropdown (upload queue only) ---------- */
+.mh-type-picker { display: grid; gap: 7px; min-width: 0; }
+.mh-type-native {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+.mh-type-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 51px;
+    padding: 12px 14px;
+    border: 1.5px solid #d5e1f3;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--mh-ink);
+    font: 600 16px/1.4 var(--mh-font);
+    text-align: left;
+    cursor: pointer;
+    transition: background .18s, border-color .18s, box-shadow .18s;
+}
+.mh-type-trigger svg { flex: none; color: #7184a1; transition: transform .2s; }
+.mh-type-trigger:hover { background: #fafcff; border-color: #9db8e6; }
+.mh-type-trigger:focus-visible, .mh-type-picker.is-open .mh-type-trigger {
+    border-color: var(--mh-blue);
+    outline: none;
+    box-shadow: 0 0 0 4px var(--mh-ring);
+}
+.mh-type-picker.is-open .mh-type-trigger svg { transform: rotate(180deg); }
+.mh-type-options {
+    display: none;
+    padding: 6px;
+    border: 1px solid #e1eaf7;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(11, 23, 48, .07);
+    max-height: 230px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+.mh-type-picker.is-open .mh-type-options { display: grid; gap: 3px; animation: mh-type-arrive .18s ease-out; }
+.mh-type-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 43px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #25334b;
+    font: 600 15px/1.35 var(--mh-font);
+    text-align: left;
+    cursor: pointer;
+}
+.mh-type-option:hover, .mh-type-option:focus-visible { background: #f2f6ff; outline: none; }
+.mh-type-option svg { visibility: hidden; flex: none; }
+.mh-type-option.is-selected { background: #edf4ff; color: var(--mh-blue); }
+.mh-type-option.is-selected svg { visibility: visible; }
+@keyframes mh-type-arrive { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+    .mh-type-picker.is-open .mh-type-options { animation: none; }
+    .mh-type-trigger svg { transition: none; }
+}
+
+/* MedHub v1.1: academic lecture-date fields */
+.mh-date-field input[type="date"] {
+    display:block; width:100%; min-height:49px; padding:11px 14px;
+    border:1.5px solid #d5e1f3; border-radius:14px; background:#fff;
+    color:#0f172a; color-scheme:light; font:500 16px/1.4 var(--mh-font);
+    -webkit-user-select:text; user-select:text;
+}
+.mh-date-field input[type="date"]:focus {
+    outline:0; border-color:#0057ff; box-shadow:0 0 0 4px rgba(0,87,255,.16);
+}
+
+/* Keep the custom lecture-type menu above the trigger on tablets and desktop. */
+.mh-type-picker { position: relative; }
+.mh-type-options {
+  position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+  width: 100%; z-index: 50;
+  box-shadow: 0 16px 40px rgba(11,23,48,.14);
+}
+
+/* Mobile profile menu: ensure overlay and account sheet remain clickable. */
+@media (max-width: 767px) {
+  .mh-menu-layer { z-index: 1700; }
+  .mh-menu-layer .mh-menu { z-index: 1701; }
+}
+
+.mh-dialog{--mh-blue:#1677ff;--mh-head:Inter,system-ui,sans-serif;--mh-font:Inter,system-ui,sans-serif;position:fixed} .mh-fab{--mh-blue:#1677ff} .mh-dialog input,.mh-dialog select{user-select:text;-webkit-user-select:text} #hp-test-files{max-width:1100px;margin:20px auto;padding:16px 20px;border:1px solid #dce6f5;border-radius:18px;background:#fff;color:#334155} #hp-test-files h3{font-size:16px;margin:0 0 8px} #hp-test-files p{font-size:13px;line-height:1.5} .hp-test-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px solid #e6edf6;padding:12px 0} .hp-test-row>div{flex:1;min-width:160px;overflow-wrap:anywhere} .hp-test-row button{font-size:12px;border:1px solid #dce6f5;border-radius:10px;background:white;padding:8px 12px;cursor:pointer;color:#1677ff} .hp-test-row small{display:block;color:#64748b;margin-top:4px} .mh-dialog .mh-field input{min-width:0}
+</style>
 </head>
 
 <body class="hp-lock">
@@ -4220,7 +5135,100 @@ el('hp-show').onclick=()=>{const i=el('hp-password'),show=i.type==='password';i.
 function help(){el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('Contact your college administrator for account activation, stage assignments or password assistance.');}
 el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclick=()=>{el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('This is the HMU Academic Portal test. One account opens your assigned academic workspace automatically.');};el('hp-menu-toggle').onclick=()=>{el('hp-menu').hidden=!el('hp-menu').hidden;el('hp-menu-toggle').setAttribute('aria-expanded',String(!el('hp-menu').hidden));};el('hp-signout').onclick=()=>logout();el('hp-mobile-nav').onclick=()=>{const open=el('hp-sidebar').classList.toggle('open');el('hp-backdrop').hidden=!open;el('hp-mobile-nav').setAttribute('aria-expanded',String(open));};el('hp-backdrop').onclick=closeNav;el('hp-refresh-directory').onclick=directory;el('hp-dir-search').oninput=filterDirectory;el('hp-dir-filter').onchange=filterDirectory;
 // Single-stage administrators see their assigned stage first; an optional test management link stays in the header.
-const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Admin tools';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
+const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Lecture management';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
+    const uploadIcon = (paths, size = 20, width = 2) =>
+        `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" ` +
+        `stroke="currentColor" stroke-width="${width}" stroke-linecap="round" ` +
+        `stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+    const UP_ICON = {
+        close: uploadIcon('<path d="M6 6l12 12M18 6L6 18"/>'),
+        plus: uploadIcon('<path d="M12 5v14M5 12h14"/>', 28, 2.6),
+        lock: uploadIcon('<rect x="4" y="10.5" width="16" height="10" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>', 26),
+        eye: uploadIcon('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
+        eyeOff: uploadIcon('<path d="M3 3l18 18"/><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.5 6.6C3.9 8.3 2 12 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/>'),
+        folder: uploadIcon('<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>', 16),
+        pdf: uploadIcon('<path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5"/><path d="M12 17v-5M9.5 14.5L12 12l2.5 2.5"/>', 24),
+        file: uploadIcon('<path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5"/>', 22),
+        check: uploadIcon('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 24, 2.4),
+        more: uploadIcon('<circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/>', 22, 3),
+        edit: uploadIcon('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>', 19),
+        trash: uploadIcon('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>', 19),
+        replace: uploadIcon('<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.6L4 15.5M4 20v-4.5h4.5"/>', 19),
+        up: uploadIcon('<path d="M12 19V5M6 11l6-6 6 6"/>', 19),
+        down: uploadIcon('<path d="M12 5v14M6 13l6 6 6-6"/>', 19),
+        sort: uploadIcon('<path d="M7 4v16M3.5 7.5L7 4l3.5 3.5M17 20V4M13.5 16.5L17 20l3.5-3.5"/>', 18),
+        logout: uploadIcon('<path d="M9 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20H9M15 8l4 4-4 4M19 12H9"/>', 19),
+        refresh: uploadIcon('<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>', 19),
+        info: uploadIcon('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', 18),
+        warn: uploadIcon('<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>', 26)
+    };
+
+
+const uploadWorker='https://medhub-admin-r2-test.eissaismail941.workers.dev';
+const uploadTypes=['Lecture','SGL','LG','Lab','Practical','Theory'];
+let uploadDestination=null,uploadQueue=[],uploadBusy=false,uploadListEpoch=0,uploadCatalog=null;
+const upFab=make('button',undefined,'mh-fab');upFab.type='button';upFab.hidden=true;upFab.title='Add lectures';upFab.setAttribute('aria-label','Add lectures');upFab.innerHTML=UP_ICON.plus;document.body.append(upFab);
+const upSheet=make('dialog',undefined,'mh-dialog mh-sheet');upSheet.setAttribute('aria-labelledby','mh-sheet-title');upSheet.innerHTML=`
+        <form id="mh-upload" class="mh-sheet-form" novalidate>
+            <div class="mh-sheet-head">
+                <div class="mh-grab" aria-hidden="true"></div>
+                <div class="mh-head-row">
+                    <div>
+                        <h2 id="mh-sheet-title">Add lectures</h2>
+                        <p id="mh-dest" class="mh-dest"
+                            aria-label="Publishing to"></p>
+                    </div>
+                    <button id="mh-sheet-close" class="mh-icon-btn"
+                        type="button" aria-label="Close">${UP_ICON.close}</button>
+                </div>
+            </div>
+
+            <div class="mh-sheet-body">
+                <label id="mh-drop" class="mh-drop" for="mh-file">
+                    <span id="mh-drop-icon" class="mh-drop-icon">${UP_ICON.pdf}</span>
+                    <strong id="mh-drop-title">Choose PDFs</strong>
+                    <small id="mh-drop-sub">Tap to browse. Pick several at once. Up to 20 MB each.</small>
+                    <input id="mh-file" type="file" multiple
+                        accept=".pdf,application/pdf">
+                </label>
+
+                <div id="mh-queue" class="mh-queue" aria-live="polite"></div>
+                <div id="mh-summary" class="mh-summary" hidden></div>
+                <div id="mh-status" class="mh-alert" role="status"
+                    aria-live="polite" hidden></div>
+            </div>
+
+            <div class="mh-sheet-foot">
+                <button id="mh-cancel" type="button"
+                    class="mh-btn mh-btn-ghost">Cancel</button>
+                <button id="mh-publish" class="mh-btn mh-btn-primary">
+                    <span class="mh-spinner" aria-hidden="true"></span>
+                    <span class="mh-btn-text">Upload test PDF</span>
+                </button>
+            </div>
+        </form>
+    `;document.body.append(upSheet);
+const testFiles=make('section');testFiles.id='hp-test-files';testFiles.hidden=true;el('resource-grid').after(testFiles);
+function upMsg(s,kind='error'){const n=el('mh-status');n.textContent=s||'';n.dataset.kind=kind;n.hidden=!s;}
+function currentUploadScope(){const st=history.state;if(!isAdmin()||st?.v!=='res'||!allowed(st))return null;const c=catalog.find(x=>x.key===st.key);if(!c||!can('medicine',c.stage))return null;return {key:c.key,stage:c.stage,block:c.stage===1?'stage1':c.block===1?'ibs':c.block===2?'msd':'',subject:subjectMap[c.key].title.replace(/\s+Resource Library\s*$/i,'').trim()};}
+function sameUploadScope(a,b){return !!a&&!!b&&a.key===b.key&&a.stage===b.stage&&a.block===b.block&&a.subject===b.subject;}
+async function upRequest(path,{method='GET',body,blob=false}={}){if(!isAdmin())throw Error('An active administrator session is required.');const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),60000);try{const r=await fetch(uploadWorker+path,{method,body,headers:{Authorization:'Bearer '+await token()},signal:controller.signal,cache:'no-store',credentials:'omit'});if(!r.ok){const d=await r.json().catch(()=>({}));throw Error(d.error||'Test library request failed (HTTP '+r.status+').');}return blob?await r.blob():await r.json();}finally{clearTimeout(timer);}}
+async function checkedUploadScope(d){if(!sameUploadScope(d,currentUploadScope()))throw Error('Your assigned subject is no longer selected.');if(!uploadCatalog){const data=await upRequest('/v6/catalog');if(!data?.ok||!data.catalog)throw Error('Test catalog is unavailable.');uploadCatalog=data.catalog;}if(!uploadCatalog[String(d.stage)]?.some(b=>b.id===d.block&&b.subjects.includes(d.subject)))throw Error('This subject is not yet configured in the private test catalog.');return d;}
+function uploadSize(n){return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';}
+function updateUploadLabel(){const remaining=uploadQueue.filter(q=>!q.done&&!q.uncertain).length;el('mh-publish').disabled=uploadBusy||!remaining;el('mh-publish').querySelector('.mh-btn-text').textContent=uploadBusy?'Uploading…':remaining?'Upload '+remaining+' PDF'+(remaining===1?'':'s'):'Upload test PDF';el('mh-drop').classList.toggle('has-file',uploadQueue.length>0);el('mh-drop').classList.toggle('is-compact',uploadQueue.length>0);el('mh-drop-title').textContent=uploadQueue.length?'Add more PDFs':'Choose PDFs';}
+function resetUpload(){uploadQueue=[];el('mh-queue').replaceChildren();el('mh-file').value='';el('mh-summary').hidden=true;upMsg('');updateUploadLabel();}
+function buildUploadItem(file){const q={file,done:false,uncertain:false};const node=make('article',undefined,'mh-qitem');node.dataset.state='queued';node.innerHTML=`<div class="mh-qhead"><span class="mh-qicon">${UP_ICON.file}</span><div class="mh-qmeta"><strong class="mh-qname"></strong><small></small></div><button type="button" class="mh-icon-btn mh-sm" data-act="preview" aria-label="Preview PDF">${UP_ICON.eye}</button><button type="button" class="mh-icon-btn mh-sm" data-act="remove" aria-label="Remove from list">${UP_ICON.close}</button></div><label class="mh-field"><span class="mh-flabel">Title</span><input type="text" class="mh-qtitle" maxlength="160" autocomplete="off" required></label><label class="mh-field"><span class="mh-flabel">Type</span><select class="mh-select mh-qcat"></select></label><div class="mh-qprog" hidden><div class="mh-bar"><span></span></div><small class="mh-qstate"></small></div>`;node.querySelector('.mh-qname').textContent=file.name;node.querySelector('.mh-qmeta small').textContent=uploadSize(file.size);node.querySelector('.mh-qtitle').value=file.name.replace(/\.pdf$/i,'').replace(/[_-]+/g,' ').trim().slice(0,160);for(const t of uploadTypes)node.querySelector('.mh-qcat').append(new Option(t,t));node.querySelector('[data-act="remove"]').onclick=()=>{if(uploadBusy)return;uploadQueue=uploadQueue.filter(x=>x!==q);node.remove();updateUploadLabel();};node.querySelector('[data-act="preview"]').onclick=()=>{if(uploadBusy)return;const u=URL.createObjectURL(file);const w=window.open(u,'_blank');if(w)w.opener=null;setTimeout(()=>URL.revokeObjectURL(u),120000);};q.node=node;return q;}
+function addUploadFiles(files){if(uploadBusy)return;const errors=[];for(const f of files){if(uploadQueue.length>=20){errors.push('Maximum 20 PDFs per batch.');break;}if(!/\.pdf$/i.test(f.name)||f.size<5||f.size>20*1024*1024){errors.push(f.name+' must be a PDF up to 20 MB.');continue;}if(uploadQueue.some(x=>x.file.name===f.name&&x.file.size===f.size&&x.file.lastModified===f.lastModified))continue;const q=buildUploadItem(f);uploadQueue.push(q);el('mh-queue').append(q.node);}upMsg(errors.join(' '));updateUploadLabel();}
+function uploadState(q,state,percent,msg){q.node.dataset.state=state;q.node.querySelector('.mh-qprog').hidden=false;q.node.querySelector('.mh-bar span').style.width=percent+'%';q.node.querySelector('.mh-qstate').textContent=msg;}
+function uploadOne(q,d,t){return new Promise((resolve,reject)=>{const form=new FormData();form.append('stage',String(d.stage));form.append('block',d.block);form.append('subject',d.subject);form.append('title',q.node.querySelector('.mh-qtitle').value.trim());form.append('kind',q.node.querySelector('.mh-qcat').value);form.append('file',q.file,q.file.name);const xhr=new XMLHttpRequest();xhr.open('POST',uploadWorker+'/v6/upload');xhr.setRequestHeader('Authorization','Bearer '+t);xhr.timeout=180000; xhr.upload.onprogress=e=>{if(e.lengthComputable)uploadState(q,'uploading',Math.round(95*e.loaded/e.total),'Uploading '+Math.round(e.loaded/e.total*100)+'%');};xhr.onload=()=>{let data;try{data=JSON.parse(xhr.responseText);}catch{}if(xhr.status>=200&&xhr.status<300&&data?.ok===true)resolve(data);else{if(xhr.status>=500||xhr.status===0||(xhr.status>=200&&xhr.status<300))q.uncertain=true;reject(Error(data?.error||'Upload response could not be confirmed (HTTP '+xhr.status+').'));}};xhr.onerror=xhr.ontimeout=xhr.onabort=()=>{q.uncertain=true;reject(Error('Connection interrupted. Check the test library before uploading this file again.'));};xhr.send(form);});}
+function setUploadBusy(v){uploadBusy=v;for(const c of el('mh-upload').elements)c.disabled=v;el('mh-sheet-close').disabled=v;el('mh-drop').style.pointerEvents=v?'none':'';if(!v)for(const q of uploadQueue)if(q.done||q.uncertain)for(const c of q.node.querySelectorAll('input,select,button:not([data-act="remove"])'))c.disabled=true;updateUploadLabel();}
+upFab.onclick=async()=>{const d=currentUploadScope();if(!d||uploadBusy)return;uploadDestination=d;resetUpload();const dest=el('mh-dest');dest.replaceChildren();for(const s of ['Medicine','Stage '+d.stage,d.subject])dest.append(make('span',s));upSheet.showModal();document.documentElement.classList.add('mh-lock');upMsg('Private test library · PDFs are not published to the live MedHub site.','info');};
+for(const id of ['mh-sheet-close','mh-cancel'])el(id).onclick=()=>{if(!uploadBusy)upSheet.close();};upSheet.addEventListener('cancel',e=>{if(uploadBusy)e.preventDefault();});upSheet.addEventListener('close',()=>{document.documentElement.classList.remove('mh-lock');resetUpload();uploadDestination=null;});el('mh-file').onchange=()=>{addUploadFiles([...el('mh-file').files]);el('mh-file').value='';};for(const n of ['dragenter','dragover'])el('mh-drop').addEventListener(n,e=>{e.preventDefault();if(!uploadBusy)el('mh-drop').classList.add('is-over');});el('mh-drop').addEventListener('dragleave',()=>el('mh-drop').classList.remove('is-over'));el('mh-drop').addEventListener('drop',e=>{e.preventDefault();el('mh-drop').classList.remove('is-over');addUploadFiles([...e.dataTransfer.files]);});
+el('mh-upload').onsubmit=async e=>{e.preventDefault();if(uploadBusy)return;const d=uploadDestination,items=uploadQueue.filter(q=>!q.done&&!q.uncertain);if(!items.length)return;for(const q of items)if(q.node.querySelector('.mh-qtitle').value.trim().length<2){upMsg('Enter a title of at least two characters for each PDF.');q.node.querySelector('.mh-qtitle').focus();return;}setUploadBusy(true);upMsg('');try{await checkedUploadScope(d);for(const q of items){if(!sameUploadScope(d,currentUploadScope()))throw Error('Academic destination changed. Upload stopped.');try{const header=new TextDecoder().decode(await q.file.slice(0,1024).arrayBuffer());if(!header.includes('%PDF-'))throw Error('This file does not appear to be a PDF.');uploadState(q,'uploading',0,'Uploading…');await uploadOne(q,d,await token());q.done=true;uploadState(q,'done',100,'Uploaded to private test library');}catch(err){uploadState(q,'error',0,err.message);}}const n=uploadQueue.filter(q=>q.done).length;const remaining=uploadQueue.length-n;upMsg(n+' uploaded'+(remaining?' · '+remaining+' not confirmed. Check the individual results.':'. All PDFs saved to the test library.'),remaining?'info':'success');await loadPrivateTestFiles(d);}catch(err){upMsg(err.message);}finally{setUploadBusy(false);}};
+async function loadPrivateTestFiles(d){const epoch=++uploadListEpoch;testFiles.replaceChildren();testFiles.hidden=!d;if(!d)return;testFiles.append(make('h3','Private test uploads'),make('p','Checking test library…'));try{await checkedUploadScope(d);let rows=[],cursor=null;const seen=new Set();do{const data=await upRequest('/v6/files?stage='+d.stage+'&block='+encodeURIComponent(d.block)+(cursor?'&cursor='+encodeURIComponent(cursor):''));if(!Array.isArray(data.files))throw Error('Invalid test file list.');rows.push(...data.files.filter(f=>f.subject===d.subject));cursor=data.nextCursor||null;if(cursor&&seen.has(cursor))throw Error('Invalid pagination response.');if(cursor)seen.add(cursor);}while(cursor);if(epoch!==uploadListEpoch||!sameUploadScope(d,currentUploadScope()))return;testFiles.replaceChildren(make('h3','Private test uploads'),make('p',rows.length+' PDF'+(rows.length===1?'':'s')+' · Administrator test library only'));for(const f of rows){const row=make('div',undefined,'hp-test-row'),meta=make('div');meta.append(make('strong',f.title||f.filename||'PDF'),make('small',(f.kind||'Lecture')+' · '+uploadSize(Number(f.size)||0)));row.append(meta);const b=make('button','Open PDF');b.type='button';b.onclick=async()=>{const tab=window.open('about:blank','_blank');if(tab)tab.opener=null;b.disabled=true;try{if(!sameUploadScope(d,currentUploadScope()))throw Error('Subject changed.');const blob=await upRequest('/v6/file?key='+encodeURIComponent(f.key),{blob:true});if(!tab)throw Error('Allow popups to open the PDF.');const url=URL.createObjectURL(blob);tab.location.href=url;setTimeout(()=>URL.revokeObjectURL(url),120000);}catch(err){tab?.close();alert(err.message);}finally{b.disabled=false;}};row.append(b);testFiles.append(row);}}catch(err){if(epoch===uploadListEpoch&&sameUploadScope(d,currentUploadScope()))testFiles.replaceChildren(make('h3','Private test uploads'),make('p',err.message));}}
+const oldUploadRender=render;render=function(st){const result=oldUploadRender(st);const d=currentUploadScope();upFab.hidden=!d;document.body.classList.toggle('mh-has-fab',!!d);if(!d){uploadListEpoch++;testFiles.hidden=true;testFiles.replaceChildren();if(upSheet.open&&!uploadBusy)upSheet.close();}else loadPrivateTestFiles(d);return result;};
+
 // A transient network or permission service error is NOT a sign-out.
 function accessDenied(message){const e=new Error(message);e.accessDenied=true;return e;}
 function terminalSessionError(e){
