@@ -29,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Test page: no service worker or manifest registration. -->
+    <!-- HMU public app shell: cache-safe static HTML; account checks remain network-only. -->
     <meta name="theme-color" content="#f8fbff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4155,6 +4155,19 @@ const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textC
   finally{setBusy(false);finish();}
 })();
 })();
+</script>
+
+<script id="hmu-shell-cache-registration">
+// Scope this worker to this exact test portal path, not the production MedHub.
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  const shell = new URL('./hmu-unified-test-v3-fast-refresh.html', location.href);
+  if (location.pathname === shell.pathname) {
+    navigator.serviceWorker.register('./hmu-portal-shell-sw.js', {
+      scope: shell.pathname,
+      updateViaCache: 'none'
+    }).catch(error => console.warn('HMU shell caching unavailable:', error.message));
+  }
+}
 </script>
 
 </body>
