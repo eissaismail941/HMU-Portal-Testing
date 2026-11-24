@@ -5,6 +5,22 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script id="hp-startup-prefetch">
+(()=>{try{
+ const a=JSON.parse(sessionStorage.getItem('hmu-unified-session-v2')||'null');
+ if(!a?.access_token||!a?.refresh_token||!a?.user?.id||!Number.isFinite(a.expiresAt))return;
+ document.documentElement.classList.add('hp-restoring');
+ if(a.expiresAt<=Date.now()+60000)return;
+ const base='https://lxmxsymxmpulkkngjfjo.supabase.co', key='sb_publishable_-7LnL-kzS1omjDFD5va_0A_Tjdh3m8h';
+ const request=(url,supabase=true)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);return fetch(url,{headers:{Accept:'application/json',Authorization:'Bearer '+a.access_token,...(supabase?{apikey:key}:{})},cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:c.signal}).then(async r=>{const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.message||data.error||data.msg||'Account verification failed (HTTP '+r.status+').');return {data};}).catch(error=>({error})).finally(()=>clearTimeout(t));};
+ const q={id:a.user.id,token:a.access_token,grants:request(base+'/rest/v1/admin_assignments?select=role,college,stage,is_active&user_id=eq.'+encodeURIComponent(a.user.id))};
+ // The student Worker verifies the bearer and returns its own authenticated profile.
+ if(!a.uiRole||a.uiRole==='student')q.student=request('https://hmu-student-pilot-test.eissaismail941.workers.dev/api/v1/student/me',false);
+ q.who=request(base+'/auth/v1/user');
+ window.__hpEarly=q;
+}catch(e){}})();
+</script>
+
     <title>HMU Academic Portal | Unified Test</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,7 +89,7 @@
 }
 
 .coming-soon-box h3 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.9rem;
     margin-bottom: 12px;
     color: #0f172a;
@@ -169,7 +185,7 @@
 }
 
 .banner-info h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: clamp(1.4rem, 4vw, 1.8rem);
     font-weight: 800;
     color: #0f172a;
@@ -214,7 +230,7 @@
 }
 
 .stat-pill .value {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 800;
     font-size: 1.3rem;
     color: var(--blue);
@@ -452,7 +468,7 @@
             color: white;
             padding: 18px 52px;
             border-radius: 14px;
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.05rem;
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -627,7 +643,7 @@
         }
 
         .subjects-header h2 {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
             color: #0f172a;
@@ -658,7 +674,7 @@
             gap: 8px;
             padding: 8px 20px;
             border-radius: 100px;
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
             font-weight: 800;
             letter-spacing: 1.5px;
@@ -763,7 +779,7 @@
         }
 
         .card-name {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1rem;
             font-weight: 700;
             color: #0f172a;
@@ -838,7 +854,7 @@
         }
 
         .split-card .card-icon { font-size: 3.5rem; margin-bottom: 18px; }
-        .split-card .card-name { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .split-card .card-name { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
         .split-card .card-desc { color: #94a3b8; font-size: 0.95rem; }
 
         .split-card.theory-card.hdsf-theme::before { background: radial-gradient(ellipse at top left, rgba(0,87,255,0.05), transparent 60%); }
@@ -861,7 +877,7 @@
         }
 
         .resources-header h2 {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
             color: #0f172a;
@@ -909,7 +925,7 @@
         .resource-title-group h2 {
             min-width: 0;
             margin: 0;
-            font: 800 clamp(1.25rem, 2.4vw, 1.75rem)/1.3 'Syne', sans-serif;
+            font: 800 clamp(1.25rem, 2.4vw, 1.75rem)/1.3 'Inter', sans-serif;
             letter-spacing: -0.02em;
             color: #0f172a;
         }
@@ -1149,7 +1165,7 @@
         }
         .resource-card .mh-lecture-meta-item svg {width:15px;height:15px;stroke:#8092ab;}
         .resource-card h3 {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.02rem;
             line-height: 1.4;
             color: #0f172a;
@@ -1280,7 +1296,7 @@
         }
 
         .hosting-note h4 {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 1.05rem;
             margin-bottom: 10px;
             color: #0f172a;
@@ -1399,7 +1415,7 @@ body.ios-device .resource-actions {
 }
 
 .block-title h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     color: #0f172a;
@@ -1471,7 +1487,7 @@ body.ios-device .resource-actions {
 
 .block-card h3 {
     position: relative;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 2rem;
     font-weight: 800;
     color: #0f172a;
@@ -1553,10 +1569,10 @@ body.ios-device .resource-actions {
     width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0;
     background: linear-gradient(135deg, var(--blue), var(--cyan)); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
+    font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem;
     box-shadow: 0 10px 24px rgba(0,87,255,0.25);
 }
-.home-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1; }
+.home-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1; }
 .home-name span, .home-hero h1 span {
     background: linear-gradient(135deg, var(--blue), var(--cyan));
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
@@ -1564,7 +1580,7 @@ body.ios-device .resource-actions {
 .home-tag { color: #94a3b8; font-size: 0.85rem; font-weight: 500; margin-top: 3px; }
 .home-hero { margin-bottom: 34px; }
 .home-hero h1 {
-    font-family: 'Syne', sans-serif; font-weight: 800; color: #0f172a;
+    font-family: 'Inter', sans-serif; font-weight: 800; color: #0f172a;
     font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.1; letter-spacing: -1px; margin-bottom: 14px;
 }
 .home-hero p { color: #64748b; line-height: 1.7; max-width: 520px; }
@@ -1577,7 +1593,7 @@ body.ios-device .resource-actions {
 .block-card.acc .block-arrow { background: linear-gradient(135deg, rgb(var(--a)), rgb(var(--b))); }
 .block-card .big-num {
     position: absolute; right: 26px; top: 16px; z-index: 0;
-    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 4.6rem; line-height: 1;
+    font-family: 'Inter', sans-serif; font-weight: 800; font-size: 4.6rem; line-height: 1;
     color: rgba(var(--a),0.10); pointer-events: none;
 }
 .block-card.soon { cursor: pointer; }
@@ -1592,7 +1608,7 @@ body.ios-device .resource-actions {
     box-shadow: 0 20px 45px rgba(15,23,42,0.05);
 }
 .empty-state .coming-soon-icon { margin-bottom: 18px; }
-.empty-state h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; color: #0f172a; margin-bottom: 8px; }
+.empty-state h3 { font-family: 'Inter', sans-serif; font-size: 1.4rem; color: #0f172a; margin-bottom: 8px; }
 .empty-state p { color: #64748b; line-height: 1.7; }
 @media (max-width: 760px) {
     #home-page { padding-top: 40px; }
@@ -1878,7 +1894,7 @@ left: auto !important;
     .mh-native-recovery button{border:1px solid #cfdcf2;background:#fff;color:#1677ff;border-radius:12px;padding:11px 18px;font-weight:600;font-size:13px;font-family:inherit;cursor:pointer}
 
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap"><style id="hmu-unified-style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"><style id="hmu-unified-style">
 :root{--portal-blue:#1677ff;--portal-ink:#172638;--portal-muted:#667789;--portal-line:#e4e9ee;--portal-bg:#f7f8fa;--portal-side:258px}
 body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} [hidden]{display:none!important} input,textarea{-webkit-user-select:text!important;user-select:text!important}button,input{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #a4c9ff;outline-offset:3px} .hp-login{min-height:100dvh;background:radial-gradient(ellipse at 76% 61%,#eaf2f6 0,transparent 48%),radial-gradient(ellipse at 43% 70%,#eaf2ee 0,transparent 37%),#f7f7f7;color:var(--portal-ink)}.hp-wrap{width:min(1296px,calc(100% - 56px));margin:auto}.hp-top{height:105px;border-bottom:1px solid #e6e8eb;display:flex;align-items:center;justify-content:space-between;gap:15px}.hp-brand{display:flex;align-items:center;gap:14px;min-width:0}.hp-crest{width:64px;height:64px;object-fit:contain;flex:none}.hp-fallback{width:60px;height:60px;display:grid;place-items:center;border:1px solid #dbe4ef;border-radius:16px;background:#fff;color:#2c5785;font-size:15px;font-weight:800;letter-spacing:-.5px;flex:none}.hp-brand b{font-size:17px;line-height:1.25;display:block;letter-spacing:-.45px}.hp-brand small{font-size:10px;letter-spacing:1.8px;color:#8995a0;font-weight:700;display:block;margin-top:5px}.hp-menu-wrap{position:relative}.hp-iconbtn{display:grid;place-items:center;background:#fff;border:1px solid var(--portal-line);border-radius:17px;width:53px;height:53px;color:var(--portal-ink);cursor:pointer;box-shadow:0 5px 15px #182b3e06}.hp-menu{position:absolute;right:0;top:64px;z-index:4;background:white;border:1px solid var(--portal-line);border-radius:16px;padding:6px;width:205px;box-shadow:0 12px 32px #22364a12}.hp-menu button{display:block;width:100%;border:0;background:none;text-align:left;padding:12px;border-radius:10px;color:var(--portal-ink);cursor:pointer}.hp-menu button:hover{background:#f2f6fa}.hp-main{display:grid;place-items:center;padding:76px 0 58px;min-height:calc(100dvh - 172px)}.hp-panel{width:min(542px,100%);border:1px solid #e5e9ed;border-radius:32px;padding:38px 37px 29px;background:rgba(255,255,255,.94);box-shadow:0 26px 65px #243b5320,0 2px 8px #243b5308;animation:hp-in .5s cubic-bezier(.2,.8,.2,1) both}.hp-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #e6edf4;border-radius:99px;background:#f5f8fb;color:#647c91;font-size:10px;letter-spacing:1.65px;font-weight:800}.hp-dot{width:7px;height:7px;border-radius:100%;background:var(--portal-blue);box-shadow:0 0 0 4px #1677ff19}.hp-panel h1{font-size:35px;letter-spacing:-1.8px;margin:22px 0 7px;line-height:1.16}.hp-desc{font-size:14px;line-height:1.8;color:#6f7c88;margin-bottom:30px}.hp-field{display:block;margin:0 0 20px;font-size:13px;font-weight:700}.hp-input{margin-top:9px;display:flex;align-items:center;gap:14px;min-height:61px;border:1px solid #dfe6ed;border-radius:17px;background:#f8fafb;padding:0 17px;transition:border-color .2s,box-shadow .2s}.hp-input:focus-within{border-color:#8bbcff;box-shadow:0 0 0 4px #1677ff0d;background:white}.hp-input svg{width:19px;height:19px;stroke:#8494a5;flex:none}.hp-input input{border:0;background:transparent;outline:0!important;min-width:0;width:100%;font-size:16px;color:var(--portal-ink);height:59px}.hp-input input::placeholder{color:#9aa5b1}.hp-show,.hp-help{border:0;background:none;color:#48637b;font-size:12px;font-weight:700;cursor:pointer;padding:7px 0}.hp-options{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#84919d;font-size:12px;margin:0 0 20px}.hp-submit{width:100%;border:0;border-radius:17px;background:linear-gradient(180deg,#2586f5,#1677ff);color:white;min-height:61px;font-size:14px;font-weight:750;box-shadow:0 12px 26px #1677ff28;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s,box-shadow .2s}.hp-submit:hover{box-shadow:0 15px 32px #1677ff35}.hp-submit:active{transform:scale(.99)}.hp-submit:disabled{opacity:.65;cursor:wait}.hp-status{font-size:13px;color:#a03b36;line-height:1.65;margin:0 0 15px;overflow-wrap:anywhere}.hp-status:empty{display:none}.hp-note{border-top:1px solid #e8edf2;margin-top:25px;padding-top:19px;font-size:12px;line-height:1.85;color:#7d8a97;text-align:center}.hp-note b{color:#4e6276}.hp-footer{border-top:1px solid #e6e9ed;padding:21px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:#798693;font-size:12px}.hp-footer b{color:#536375}.hp-appbar{height:75px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 30px;border-bottom:1px solid var(--portal-line);background:#fff;position:sticky;top:0;z-index:20}.hp-appbar .hp-crest,.hp-appbar .hp-fallback{width:42px;height:42px;font-size:12px;border-radius:12px}.hp-appbar .hp-brand b{font-size:14px}.hp-appbar .hp-brand small{font-size:9px}.hp-account{display:flex;align-items:center;gap:12px;min-width:0}.hp-account-text{text-align:right;min-width:0}.hp-account-text b,.hp-account-text small{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hp-account-text b{font-size:13px;color:#25374a}.hp-account-text small{font-size:11px;color:#758395;margin-top:3px}.hp-smallbtn{padding:10px 14px;background:white;border:1px solid var(--portal-line);border-radius:11px;color:#42556b;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap}.hp-smallbtn:hover{background:#f4f7fb}.hp-side{width:var(--portal-side);position:fixed;top:75px;bottom:0;left:0;background:white;border-right:1px solid var(--portal-line);z-index:19;overflow-y:auto;padding:24px 15px;display:flex;flex-direction:column;gap:7px}.hp-cap{font-size:10px;letter-spacing:1.5px;color:#8290a0;font-weight:800;padding:12px 11px 7px}.hp-navbtn,.hp-side summary{width:100%;border:0;border-radius:10px;background:none;text-align:left;padding:12px 11px;color:#42556b;cursor:pointer;font-size:13px;font-weight:650;display:flex;gap:10px;align-items:center}.hp-navbtn:hover,.hp-side summary:hover{background:#f3f6fa}.hp-navbtn.active{background:#eaf3ff;color:#1468d7}.hp-side summary{list-style:none}.hp-side summary::-webkit-details-marker{display:none}.hp-side summary:after{content:'›';margin-left:auto;color:#8b99a8}.hp-side details[open]>summary:after{transform:rotate(90deg)}.hp-stage-link{margin-left:12px;width:calc(100% - 12px);padding:9px 12px;font-weight:500}.hp-side-note{margin-top:auto;padding:14px 11px;color:#8290a0;font-size:11px;line-height:1.6}.hp-view{min-height:calc(100dvh - 75px);padding:48px 34px 68px;background:#f8fbff;color:var(--portal-ink)}.hp-content{max-width:1100px;margin:auto}.hp-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.6px;color:#718398;text-transform:uppercase;margin-bottom:12px}.hp-view h1{font-size:clamp(27px,4vw,40px);letter-spacing:-1.6px;margin-bottom:9px;line-height:1.15}.hp-lead{font-size:14px;color:#6c7b8c;line-height:1.7;margin-bottom:28px}.hp-statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:32px}.hp-stat,.hp-card{background:white;border:1px solid #e4ebf3;border-radius:19px;padding:22px;box-shadow:0 5px 20px #18365506}.hp-stat span{font-size:12px;color:#758597;display:block;margin-bottom:9px}.hp-stat strong{font-size:25px;letter-spacing:-.75px;display:block}.hp-card h2{font-size:17px;letter-spacing:-.3px;margin-bottom:9px}.hp-card p{font-size:13px;color:#718196;line-height:1.7}.hp-collegegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px}.hp-collegegrid .hp-card{display:flex;flex-direction:column;gap:12px}.hp-stagegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto}.hp-stagegrid button{border:1px solid #e2eaf4;background:#f7faff;color:#2860a5;border-radius:9px;padding:10px 4px;cursor:pointer;font-size:12px;font-weight:650}.hp-stagegrid button:hover{background:#e9f2ff}.hp-tablewrap{overflow:auto}.hp-table{border-collapse:collapse;width:100%;text-align:left;font-size:13px;white-space:nowrap}.hp-table th,.hp-table td{padding:13px 12px;border-bottom:1px solid #e9edf2}.hp-table th{color:#708095;font-size:11px;text-transform:uppercase;letter-spacing:.5px}.hp-library-note{max-width:1100px;margin:14px auto 0;color:#6f8195;font-size:12px;line-height:1.6;padding:0 20px}.hp-library-note:empty{display:none}.hp-workspace .hp-appbar{position:sticky}.hp-with-side #home-page,.hp-with-side #subject-page,.hp-with-side #stage2-page,.hp-with-side #s2block-page,.hp-with-side #split-page,.hp-with-side #resources-page,.hp-with-side .hp-view,.hp-with-side .hp-library-note{margin-left:var(--portal-side)}.hp-workspace #subject-page,.hp-workspace #stage2-page,.hp-workspace #s2block-page,.hp-workspace #split-page,.hp-workspace #resources-page{min-height:calc(100dvh - 75px)}.hp-root-stage:not(.hp-with-side) #stage2-page .mh-stage-heading>.mh-compact-back,.hp-root-stage:not(.hp-with-side) #block-entrance .mh-stage-heading>.mh-compact-back{display:none}.hp-lock #home-page,.hp-lock #subject-page,.hp-lock #stage2-page,.hp-lock #s2block-page,.hp-lock #split-page,.hp-lock #resources-page{display:none!important}.hp-mobile-nav{display:none}.hp-sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}.hp-sectionhead h2{font-size:19px}.hp-empty{max-width:700px}.hp-preview{font-size:11px;color:#916a2b;background:#fff5e2;padding:8px 12px;border-radius:9px;display:inline-block;margin:0 0 15px}.hp-view .hp-smallbtn{margin-top:12px}.hp-backdrop{position:fixed;inset:75px 0 0;background:#17263840;z-index:18}@keyframes hp-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:900px){.hp-with-side #home-page,.hp-with-side #subject-page,.hp-with-side #stage2-page,.hp-with-side #s2block-page,.hp-with-side #split-page,.hp-with-side #resources-page,.hp-with-side .hp-view,.hp-with-side .hp-library-note{margin-left:0}.hp-side{transform:translateX(-100%);transition:transform .24s cubic-bezier(.2,.8,.2,1)}.hp-side.open{transform:translateX(0)}.hp-with-side .hp-mobile-nav{display:block}.hp-appbar{padding:0 17px}.hp-view{padding:32px 20px}.hp-statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -1921,27 +1937,71 @@ body.hp-workspace{font-family:Inter,'DM Sans',-apple-system,BlinkMacSystemFont,'
 @media(max-width:1200px){.hp-workspace .hp-collegegrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.hp-workspace .hp-collegegrid{grid-template-columns:1fr}.hp-workspace .hp-statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.hp-workspace .hp-stat:first-child{grid-column:1/-1}.hp-workspace .hp-welcome{padding:20px}.hp-workspace .hp-view{padding-top:24px}.hp-account-avatar{display:none}}@media(prefers-reduced-motion:reduce){.hp-workspace .hp-view .hp-content,.hp-side details[open] .hp-stage-link{animation:none}.hp-side .hp-navbtn,.hp-collegegrid .hp-card{transition:none}}
 </style>
 <style id="hp-refresh-style">
-/* Keep the login form out of the first paint when a saved session exists. */
+/* A fast, non-interactive first paint. Never restore credentials, roles or protected records from a visual cache. */
 #hp-restore-screen{display:none}
 html.hp-restoring #hp-login{display:none!important}
-html.hp-restoring #hp-restore-screen{display:flex;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#f7f8fa;color:#718096;font:400 13px Inter,system-ui,sans-serif}
-#hp-restore-screen .hp-restore-indicator{display:flex;align-items:center;gap:10px;animation:hp-restore-appear .16s .22s both}
-#hp-restore-screen .hp-restore-ring{width:19px;height:19px;border:2px solid #dbe5f1;border-top-color:#1677ff;border-radius:50%;animation:hp-restore-spin .75s linear infinite}
-@keyframes hp-restore-spin{to{transform:rotate(360deg)}}
-@keyframes hp-restore-appear{from{opacity:0}to{opacity:1}}
-/* The restored page is ready immediately; do not replay staggered entrance effects. */
-body.hp-refresh-arrival .block-card,body.hp-refresh-arrival .subject-card,body.hp-refresh-arrival .split-card,body.hp-refresh-arrival .resource-card{animation:none!important;opacity:1!important;transform:none!important}
-/* Hiding the stage back arrow must not move the heading into its narrow grid column. */
+html.hp-restoring #hp-restore-screen{display:block;min-height:100dvh;background:#f5f8fb;color:#142033;font-family:Inter,system-ui,sans-serif}
+#hp-restore-screen .hp-r-top{height:75px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:16px;background:white;border-bottom:1px solid #e8ebef}
+#hp-restore-screen .hp-r-identity{display:flex;align-items:center;gap:13px}
+#hp-restore-screen .hp-r-identity img{width:42px;height:42px;object-fit:contain}
+#hp-restore-screen .hp-r-identity b{display:block;font-size:14px;line-height:1.4}
+#hp-restore-screen .hp-r-identity small{display:block;font-size:9px;font-weight:650;letter-spacing:1.4px;color:#8290a0;margin-top:3px}
+.hp-r-account{display:flex;align-items:center;gap:12px}
+.hp-r-bar,.hp-r-dot{display:block;background:#e9eef4;border-radius:6px;height:10px;width:90px}
+.hp-r-dot{width:34px;height:34px;border-radius:50%}
+.hp-r-side{display:none;position:absolute;left:0;top:75px;bottom:0;width:var(--portal-side);padding:30px 25px;background:white;border-right:1px solid #e8ebef}
+.hp-r-has-side .hp-r-side{display:block}
+.hp-r-side .hp-r-bar{height:11px;margin:20px 0 30px;width:76%}
+.hp-r-side .hp-r-bar:nth-child(3n){width:55%}
+.hp-r-has-side .hp-r-body{margin-left:var(--portal-side)}
+.hp-r-body{padding:60px 20px 80px;min-height:calc(100dvh - 75px)}
+.hp-r-wrap{max-width:1100px;margin:auto}
+.hp-r-heading{text-align:center;margin-bottom:34px}
+.hp-r-heading h2{font:800 clamp(2rem,5vw,3rem)/1.2 Inter,system-ui,sans-serif;color:#0f172a;letter-spacing:-.03em;margin:0 0 10px}
+.hp-r-heading p{font-size:1rem;color:#94a3b8}
+.hp-r-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.hp-r-card{background:#fff;border-radius:32px;min-height:250px;padding:34px;box-shadow:0 12px 32px #0f172a08}
+.hp-r-chip{display:block;width:100px;height:32px;border-radius:999px;background:#eaf1fc;margin:0 0 23px}
+.hp-r-card .hp-r-bar{margin:0 0 13px;height:12px;width:80%;background:#eef1f5}
+.hp-r-card .hp-r-title{height:27px;width:38%;margin-bottom:21px}
+.hp-r-card .hp-r-bar:last-child{width:45%}
+.hp-r-general .hp-r-heading{text-align:left}
+.hp-r-general .hp-r-card{min-height:155px}
+.hp-r-general .hp-r-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hp-r-slow{display:none;font-size:12px;color:#708096;margin:18px 0;text-align:center}
+html.hp-restoring .hp-r-slow{display:block;animation:hp-r-slow-in .15s 1.5s both}
+@keyframes hp-r-slow-in{from{opacity:0}to{opacity:1}}
+body.hp-refresh-arrival .block-card,body.hp-refresh-arrival .subject-card,body.hp-refresh-arrival .split-card,body.hp-refresh-arrival .resource-card,body.hp-refresh-arrival .hp-content,body.hp-refresh-arrival .hp-stage-link{animation:none!important;opacity:1!important;transform:none!important}
 .hp-root-stage:not(.hp-with-side) #stage2-page .mh-stage-heading>.block-title,.hp-root-stage:not(.hp-with-side) #block-entrance .mh-stage-heading>.block-title{grid-column:1/-1;min-width:0}
-@media(prefers-reduced-motion:reduce){#hp-restore-screen .hp-restore-indicator{animation:none}#hp-restore-screen .hp-restore-ring{animation:none}}
+@media(max-width:900px){.hp-r-has-side .hp-r-side{display:none}.hp-r-has-side .hp-r-body{margin-left:0}.hp-r-general .hp-r-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.hp-r-body{padding:32px 20px}.hp-r-grid{grid-template-columns:1fr}.hp-r-card{min-height:200px;padding:28px;border-radius:26px}}
+@media(max-width:600px){#hp-restore-screen .hp-r-top{padding:0 17px}.hp-r-account .hp-r-bar{display:none}.hp-r-general .hp-r-grid{grid-template-columns:1fr}.hp-r-identity b{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){html.hp-restoring .hp-r-slow{animation:none}}
 </style>
-<script id="hp-early-restore">
-try { const a=JSON.parse(sessionStorage.getItem('hmu-unified-session-v2')||'null'); if(a?.access_token&&a?.refresh_token&&a?.user?.id&&Number.isFinite(a.expiresAt))document.documentElement.classList.add('hp-restoring'); } catch(e) {}
-</script>
 </head>
 
 <body class="hp-lock">
-<div id="hp-restore-screen" role="status" aria-live="polite"><div class="hp-restore-indicator"><span class="hp-restore-ring" aria-hidden="true"></span><span>Opening your workspace…</span></div></div>
+<div id="hp-restore-screen" aria-busy="true" inert>
+ <header class="hp-r-top"><div class="hp-r-identity"><img src="/MedHub/reader/assets/hmu-logo.png" alt=""><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-r-account"><span class="hp-r-dot"></span><span class="hp-r-bar"></span></div></header>
+ <aside class="hp-r-side" aria-hidden="true"><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span></aside>
+ <main class="hp-r-body"><div class="hp-r-wrap"><div class="hp-r-heading"><h2 id="hp-r-title">Academic workspace</h2><p id="hp-r-subtitle">Academic resources</p></div><div class="hp-r-grid" id="hp-r-grid"></div><p class="hp-r-slow">Checking your session…</p></div></main>
+</div>
+<script id="hp-preview-layout">
+(()=>{if(!document.documentElement.classList.contains('hp-restoring'))return;try{
+ const a=JSON.parse(sessionStorage.getItem('hmu-unified-session-v2')||'null'), st=history.state||{}, shell=document.getElementById('hp-restore-screen');
+ const side=a.uiSide===true||a.uiRole==='super_admin'||a.uiRole==='college_admin';shell.classList.toggle('hp-r-has-side',side);
+ const isStage=st.v==='stage1'||st.v==='stage2';let title='Academic workspace',subtitle='Academic resources',count=3;
+ if(isStage){title=st.v==='stage1'?'Stage 1':'Stage 2';subtitle='Choose a block';count=st.v==='stage1'?2:5;}
+ else if(st.v==='hp-dashboard'||(!st.v&&side)){title='University overview';subtitle='Academic workspace';}
+ else if(st.v==='hp-directory'){title='Administrators';subtitle='Administrator directory';}
+ else if(st.v==='block'||st.v==='s2block'){title='Block '+(Number.isInteger(st.b)?st.b:'');subtitle='Academic resources';count=4;}
+ else if(st.v==='res'){title='Lectures';count=4;}
+ else if(st.v==='hp-empty'&&Number.isInteger(st.stage)){title='Stage '+st.stage;count=1;}
+ shell.classList.toggle('hp-r-general',!isStage);
+ document.getElementById('hp-r-title').textContent=title;document.getElementById('hp-r-subtitle').textContent=subtitle;
+ const grid=document.getElementById('hp-r-grid');for(let i=0;i<count;i++){const card=document.createElement('div');card.className='hp-r-card';card.innerHTML='<span class="hp-r-chip"></span><span class="hp-r-bar hp-r-title"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span>';grid.append(card);}
+}catch(e){}})();
+</script>
 <section id="hp-login" class="hp-login">
 <div class="hp-wrap"><header class="hp-top"><div class="hp-brand"><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-menu-wrap"><button type="button" id="hp-menu-toggle" class="hp-iconbtn" aria-label="Portal menu" aria-expanded="false" aria-controls="hp-menu"><span class="hp-menu-lines" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="hp-menu" id="hp-menu" hidden><button type="button" id="hp-about">About the portal</button><button type="button" id="hp-menu-help">Help &amp; support</button></div></div></header>
 <main class="hp-main"><section class="hp-panel" aria-labelledby="hp-login-title"><div class="hp-badge"><span class="hp-dot"></span> HMU ACADEMIC PORTAL · TEST</div><h1 id="hp-login-title">Sign in</h1><p class="hp-desc" id="hp-login-desc">Sign in with your university account. Your academic workspace opens automatically.</p><form id="hp-form"><label class="hp-field" for="hp-email">Email address<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg><input type="email" id="hp-email" placeholder="Enter your account email" autocomplete="username" required></span></label><label class="hp-field" for="hp-password">Password<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><input type="password" id="hp-password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" class="hp-show" id="hp-show" aria-pressed="false">Show</button></span></label><div class="hp-options"><span>Student &amp; administrator access</span><button type="button" id="hp-help" class="hp-help">Need help?</button></div><p id="hp-status" class="hp-status" role="status" aria-live="polite"></p><button type="submit" id="hp-submit" class="hp-submit">Sign in to portal <span aria-hidden="true">→</span></button></form><form id="hp-activation" hidden><label class="hp-field" for="hp-code">One-time activation code<span class="hp-input"><input id="hp-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="XXXX-XXXX-XXXX" required></span></label><p class="hp-status" id="hp-activation-status" role="status" aria-live="polite"></p><button class="hp-submit" id="hp-activate" type="submit">Activate account →</button><button type="button" id="hp-cancel-activation" class="hp-help" style="margin-top:15px">Back to sign in</button></form><div class="hp-note">College, stage, and permissions are assigned to your account. <b>No manual selection.</b></div></section></main><footer class="hp-footer"><span><b>Hawler Medical University</b> · Academic Portal</span><span>© 2026 · Test workspace</span></footer></div></section>
@@ -4048,7 +4108,7 @@ goBack=function(){if(!account)return;if((history.state?.d||0)>0){baseBack();retu
 // Render database-supplied titles as text, not HTML. Keep the original lecture card styles.
 renderResources=function(items,group,subjectTitle){const grid=el('resource-grid');grid.replaceChildren();const order=items.slice().sort((a,b)=>{if(history.state?.key?.startsWith('s2b1m')&&/^Biochemistry/i.test(subjectTitle)){const key=x=>{const m=(String(x.description||'')+' '+String(x.title||'')).match(/\b(?:LECTURE|LEC)\s*[-_.#:]?\s*0*(\d+)\b/i);return m?Number(m[1]):-1;};const x=key(a),y=key(b);if(x>=0||y>=0)return x<0?1:y<0?-1:x-y;}const x=mhLectureSortKey(a),y=mhLectureSortKey(b);return x.rank-y.rank||(x.number===y.number?0:x.number-y.number);});order.forEach((item,i)=>{const card=make('article',undefined,'resource-card'+(group==='bbb'?' bbb-resource':''));card.append(make('div','📄','resource-icon'),make('div','PDF '+String(i+1).padStart(2,'0'),'resource-index'),make('h3',item.title||'Lecture'));if(item.description)card.append(make('p',item.description));const meta=make('div',undefined,'mh-lecture-meta');meta.innerHTML=mhMetaCell('date',mhFormatLectureDate(item.lectureDate))+mhMetaCell('size',mhFormatFileSize(item.fileSizeBytes));card.append(meta);const actions=make('div',undefined,'resource-actions'),open=make('a','Open PDF','btn-link btn-open');open.href=viewerURL(item.url,readerTitleFor(item,items));const dl=make('button','Download','btn-link btn-download mh-download-pdf');dl.type='button';dl.dataset.pdfUrl=item.url;dl.dataset.pdfTitle=readerTitleFor(item,items);actions.append(open,dl);card.append(actions);grid.append(card);});};
 async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent='Checking for uploaded lectures…';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const r=await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';if(history.state?.v==='res'&&allowed(history.state))renderResourcePage(history.state.key);}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
-function enter(restore=false){auth.uiRole=account.role;store();if(restore)document.body.classList.add("hp-refresh-arrival");renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');render(r);refreshLectures();}
+function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();store();if(restore)document.body.classList.add("hp-refresh-arrival");renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');render(r);refreshLectures();}
 async function logout(revoke=true){resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
 el('hp-form').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;setBusy(true);status('');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email:el('hp-email').value.trim(),password:el('hp-password').value}});setAuth(d);await resolveAccount();el('hp-password').value='';if(account)enter();}catch(e){await logout();status(e.message||'Could not sign in.');}finally{setBusy(false);}});
 el('hp-cancel-activation').onclick=()=>logout();
@@ -4067,9 +4127,12 @@ const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textC
     auth=saved;const t=await token(),id=auth.user.id;
     // The saved role is only a prefetch hint, never a permission decision.
     // Verify the real identity and role on the server before revealing anything.
-    const whoPromise=api('/auth/v1/user',{token:t});
-    const grantsPromise=loadGrants(t,id);
-    const studentCheck=(!saved.uiRole||saved.uiRole==='student')?studentApi('/api/v1/student/me').then(data=>({data}),error=>({error})):null;
+    const early=window.__hpEarly;delete window.__hpEarly;
+    const reuse=early?.id===id&&early.token===t;
+    const unwrap=async p=>{const r=await p;if(r.error)throw r.error;return r.data;};
+    const whoPromise=reuse?unwrap(early.who):api('/auth/v1/user',{token:t});
+    const grantsPromise=reuse?unwrap(early.grants):loadGrants(t,id);
+    const studentCheck=(!saved.uiRole||saved.uiRole==='student')?(reuse&&early.student?early.student:studentApi('/api/v1/student/me').then(data=>({data}),error=>({error}))):null;
     const [who,grants]=await Promise.all([whoPromise,grantsPromise]);
     if(who.id!==id||auth?.user?.id!==id)throw Error('Session no longer valid.');
     await resolveAccount(grants,studentCheck);
