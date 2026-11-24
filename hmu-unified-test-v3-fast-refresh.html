@@ -11,7 +11,9 @@
  if(!a?.access_token||!a?.refresh_token||!a?.user?.id||!Number.isFinite(a.expiresAt))return;
  document.documentElement.classList.add('hp-restoring');
  // A saved role controls presentation only; actual access still requires server verification.
- if(a.uiRole==='student'){document.documentElement.classList.add('hp-student-restoring');setTimeout(()=>{if(document.documentElement.classList.contains('hp-student-restoring'))document.documentElement.classList.add('hp-student-slow');},2000);}
+ const academic=['stage1','stage2','block','s2block','split','res','hp-empty'].includes(history.state?.v);
+ // The stored role and route select a public loading presentation only.
+ if(a.uiRole==='student'||a.uiRole==='content_admin'||a.uiRole==='stage_admin'||academic){document.documentElement.classList.add('hp-natural-restoring');setTimeout(()=>{if(document.documentElement.classList.contains('hp-natural-restoring'))document.documentElement.classList.add('hp-natural-slow');},2000);}
  if(a.expiresAt<=Date.now()+60000)return;
  const base='https://lxmxsymxmpulkkngjfjo.supabase.co', key='sb_publishable_-7LnL-kzS1omjDFD5va_0A_Tjdh3m8h';
  const request=(url,supabase=true)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),18000);return fetch(url,{headers:{Accept:'application/json',Authorization:'Bearer '+a.access_token,...(supabase?{apikey:key}:{})},cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:c.signal}).then(async r=>{const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.message||data.error||data.msg||'Account verification failed (HTTP '+r.status+').');return {data};}).catch(error=>({error})).finally(()=>clearTimeout(t));};
@@ -1943,11 +1945,16 @@ body.hp-workspace{font-family:Inter,'DM Sans',-apple-system,BlinkMacSystemFont,'
 #hp-restore-screen{display:none}
 html.hp-restoring #hp-login{display:none!important}
 html.hp-restoring #hp-restore-screen{display:block;min-height:100dvh;background:#f5f8fb;color:#142033;font-family:Inter,system-ui,sans-serif}
-/* Student refresh: ordinary page paint, no skeleton, spinner or entrance animation. */
+/* Academic refresh: keep only public branding visible until permissions return. */
 #hp-student-refresh-status{display:none}
-html.hp-student-restoring #hp-restore-screen{display:none!important}
-html.hp-student-restoring,html.hp-student-restoring body{background:#f5f8fb}
-html.hp-student-restoring.hp-student-slow #hp-student-refresh-status{display:grid;place-items:center;min-height:100dvh;color:#708096;font:400 13px/1.5 Inter,system-ui,sans-serif}
+html.hp-natural-restoring,html.hp-natural-restoring body{background:#f5f8fb}
+html.hp-natural-restoring #hp-restore-screen .hp-r-account,
+html.hp-natural-restoring #hp-restore-screen .hp-r-side,
+html.hp-natural-restoring #hp-restore-screen .hp-r-body{display:none!important}
+html.hp-natural-restoring.hp-natural-slow #hp-student-refresh-status{display:block;position:fixed;top:96px;left:0;right:0;text-align:center;color:#708096;font:400 13px/1.5 Inter,system-ui,sans-serif;z-index:2}
+/* Keep the original MedHub entrance timing; never spend it behind a loading view. */
+html.hp-restoring .hp-workspace .block-card,html.hp-restoring .hp-workspace .subject-card,html.hp-restoring .hp-workspace .split-card{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.hp-workspace .block-card,.hp-workspace .subject-card,.hp-workspace .split-card{animation:none!important}}
 #hp-restore-screen .hp-r-top{height:75px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:16px;background:white;border-bottom:1px solid #e8ebef}
 #hp-restore-screen .hp-r-identity{display:flex;align-items:center;gap:13px}
 #hp-restore-screen .hp-r-identity img{width:42px;height:42px;object-fit:contain}
@@ -1978,7 +1985,6 @@ html.hp-student-restoring.hp-student-slow #hp-student-refresh-status{display:gri
 .hp-r-slow{display:none;font-size:12px;color:#708096;margin:18px 0;text-align:center}
 html.hp-restoring .hp-r-slow{display:block;animation:hp-r-slow-in .15s 1.5s both}
 @keyframes hp-r-slow-in{from{opacity:0}to{opacity:1}}
-body.hp-refresh-arrival .block-card,body.hp-refresh-arrival .subject-card,body.hp-refresh-arrival .split-card,body.hp-refresh-arrival .resource-card,body.hp-refresh-arrival .hp-content,body.hp-refresh-arrival .hp-stage-link{animation:none!important;opacity:1!important;transform:none!important}
 .hp-root-stage:not(.hp-with-side) #stage2-page .mh-stage-heading>.block-title,.hp-root-stage:not(.hp-with-side) #block-entrance .mh-stage-heading>.block-title{grid-column:1/-1;min-width:0}
 @media(max-width:900px){.hp-r-has-side .hp-r-side{display:none}.hp-r-has-side .hp-r-body{margin-left:0}.hp-r-general .hp-r-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.hp-r-body{padding:32px 20px}.hp-r-grid{grid-template-columns:1fr}.hp-r-card{min-height:200px;padding:28px;border-radius:26px}}
@@ -1995,7 +2001,7 @@ body.hp-refresh-arrival .block-card,body.hp-refresh-arrival .subject-card,body.h
  <main class="hp-r-body"><div class="hp-r-wrap"><div class="hp-r-heading"><h2 id="hp-r-title">Academic workspace</h2><p id="hp-r-subtitle">Academic resources</p></div><div class="hp-r-grid" id="hp-r-grid"></div><p class="hp-r-slow">Checking your session…</p></div></main>
 </div>
 <script id="hp-preview-layout">
-(()=>{if(!document.documentElement.classList.contains('hp-restoring')||document.documentElement.classList.contains('hp-student-restoring'))return;try{
+(()=>{if(!document.documentElement.classList.contains('hp-restoring')||document.documentElement.classList.contains('hp-natural-restoring'))return;try{
  const a=JSON.parse(sessionStorage.getItem('hmu-unified-session-v2')||'null'), st=history.state||{}, shell=document.getElementById('hp-restore-screen');
  const side=a.uiSide===true||a.uiRole==='super_admin'||a.uiRole==='college_admin';shell.classList.toggle('hp-r-has-side',side);
  const isStage=st.v==='stage1'||st.v==='stage2';let title='Academic workspace',subtitle='Academic resources',count=3;
@@ -4116,7 +4122,7 @@ goBack=function(){if(!account)return;if((history.state?.d||0)>0){baseBack();retu
 // Render database-supplied titles as text, not HTML. Keep the original lecture card styles.
 renderResources=function(items,group,subjectTitle){const grid=el('resource-grid');grid.replaceChildren();const order=items.slice().sort((a,b)=>{if(history.state?.key?.startsWith('s2b1m')&&/^Biochemistry/i.test(subjectTitle)){const key=x=>{const m=(String(x.description||'')+' '+String(x.title||'')).match(/\b(?:LECTURE|LEC)\s*[-_.#:]?\s*0*(\d+)\b/i);return m?Number(m[1]):-1;};const x=key(a),y=key(b);if(x>=0||y>=0)return x<0?1:y<0?-1:x-y;}const x=mhLectureSortKey(a),y=mhLectureSortKey(b);return x.rank-y.rank||(x.number===y.number?0:x.number-y.number);});order.forEach((item,i)=>{const card=make('article',undefined,'resource-card'+(group==='bbb'?' bbb-resource':''));card.append(make('div','📄','resource-icon'),make('div','PDF '+String(i+1).padStart(2,'0'),'resource-index'),make('h3',item.title||'Lecture'));if(item.description)card.append(make('p',item.description));const meta=make('div',undefined,'mh-lecture-meta');meta.innerHTML=mhMetaCell('date',mhFormatLectureDate(item.lectureDate))+mhMetaCell('size',mhFormatFileSize(item.fileSizeBytes));card.append(meta);const actions=make('div',undefined,'resource-actions'),open=make('a','Open PDF','btn-link btn-open');open.href=viewerURL(item.url,readerTitleFor(item,items));const dl=make('button','Download','btn-link btn-download mh-download-pdf');dl.type='button';dl.dataset.pdfUrl=item.url;dl.dataset.pdfTitle=readerTitleFor(item,items);actions.append(open,dl);card.append(actions);grid.append(card);});};
 async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent=account.role==='student'?'':'Checking for uploaded lectures…';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const r=await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';if(history.state?.v==='res'&&allowed(history.state))renderResourcePage(history.state.key);}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
-function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();store();if(restore)document.body.classList.add("hp-refresh-arrival");renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');render(r);refreshLectures();}
+function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();store();renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');render(r);refreshLectures();}
 async function logout(revoke=true){resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
 el('hp-form').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;setBusy(true);status('');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email:el('hp-email').value.trim(),password:el('hp-password').value}});setAuth(d);await resolveAccount();el('hp-password').value='';if(account)enter();}catch(e){await logout();status(e.message||'Could not sign in.');}finally{setBusy(false);}});
 el('hp-cancel-activation').onclick=()=>logout();
@@ -4127,7 +4133,7 @@ el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclic
 // Single-stage administrators see their assigned stage first; an optional test management link stays in the header.
 const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Admin tools';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
 (async()=>{
-  const finish=()=>document.documentElement.classList.remove('hp-restoring','hp-student-restoring','hp-student-slow');
+  const finish=()=>document.documentElement.classList.remove('hp-restoring','hp-natural-restoring','hp-natural-slow');
   let saved=null;try{saved=JSON.parse(sessionStorage.getItem(SESSION)||'null');}catch{}
   if(!saved?.access_token||!saved?.refresh_token||!saved?.user?.id||!Number.isFinite(saved.expiresAt)){render(null);finish();return;}
   setBusy(true);status('');
@@ -4148,10 +4154,6 @@ const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textC
   }catch(e){await logout(false);status('Please sign in again. '+e.message);}
   finally{setBusy(false);finish();}
 })();
-// Re-enable normal navigation animations on the next actual navigation.
-function clearRefreshArrival(){document.body.classList.remove('hp-refresh-arrival');}
-document.addEventListener('click',clearRefreshArrival,true);
-window.addEventListener('popstate',clearRefreshArrival,true);
 })();
 </script>
 
