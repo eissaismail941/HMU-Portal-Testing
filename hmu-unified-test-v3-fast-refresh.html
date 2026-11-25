@@ -1850,6 +1850,8 @@ left: auto !important;
   min-height: 44px;
 }
 
+</style>
+<style id="mh-document-loader-style">
 /* Native PDF loading animation in the *MedHub page* (not browser history). */
 /* Original MedHub Reader skeleton loader copied from your supplied production bundle. */
 /* Premium document-opening experience: presentation only. */
@@ -3954,6 +3956,48 @@ function closeMedhubPdfFrame() {
 // active === true while its temporary loading entry / overlay exists; the launcher
 // then owns the next popstate (the Back press that cancels or leaves that entry).
 const mhPdfLoader = { active: false };
+const mhDocumentLoaderMarkup = `<main class="mh-loading-screen" role="status" aria-label="Opening your document">
+    <div class="mh-loader-wrap">
+      <div class="mh-loader-stage" aria-hidden="true">
+        <div class="mh-loader-back second"></div>
+        <div class="mh-loader-back"></div>
+        <div class="mh-loading-page">
+          <div class="mh-loader-accent"></div>
+          <div class="mh-loader-head">
+            <span class="mh-loader-icon">
+              <svg width="17" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 2.75h7l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4.75A2 2 0 0 1 7 2.75Z"/>
+                <path d="M14 3v5h5M8.5 12h7M8.5 16h7"/>
+              </svg>
+            </span>
+            <div class="mh-loader-tag"><div class="mh-loading-block" style="width:42%;height:8px"></div><div class="mh-loading-block small" style="width:27%"></div></div>
+          </div>
+          <div class="mh-loading-block heading" style="width:71%"></div>
+          <div class="mh-loading-block" style="width:95%"></div>
+          <div class="mh-loading-block" style="width:89%"></div>
+          <div class="mh-loading-block" style="width:98%"></div>
+          <div class="mh-loading-block" style="width:62%"></div>
+          <div class="mh-loading-space"></div>
+          <div class="mh-loader-picture"><span></span><span></span><span></span></div>
+          <div class="mh-loading-space"></div>
+          <div class="mh-loader-divider"></div>
+          <div class="mh-loading-block" style="width:91%"></div>
+          <div class="mh-loading-block" style="width:96%"></div>
+          <div class="mh-loading-block" style="width:73%"></div>
+        </div>
+      </div>
+      <div class="mh-loading-caption">
+        <strong>Opening your document</strong>
+        <small>Preparing a clear reading experience</small>
+        <div class="mh-loader-progress" aria-label="Opening PDF"></div>
+      </div>
+      <div class="mh-native-recovery">
+        <div>This is taking longer than expected.</div>
+        <a class="mh-native-open" target="_blank" rel="noopener noreferrer">Open the PDF in a new tab</a>
+        <button type="button" class="mh-native-close">Back to lectures</button>
+      </div>
+    </div>
+  </main>`;
 let mhScrollCancel = null;
 
 // Restore scroll robustly: dynamic (Supabase) lecture cards are rendered AFTER the
@@ -4633,48 +4677,7 @@ document.addEventListener('click', event => {
 
         priorBodyOverflow = document.body.style.overflow;
         const template = document.createElement('template');
-        template.innerHTML = `<main class="mh-loading-screen" role="status" aria-label="Opening your document">
-    <div class="mh-loader-wrap">
-      <div class="mh-loader-stage" aria-hidden="true">
-        <div class="mh-loader-back second"></div>
-        <div class="mh-loader-back"></div>
-        <div class="mh-loading-page">
-          <div class="mh-loader-accent"></div>
-          <div class="mh-loader-head">
-            <span class="mh-loader-icon">
-              <svg width="17" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 2.75h7l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4.75A2 2 0 0 1 7 2.75Z"/>
-                <path d="M14 3v5h5M8.5 12h7M8.5 16h7"/>
-              </svg>
-            </span>
-            <div class="mh-loader-tag"><div class="mh-loading-block" style="width:42%;height:8px"></div><div class="mh-loading-block small" style="width:27%"></div></div>
-          </div>
-          <div class="mh-loading-block heading" style="width:71%"></div>
-          <div class="mh-loading-block" style="width:95%"></div>
-          <div class="mh-loading-block" style="width:89%"></div>
-          <div class="mh-loading-block" style="width:98%"></div>
-          <div class="mh-loading-block" style="width:62%"></div>
-          <div class="mh-loading-space"></div>
-          <div class="mh-loader-picture"><span></span><span></span><span></span></div>
-          <div class="mh-loading-space"></div>
-          <div class="mh-loader-divider"></div>
-          <div class="mh-loading-block" style="width:91%"></div>
-          <div class="mh-loading-block" style="width:96%"></div>
-          <div class="mh-loading-block" style="width:73%"></div>
-        </div>
-      </div>
-      <div class="mh-loading-caption">
-        <strong>Opening your document</strong>
-        <small>Preparing a clear reading experience</small>
-        <div class="mh-loader-progress" aria-label="Opening PDF"></div>
-      </div>
-      <div class="mh-native-recovery">
-        <div>This is taking longer than expected.</div>
-        <a class="mh-native-open" target="_blank" rel="noopener noreferrer">Open the PDF in a new tab</a>
-        <button type="button" class="mh-native-close">Back to lectures</button>
-      </div>
-    </div>
-  </main>`;
+        template.innerHTML = mhDocumentLoaderMarkup;
         overlay = template.content.firstElementChild;
         overlay.querySelector('.mh-native-open').href = pdfHref;
         overlay.querySelector('.mh-native-close').addEventListener('click', function () { dismiss(true); });
@@ -5299,7 +5302,61 @@ async function loadPrivateTestFiles(d){ // explicit post-upload/edit/replace/del
 }
 function assertPrivate(item,manage=false){if(item.privateOwner!==viewIdentity()||!sameUploadScope(item.privateScope,currentLibraryScope())||!privateKeyValid(item.privateFile.key,item.privateScope)||(manage&&(!isAdmin()||!item.privateFile.canManage)))throw Error('Your access or selected subject changed. Refresh and try again.');}
 function privatePath(item){return '/v6/file?key='+encodeURIComponent(item.privateFile.key);}
-async function openPrivate(item,download,button){if(button.dataset.busy)return;let tab=null;const previous=button.textContent;button.textContent=download?'Preparing…':'Opening…';button.setAttribute('aria-busy','true');button.dataset.busy='1';try{assertPrivate(item);if(!download){tab=window.open('about:blank','_blank');if(tab)tab.opener=null;}const blob=account.role==='student'?await studentLibraryRequest('/p9/file?key='+encodeURIComponent(item.privateFile.key),true):await upRequest(privatePath(item),{blob:true});assertPrivate(item);const url=URL.createObjectURL(blob);if(download||!tab){const a=make('a');a.href=url;a.download=(item.privateFile.filename||item.title+'.pdf').replace(/[\\/\u0000-\u001f]/g,'_');document.body.append(a);a.click();a.remove();}else tab.location.replace(url);setTimeout(()=>URL.revokeObjectURL(url),120000);}catch(err){tab?.close();alert(err.message);}finally{delete button.dataset.busy;button.removeAttribute('aria-busy');button.textContent=previous;}}
+// Show the original MedHub skeleton in the private PDF's existing new tab.
+// No credentials, PDF data, or remote scripts are written into this loading document.
+function showPrivatePdfSkeleton(tab){
+    const doc=tab.document;
+    doc.title='Opening your document';
+    doc.documentElement.lang='en';
+    const viewport=doc.createElement('meta');
+    viewport.name='viewport';viewport.content='width=device-width, initial-scale=1.0';
+    const style=doc.createElement('style');
+    style.textContent='html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f6f8fc}*{box-sizing:border-box}body{font-family:DM Sans,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif}\n'+document.getElementById('mh-document-loader-style').textContent;
+    const template=doc.createElement('template');
+    template.innerHTML=mhDocumentLoaderMarkup;
+    const loader=template.content.firstElementChild;
+    // Private requests already have a timeout and close the tab on failure.
+    // No public URL or redundant recovery link belongs in this tab.
+    loader.querySelector('.mh-native-recovery').remove();
+    doc.head.append(viewport,style);
+    doc.body.replaceChildren(loader);
+}
+function privatePdfTabStillLoading(tab){
+    try{return !tab.closed&&tab.location.href==='about:blank';}catch(_){return false;}
+}
+async function openPrivate(item,download,button){
+    if(button.dataset.busy)return;
+    let tab=null;
+    const previous=button.textContent;
+    button.textContent=download?'Preparing…':'Opening…';
+    button.setAttribute('aria-busy','true');button.dataset.busy='1';
+    try{
+        assertPrivate(item);
+        if(!download){
+            tab=window.open('about:blank','_blank');
+            if(tab){
+                tab.opener=null;
+                // If a browser restricts access to the blank tab, retain the original PDF path.
+                try{showPrivatePdfSkeleton(tab);}catch(_){/* presentation only */}
+            }
+        }
+        const blob=account.role==='student'?await studentLibraryRequest('/p9/file?key='+encodeURIComponent(item.privateFile.key),true):await upRequest(privatePath(item),{blob:true});
+        // Closing or navigating away from the loading tab cancels the handoff.
+        if(tab&&!privatePdfTabStillLoading(tab))return;
+        assertPrivate(item);
+        const url=URL.createObjectURL(blob);
+        try{
+            if(download||!tab){
+                const a=make('a');a.href=url;a.download=(item.privateFile.filename||item.title+'.pdf').replace(/[\\/\u0000-\u001f]/g,'_');
+                document.body.append(a);a.click();a.remove();
+            }else tab.location.replace(url);
+        }finally{setTimeout(()=>URL.revokeObjectURL(url),120000);}
+    }catch(err){
+        if(!tab||privatePdfTabStillLoading(tab)){tab?.close();alert(err.message);}
+    }finally{
+        delete button.dataset.busy;button.removeAttribute('aria-busy');button.textContent=previous;
+    }
+}
 // Original MedHub-style three-dot control, with native dialog to avoid clipped card menus.
 const manageDialog=make('dialog',undefined,'mh-dialog mh-sheet hp-private-manage');
 const manageChevron=uploadIcon('<path d="m9 18 6-6-6-6"/>',16);
