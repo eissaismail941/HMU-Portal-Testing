@@ -2007,7 +2007,12 @@ html.hp-public-paint #hp-restore-screen{display:none!important}
 html.hp-public-paint #hp-student-refresh-status{display:none!important}
 html.hp-public-paint.hp-natural-slow #hp-student-refresh-status{display:block!important;position:fixed;top:76px;left:0;right:0;text-align:center;color:#708096;font:400 12px/1.5 Inter,system-ui,sans-serif;pointer-events:none;z-index:2}
 html.hp-public-paint .hp-workspace .block-card,html.hp-public-paint .hp-workspace .subject-card,html.hp-public-paint .hp-workspace .split-card{animation-play-state:running!important}
-html.hp-public-paint #hp-appbar .hp-account{visibility:hidden}
+/* The real header stays visible during the inert public preview. */
+html.hp-header-preview #hp-restore-screen .hp-r-top{display:none!important}
+html.hp-header-preview.hp-restoring #hp-restore-screen{min-height:calc(100dvh - 75px)}
+html.hp-header-preview.hp-natural-restoring #hp-restore-screen{display:none!important}
+html.hp-header-preview #hp-appbar{pointer-events:none}
+@media(max-width:600px){html.hp-header-preview.hp-restoring #hp-restore-screen{min-height:calc(100dvh - 68px)}}
 html.hp-public-paint [inert]{pointer-events:none}
 
 /* Recovery UI is never shown during a successful refresh. */
@@ -3071,11 +3076,59 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 @keyframes hp-wait-in{from{opacity:0}to{opacity:1}}@keyframes hp-wait-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.hp-lecture-wait,.hp-lecture-wait::before{animation:none}}
 </style>
+
+<style id="hp-push-pilot-style">
+#hp-appbar .hp-account{gap:9px}
+#hp-push-toggle{width:42px;height:42px;display:grid;place-items:center;position:relative;border:0;background:transparent;color:#475569;border-radius:50%;cursor:pointer;flex:none;transition:background .18s,color .18s,transform .18s}
+#hp-push-toggle svg{width:22px;height:22px}
+#hp-push-toggle[aria-expanded=true]{background:#edf4ff;color:#1677ff}
+#hp-push-toggle:active{transform:scale(.94)}
+#hp-push-toggle:focus-visible{outline:2px solid #1677ff;outline-offset:2px}
+#hp-push-dot{position:absolute;right:8px;top:8px;width:8px;height:8px;border:2px solid #fff;border-radius:50%;background:#1677ff}
+#hp-push-panel{position:absolute;top:calc(100% + 12px);right:0;width:min(340px,calc(100vw - 24px));background:#fff;border:1px solid #e6ebf1;border-radius:20px;padding:18px;box-shadow:0 16px 48px #213c5d1a,0 2px 8px #213c5d09;z-index:33;animation:hp-account-in .18s cubic-bezier(.2,.8,.2,1) both;text-align:left}
+#hp-push-panel h2{font-size:17px;font-weight:700;color:#172331;letter-spacing:-.35px;margin:0 0 4px}
+#hp-push-panel p{font-size:12px;line-height:1.55;color:#64748b;margin:0}
+.hp-push-pref{display:flex;align-items:center;gap:12px;margin:18px 0 12px;padding:13px;background:#f5f8fc;border:1px solid #edf1f6;border-radius:13px}
+.hp-push-pref-icon{display:grid;place-items:center;width:38px;height:38px;background:#e5efff;border-radius:11px;color:#1677ff;flex:none}
+.hp-push-pref-icon svg{width:19px;height:19px}
+.hp-push-pref b{display:block;font-size:13px;color:#243446;margin-bottom:3px}
+#hp-push-action{width:100%;min-height:43px;border:0;border-radius:11px;background:#1677ff;color:#fff;font-size:13px;font-weight:650;cursor:pointer;padding:8px 12px}
+#hp-push-action:disabled{opacity:.55;cursor:default}
+#hp-push-action[data-on=true]{background:#edf4ff;color:#1759ab}
+#hp-push-panel .hp-push-foot{margin-top:12px;font-size:11px;color:#738195}
+@media(hover:hover){#hp-push-toggle:hover{background:#f1f5fa;color:#1677ff}}
+@media(max-width:600px){#hp-appbar .hp-account{gap:3px}#hp-push-toggle{width:40px;height:40px}#hp-push-panel{padding:16px}}
+@media(prefers-reduced-motion:reduce){#hp-push-panel{animation:none}#hp-push-toggle{transition:none}}
+</style>
+
 </head>
 
 <body class="hp-lock">
 <section id="hp-session-recovery" hidden role="dialog" aria-modal="true" aria-labelledby="hp-session-recovery-title"><div class="hp-recovery-card"><h2 id="hp-session-recovery-title">Could not reconnect</h2><p>Your session has been kept on this device. Retry to verify your account and return to your academic page.</p><div class="hp-recovery-actions"><button type="button" id="hp-session-retry">Try again</button><button type="button" id="hp-session-signout">Sign out</button></div></div></section>
 <div id="hp-student-refresh-status" role="status">Checking your session…</div>
+<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div class="hp-brand-copy"><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><button type="button" id="hp-push-toggle" aria-label="Notifications" aria-expanded="false" aria-controls="hp-push-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span id="hp-push-dot" hidden></span></button><section id="hp-push-panel" aria-label="Notifications" hidden><h2>Notifications</h2><p>Stay up to date with your academic portal.</p><div class="hp-push-pref"><span class="hp-push-pref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></span><div><b>Push notifications</b><p id="hp-push-status" role="status" aria-live="polite">Checking device support…</p></div></div><button type="button" id="hp-push-action" disabled>Checking…</button><p class="hp-push-foot">Testing only · Alerts are device-based and not linked to your student account yet. Disable here before sharing this device.</p></section><button type="button" class="hp-profile" id="hp-profile-toggle" aria-label="Account options" aria-expanded="false" aria-controls="hp-profile-menu"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span></button><div id="hp-profile-menu" class="hp-profile-menu" hidden><div class="hp-profile-caption">YOUR ACCOUNT</div><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div><div class="hp-profile-rule"></div><button type="button" id="hp-signout" class="hp-smallbtn" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m10-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg><span class="hp-signout-label">Sign out</span></button></div></div></header>
+<script id="hp-stable-header-startup">
+(()=>{try{
+  const root=document.documentElement;
+  if(!root.classList.contains('hp-restoring'))return;
+  const saved=JSON.parse(sessionStorage.getItem('hmu-unified-session-v2')||'null');
+  if(!saved?.access_token||!saved?.refresh_token||!saved?.user?.id||!Number.isFinite(saved.expiresAt))return;
+  const st=history.state||{}, names={medicine:'Medicine',dentistry:'Dentistry',pharmacy:'Pharmacy',nursing:'Nursing','health-sciences':'Health Sciences'};
+  let c='medicine',stage=null;
+  if(['stage1','block','split'].includes(st.v))stage=1;
+  else if(['stage2','s2block'].includes(st.v))stage=2;
+  else if(st.v==='res'&&typeof st.key==='string')stage=/^s2b[1-5]m\d+$/.test(st.key)?2:1;
+  else if(st.v==='hp-empty'&&Object.hasOwn(names,st.college)&&Number.isInteger(Number(st.stage))&&Number(st.stage)>=1&&Number(st.stage)<=6){c=st.college;stage=Number(st.stage);}
+  const bar=document.getElementById('hp-appbar');
+  // Presentation only: use the existing tab's saved initial and public route label.
+  // Do not expose account details, enable menus, or grant access before verification.
+  document.getElementById('hp-context').textContent=stage?'COLLEGE OF '+names[c].toUpperCase()+' · STAGE '+stage:'ACADEMIC PORTAL';
+  document.getElementById('hp-account-avatar').textContent=(typeof saved.user.email==='string'&&saved.user.email?saved.user.email:'H').charAt(0).toUpperCase();
+  bar.inert=true;
+  bar.hidden=false;
+  root.classList.add('hp-header-preview');
+}catch(e){}})();
+</script>
 <div id="hp-restore-screen" aria-busy="true" inert>
  <header class="hp-r-top"><div class="hp-r-identity"><img src="/MedHub/reader/assets/hmu-logo.png" alt=""><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-r-account"><span class="hp-r-dot"></span><span class="hp-r-bar"></span></div></header>
  <aside class="hp-r-side" aria-hidden="true"><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span><span class="hp-r-bar"></span></aside>
@@ -3100,7 +3153,7 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 <section id="hp-login" class="hp-login">
 <div class="hp-wrap"><header class="hp-top"><div class="hp-brand"><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-menu-wrap"><button type="button" id="hp-menu-toggle" class="hp-iconbtn" aria-label="Portal menu" aria-expanded="false" aria-controls="hp-menu"><span class="hp-menu-lines" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="hp-menu" id="hp-menu" hidden><button type="button" id="hp-about">About the portal</button><button type="button" id="hp-menu-help">Help &amp; support</button></div></div></header>
 <main class="hp-main"><section class="hp-panel" aria-labelledby="hp-login-title"><div class="hp-badge"><span class="hp-dot"></span> HMU ACADEMIC PORTAL · TEST</div><h1 id="hp-login-title">Sign in</h1><p class="hp-desc" id="hp-login-desc">Sign in with your university account. Your academic workspace opens automatically.</p><form id="hp-form"><label class="hp-field" for="hp-email">Email address<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg><input type="email" id="hp-email" placeholder="Enter your account email" autocomplete="username" required></span></label><label class="hp-field" for="hp-password">Password<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><input type="password" id="hp-password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" class="hp-show" id="hp-show" aria-pressed="false">Show</button></span></label><div class="hp-options"><span>Student &amp; administrator access</span><button type="button" id="hp-help" class="hp-help">Need help?</button></div><p id="hp-status" class="hp-status" role="status" aria-live="polite"></p><button type="submit" id="hp-submit" class="hp-submit">Sign in to portal <span aria-hidden="true">→</span></button></form><form id="hp-activation" hidden><label class="hp-field" for="hp-code">One-time activation code<span class="hp-input"><input id="hp-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="XXXX-XXXX-XXXX" required></span></label><p class="hp-status" id="hp-activation-status" role="status" aria-live="polite"></p><button class="hp-submit" id="hp-activate" type="submit">Activate account →</button><button type="button" id="hp-cancel-activation" class="hp-help" style="margin-top:15px">Back to sign in</button></form><div class="hp-note">College, stage, and permissions are assigned to your account. <b>No manual selection.</b></div></section></main><footer class="hp-footer"><span><b>Hawler Medical University</b> · Academic Portal</span><span>© 2026 · Test workspace</span></footer></div></section>
-<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div class="hp-brand-copy"><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><button type="button" class="hp-profile" id="hp-profile-toggle" aria-label="Account options" aria-expanded="false" aria-controls="hp-profile-menu"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span></button><div id="hp-profile-menu" class="hp-profile-menu" hidden><div class="hp-profile-caption">YOUR ACCOUNT</div><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div><div class="hp-profile-rule"></div><button type="button" id="hp-signout" class="hp-smallbtn" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m10-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg><span class="hp-signout-label">Sign out</span></button></div></div></header>
+
 <div id="hp-backdrop" class="hp-backdrop" hidden></div><aside id="hp-sidebar" class="hp-side" aria-label="Administrator navigation" hidden></aside>
 <section id="hp-dashboard" class="hp-view" hidden><div class="hp-content"><div class="hp-welcome"><div class="hp-eyebrow">ADMINISTRATION / WORKSPACE</div><h1 id="hp-dashboard-title">University overview</h1><p class="hp-lead">Manage your academic workspace across colleges and stages.</p></div><div class="hp-statgrid" id="hp-stats"></div><div id="hp-v1-quick" hidden><div class="hp-sectionhead"><h2>Management</h2></div><div class="hp-v1-quick" id="hp-v1-quick-buttons"></div></div><div class="hp-sectionhead"><h2>Colleges &amp; stages</h2></div><div id="hp-collegegrid" class="hp-collegegrid"></div></div></section>
 <section id="hp-directory" class="hp-view" hidden><div class="hp-content"><div class="hp-eyebrow">Administration / Directory</div><h1>Administrators</h1><p class="hp-lead">Verified administrator assignments from Supabase.</p><div class="hp-card"><div class="hp-sectionhead"><h2>Administrator directory</h2><div class="hp-v1-actions"><button id="hp-admin-manage" type="button" class="hp-v1-primary">Manage administrators</button><button id="hp-refresh-directory" type="button" class="hp-smallbtn">Refresh</button></div></div><div class="hp-directory-filter"><input id="hp-dir-search" type="search" placeholder="Search email, Student ID or role" aria-label="Search administrators"><select id="hp-dir-college" aria-label="Filter by college"><option value="all">All colleges</option><option value="global">University-wide</option><option value="medicine">Medicine</option><option value="dentistry">Dentistry</option><option value="pharmacy">Pharmacy</option><option value="nursing">Nursing</option><option value="health_sciences">Health Sciences</option></select><select id="hp-dir-filter" aria-label="Filter by status"><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div><p id="hp-dir-result" role="status" aria-live="polite"></p><p id="hp-directory-status" role="status"></p><div class="hp-tablewrap"><table class="hp-table"><thead><tr><th>Account</th><th>Student ID</th><th>Role</th><th>College</th><th>Stage</th><th>Status</th><th>Action</th></tr></thead><tbody id="hp-directory-rows"></tbody></table></div></div></div><dialog id="hp-admin-dialog" aria-labelledby="hp-am-title">
@@ -4787,7 +4840,7 @@ let publicPaint=null;
 const publicPaintIds=['hp-appbar','hp-sidebar','subject-page','stage2-page','s2block-page','split-page','resources-page'];
 function clearPublicPaint(){
   for(const id of publicPaintIds)el(id).inert=false;
-  document.documentElement.classList.remove('hp-public-paint');
+  document.documentElement.classList.remove('hp-public-paint','hp-header-preview');
   publicPaint=null;
 }
 function paintPublicAcademic(saved){
@@ -4799,14 +4852,15 @@ function paintPublicAcademic(saved){
   if(st.v==='s2block'&&!stage2Blocks.some(b=>b.n===st.b))return;
   if(st.v==='split'&&!['microbiology','biophysics','biochemistry'].includes(st.key))return;
   // Route and layout are untrusted display hints. Only static, public curriculum
-  // markup is painted. Never copy account identity, private records or privileges.
+  // markup is painted. Only the saved profile initial is displayed; no account details, private records or privileges.
   const side=saved.uiSide===true||['super_admin','college_admin'].includes(saved.uiRole);
   for(const id of publicPaintIds)el(id).inert=true;
   document.body.classList.remove('hp-lock');
   document.body.classList.add('hp-workspace');
   document.body.classList.toggle('hp-with-side',side);
   document.body.classList.toggle('hp-root-stage',['stage1','stage2'].includes(st.v));
-  el('hp-appbar').hidden=false;el('hp-context').textContent='ACADEMIC PORTAL';
+  el('hp-appbar').hidden=false;el('hp-context').textContent='COLLEGE OF '+collegeInfo(sc.college)[1].toUpperCase()+' · STAGE '+sc.stage;
+  el('hp-account-avatar').textContent=(typeof saved.user.email==='string'&&saved.user.email?saved.user.email:'H').charAt(0).toUpperCase();
   el('hp-sidebar').hidden=!side;
   if(side){const sb=el('hp-sidebar');sb.replaceChildren();sb.append(make('div','ACADEMIC STAGES','hp-cap'),make('div','College of Medicine','hp-navbtn'),make('div','Stage '+sc.stage,'hp-navbtn hp-stage-link'));}
   el('hp-login').hidden=true;el('hp-library-note').hidden=true;
@@ -4944,7 +4998,7 @@ lastLibraryPaint={key:d?.key,items,entry};grid.replaceChildren();const order=com
 const MSD_MIGRATED_IDS=new Set(["c36fdc04-c35a-458c-97cc-9b2dade3ad6e","3769a9f7-dc52-4831-9f4d-7e7b902560b4","1fdb8ba2-26f6-403b-9543-529ac146de12","c5513294-280c-4176-92f3-3e8b46e8c24f","a69ea21f-16cb-48a3-a5d3-e715a2d2f60d","0304036e-1dc0-4915-bb2a-4fb6b4ca3352","c378fffa-13d9-46ee-8728-feeb2c9db088","d4411eb6-3114-4e09-b9a5-a2b978f4a55c","ebd73d4f-9cd3-41e5-b0ab-0237ab90ff7a","22a4e40d-b810-44b7-8840-d803d8969b31","cac3913a-7f7b-4611-9573-e4150eed97fe","96367323-47ab-475e-9bbc-7cc4b34a51d6","65bab07c-338b-4bb3-9af9-bdbe4e1fb6fb","39cfddf7-83b1-4b72-8f5e-05dfd4dc4e6a","264c65f0-cb7a-4dbd-91ad-633996963be4","e1f8ff4b-21b1-42c1-b532-f10d25799490","e2167d42-d834-4cfc-b7cd-3fcd8bfb4483","6a461ab6-14ed-497d-ad60-71b07b94d434","744a4a04-5aea-4209-adc9-2c70126c33bf","cbf458da-cff4-4f20-bd96-7ad1e7767f55","3da67f37-a296-47fd-a74e-90cee7e04a55","d19fa712-aa6f-4993-803a-cf7413eed534","2c5438d3-cc23-4698-a5c1-c5c8728794d6","fa702322-fba4-43c4-a2be-f9677d04b8a0","f024bbff-b542-4e22-bcc1-809515c671d6","e97650f6-7330-4b28-b8ad-3987627d7a02","56365034-f75c-4321-b368-b9adf874b197","402dee4c-fc10-4355-8459-9f9608d3f4bc","eb560398-5cc2-4ea0-bdcd-ae3307210411","24f661f0-d162-4e0a-872e-b1f366fc5ac4","9baf7098-721f-4689-a6dd-6d52781da174","49c0bc5c-6f2c-4c6c-a095-25d60ce8c1bb","a276e879-5185-4e4a-88ab-f920c9f11bf4","7d1c9df6-5d22-46e3-9765-3e5bf701cf10","fcdd860b-c28e-4192-9ee5-25c291622a11","3caf94f8-572f-4e22-a406-6e4e9ed4aa67","6a5863c7-9ad4-4766-b8b9-9cb96cb08b9b"]);
 async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent='';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const pre=offset===0&&stages.length===1?await useEarlyList('public',stages[0],null,t):null;const r=Array.isArray(pre)?pre:await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){if(Number(r.stage)===2&&Number(r.block)===2&&MSD_MIGRATED_IDS.has(r.id))continue;const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';/* Render once both lecture sources have settled. */}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
 function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();store();renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');syncLibraryAccount();startPublicLectures();render(r);}
-async function logout(revoke=true){closeProfile();earlyLibrary=null;resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
+async function logout(revoke=true){closeProfile();closePush();earlyLibrary=null;resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
 el('hp-form').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;setBusy(true);status('');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email:el('hp-email').value.trim(),password:el('hp-password').value}});setAuth(d);await resolveAccount();el('hp-password').value='';if(account)enter();}catch(e){await logout();status(e.message||'Could not sign in.');}finally{setBusy(false);}});
 el('hp-cancel-activation').onclick=()=>logout();
 el('hp-activation').addEventListener('submit',async e=>{e.preventDefault();if(busy||!auth)return;const b=el('hp-activate');busy=true;b.disabled=true;el('hp-activation-status').textContent='';try{const data=await studentApi('/api/v1/student/activate',{code:el('hp-code').value.trim()});if(data.ok!==true)throw Error('Activation could not be verified.');acceptStudent(data.student);resetActivation();enter();}catch(e){el('hp-activation-status').textContent=e.message;}finally{busy=false;b.disabled=false;}});
@@ -4952,10 +5006,75 @@ el('hp-show').onclick=()=>{const i=el('hp-password'),show=i.type==='password';i.
 function help(){el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('Contact your college administrator for account activation, stage assignments or password assistance.');}
 el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclick=()=>{el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('This is the HMU Academic Portal test. One account opens your assigned academic workspace automatically.');};el('hp-menu-toggle').onclick=()=>{el('hp-menu').hidden=!el('hp-menu').hidden;el('hp-menu-toggle').setAttribute('aria-expanded',String(!el('hp-menu').hidden));};const profileToggle=el('hp-profile-toggle'),profileMenu=el('hp-profile-menu');
 function closeProfile(restoreFocus=false){profileMenu.hidden=true;profileToggle.setAttribute('aria-expanded','false');if(restoreFocus)profileToggle.focus();}
-profileToggle.onclick=()=>{if(!account)return;const open=profileMenu.hidden;profileMenu.hidden=!open;profileToggle.setAttribute('aria-expanded',String(open));};
+profileToggle.onclick=()=>{if(!account)return;closePush();const open=profileMenu.hidden;profileMenu.hidden=!open;profileToggle.setAttribute('aria-expanded',String(open));};
 document.addEventListener('click',e=>{if(!profileMenu.hidden&&!el('hp-appbar').querySelector('.hp-account').contains(e.target))closeProfile();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!profileMenu.hidden){e.preventDefault();closeProfile(true);}});
 window.addEventListener('popstate',()=>closeProfile());
+
+// HMU push pilot: anonymous device subscriptions only. No account identifiers, tags,
+// API secrets, private lecture content or upload hooks are sent to OneSignal.
+const pushToggle=el('hp-push-toggle'),pushPanel=el('hp-push-panel'),pushAction=el('hp-push-action'),pushStatus=el('hp-push-status'),pushDot=el('hp-push-dot');
+let pushSDK=null,pushLoading=false,pushBusy=false,pushFailed=false;
+function closePush(focus=false){pushPanel.hidden=true;pushToggle.setAttribute('aria-expanded','false');if(focus)pushToggle.focus();}
+function paintPush(){
+  const supported=pushSDK&&pushSDK.Notifications.isPushSupported();
+  const permission=typeof Notification!=='undefined'?Notification.permission:'default';
+  const on=!!(supported&&pushSDK.User.PushSubscription.optedIn);
+  pushDot.hidden=!on;pushAction.dataset.on=String(on);
+  if(pushFailed){pushStatus.textContent='Unable to connect. Refresh this page and try again.';pushAction.textContent='Unavailable';pushAction.disabled=true;return;}
+  if(!pushSDK){pushStatus.textContent='Connecting to notification service…';pushAction.textContent='Connecting…';pushAction.disabled=true;return;}
+  if(!supported){pushStatus.textContent='Use a supported browser. On iPhone or iPad, add the portal to your Home Screen first.';pushAction.textContent='Not supported on this device';pushAction.disabled=true;return;}
+  if(permission==='denied'){pushStatus.textContent='Notifications are blocked in your browser or device settings.';pushAction.textContent='Permission blocked';pushAction.disabled=true;return;}
+  pushStatus.textContent=on?'Enabled on this device':'Receive test alerts on this device.';
+  pushAction.textContent=on?'Turn off notifications':'Enable notifications';
+  pushAction.disabled=pushBusy;
+}
+function startPush(){
+  if(pushSDK||pushLoading||pushFailed)return;
+  if(location.origin!=='https://eissaismail941.github.io'||location.pathname!=='/HMU-Portal-Testing/hmu-unified-test-v3-fast-refresh.html'){
+    pushFailed=true;paintPush();pushStatus.textContent='Open the deployed HMU testing portal to enable push.';return;
+  }
+  pushLoading=true;paintPush();
+  const fail=()=>{pushLoading=false;pushFailed=true;paintPush();};
+  const timer=setTimeout(fail,20000);
+  window.OneSignalDeferred=window.OneSignalDeferred||[];
+  window.OneSignalDeferred.push(async function(OneSignal){
+    try{
+      await OneSignal.init({
+        appId:'423f1264-5447-48a4-afd3-a51e41d6d761',
+        serviceWorkerPath:'HMU-Portal-Testing/push/onesignal/OneSignalSDKWorker.js',
+        serviceWorkerParam:{scope:'/HMU-Portal-Testing/push/onesignal/'},
+        notifyButton:{enable:false},
+        promptOptions:{slidedown:{prompts:[{type:'push',autoPrompt:false}]}},
+        welcomeNotification:{disable:true}
+      });
+      pushSDK=OneSignal;pushFailed=false;pushLoading=false;
+      OneSignal.User.PushSubscription.addEventListener('change',paintPush);
+      OneSignal.Notifications.addEventListener('permissionChange',paintPush);
+      paintPush();
+    }catch(e){console.warn('HMU push initialization failed:',e);fail();}
+    finally{clearTimeout(timer);}
+  });
+  const script=document.createElement('script');
+  script.src='https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+  script.async=true;script.onerror=()=>{clearTimeout(timer);fail();};
+  document.head.append(script);
+}
+pushToggle.onclick=()=>{if(!account)return;const open=pushPanel.hidden;closeProfile();pushPanel.hidden=!open;pushToggle.setAttribute('aria-expanded',String(open));if(open){paintPush();startPush();}};
+pushAction.onclick=async()=>{
+  if(!account||!pushSDK||pushBusy||!pushSDK.Notifications.isPushSupported())return;
+  pushBusy=true;paintPush();
+  try{
+    if(pushSDK.User.PushSubscription.optedIn)await pushSDK.User.PushSubscription.optOut();
+    else await pushSDK.User.PushSubscription.optIn();
+  }catch(e){console.warn('HMU push preference failed:',e);pushBusy=false;paintPush();pushStatus.textContent='Could not change notifications. Please try again.';return;}
+  finally{if(pushBusy){pushBusy=false;paintPush();}}
+};
+document.addEventListener('click',e=>{if(!pushPanel.hidden&&!pushPanel.contains(e.target)&&!pushToggle.contains(e.target))closePush();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pushPanel.hidden){e.preventDefault();closePush(true);}});
+window.addEventListener('popstate',()=>closePush());
+window.addEventListener('focus',()=>{if(pushSDK)paintPush();});
+
 el('hp-signout').onclick=()=>{closeProfile();logout();};el('hp-mobile-nav').onclick=()=>{const open=el('hp-sidebar').classList.toggle('open');el('hp-backdrop').hidden=!open;el('hp-mobile-nav').setAttribute('aria-expanded',String(open));};el('hp-backdrop').onclick=closeNav;el('hp-refresh-directory').onclick=directory;el('hp-dir-search').oninput=filterDirectory;el('hp-dir-filter').onchange=filterDirectory;el('hp-dir-college').onchange=filterDirectory;{const select=el('hp-dir-college');select.replaceChildren(new Option('All colleges','all'),new Option('University-wide','global'));for(const [key,label] of colleges)select.add(new Option(label,key));}
 // Single-stage administrators see their assigned stage first; an optional test management link stays in the header.
 const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Lecture management';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
