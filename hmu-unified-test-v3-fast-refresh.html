@@ -3041,8 +3041,9 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 #hp-appbar .hp-brand small{display:block;margin-top:4px;font-size:10px;line-height:1.3;letter-spacing:.55px;font-weight:550;color:#748195;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #hp-appbar .hp-account{position:relative;gap:0;flex:none;min-width:0}
 #hp-appbar .hp-profile{display:grid;place-items:center;width:46px;height:46px;border:0;border-radius:50%;padding:3px;background:transparent;cursor:pointer;transition:background .18s,transform .18s;-webkit-tap-highlight-color:transparent}
-#hp-appbar .hp-account-avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(145deg,#e8f3ff,#d5e7ff);color:#2867b9;border:1px solid #d5e6fb;font-size:17px;font-weight:650;line-height:1;flex:none;box-shadow:inset 0 1px 1px #ffffffb3}
-#hp-appbar .hp-profile[aria-expanded=true]{background:#edf4ff}
+#hp-appbar .hp-account-avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0057ff,#0ea5e9);color:#fff;border:2px solid #fff;font:800 1rem "Syne","DM Sans",system-ui,sans-serif;line-height:1;flex:none;box-shadow:0 6px 18px rgba(0,87,255,.30);transition:box-shadow .2s ease}
+#hp-appbar .hp-profile[aria-expanded=true]{background:transparent}
+#hp-appbar .hp-profile[aria-expanded=true] .hp-account-avatar{box-shadow:0 6px 18px rgba(0,87,255,.30),0 0 0 3px #dceaff}
 #hp-appbar .hp-profile:active{transform:scale(.94)}
 #hp-appbar .hp-profile-menu{position:absolute;right:0;top:calc(100% + 12px);width:min(280px,calc(100vw - 24px));padding:14px 9px 8px;border:1px solid #e6ebf1;border-radius:18px;background:#fff;box-shadow:0 16px 48px #213c5d1a,0 2px 8px #213c5d09;z-index:32;transform-origin:top right;animation:hp-account-in .18s cubic-bezier(.2,.8,.2,1) both}
 @keyframes hp-account-in{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
@@ -3056,13 +3057,13 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 #hp-appbar #hp-signout svg{width:17px;height:17px;flex:none}
 #hp-appbar #hp-signout{color:#405169}
 #hp-appbar #hp-mobile-nav{display:none}
-@media(hover:hover){#hp-appbar .hp-profile:hover{background:#f0f5fb}#hp-appbar .hp-smallbtn:hover{background:#f2f6fb;color:#243c5a}}
+@media(hover:hover){#hp-appbar .hp-profile:hover .hp-account-avatar{box-shadow:0 8px 22px rgba(0,87,255,.42)}#hp-appbar .hp-smallbtn:hover{background:#f2f6fb;color:#243c5a}}
 #hp-appbar .hp-smallbtn:active{transform:scale(.98);background:#edf2f8}
 #hp-appbar .hp-profile:focus-visible,#hp-appbar .hp-smallbtn:focus-visible{outline:2px solid #1677ff;outline-offset:2px}
 @media(max-width:900px){#hp-appbar{padding:0 18px;gap:12px}.hp-with-side #hp-appbar #hp-mobile-nav{display:inline-flex;width:40px;padding:0}}
-@media(max-width:600px){#hp-appbar{height:68px;padding:0 12px;gap:8px}#hp-appbar .hp-brand{gap:8px}#hp-appbar .hp-crest,#hp-appbar .hp-fallback{width:34px;height:34px}#hp-appbar .hp-brand-copy{padding-left:8px}#hp-appbar .hp-brand b{font-size:12px;white-space:normal;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}#hp-appbar .hp-brand small{font-size:9px;letter-spacing:.15px;margin-top:3px}#hp-appbar .hp-profile{width:44px;height:44px}#hp-appbar .hp-account-avatar{width:38px;height:38px;font-size:15px}.hp-with-side #hp-appbar #hp-mobile-nav{width:34px;min-height:38px}}
+@media(max-width:600px){#hp-appbar{height:68px;padding:0 12px;gap:8px}#hp-appbar .hp-brand{gap:8px}#hp-appbar .hp-crest,#hp-appbar .hp-fallback{width:34px;height:34px}#hp-appbar .hp-brand-copy{padding-left:8px}#hp-appbar .hp-brand b{font-size:12px;white-space:normal;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}#hp-appbar .hp-brand small{font-size:9px;letter-spacing:.15px;margin-top:3px}#hp-appbar .hp-profile{width:44px;height:44px}#hp-appbar .hp-account-avatar{width:40px;height:40px;font-size:16px}.hp-with-side #hp-appbar #hp-mobile-nav{width:34px;min-height:38px}}
 @media(max-width:360px){#hp-appbar{padding:0 8px;gap:6px}#hp-appbar .hp-brand{gap:5px}#hp-appbar .hp-brand-copy{padding-left:5px}#hp-appbar .hp-brand small{font-size:8px}}
-@media(prefers-reduced-motion:reduce){#hp-appbar .hp-profile-menu{animation:none}#hp-appbar .hp-profile,#hp-appbar .hp-smallbtn{transition:none}}
+@media(prefers-reduced-motion:reduce){#hp-appbar .hp-profile-menu{animation:none}#hp-appbar .hp-profile,#hp-appbar .hp-account-avatar,#hp-appbar .hp-smallbtn{transition:none}}
 #resources-count:empty{visibility:hidden}
 /* A quiet, non-interactive loading hint, only visible if the network is slow. */
 .hp-lecture-wait{grid-column:1/-1;min-height:60px;display:flex;justify-content:center;align-items:center;gap:8px;color:#748296;font:500 13px/1.5 Inter,system-ui,sans-serif;animation:hp-wait-in .18s .25s both}
