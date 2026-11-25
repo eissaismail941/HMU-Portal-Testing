@@ -22,6 +22,15 @@
  // The student Worker verifies the bearer and returns its own authenticated profile.
  if(!a.uiRole||a.uiRole==='student')q.student=request('https://hmu-student-pilot-test.eissaismail941.workers.dev/api/v1/student/me',false);
  q.who=request(base+'/auth/v1/user');
+ // A route is only a request hint. The servers still check the bearer; results
+ // stay in memory and are consumed only after the matching account is verified.
+ const st=history.state||{}, m=typeof st.key==='string'&&st.key.match(/^s2b([1-5])m\d+$/);
+ if(a.uiRole==='student'&&st.v==='res'&&typeof st.key==='string'){
+   const stage=m?2:1, block=m?({'1':'ibs','2':'msd'}[m[1]]||null):'stage1';
+   q.library={stage,block,key:st.key};
+   q.library.public=request(base+'/rest/v1/lectures?select=*&stage=in.('+stage+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset=0');
+   if(block)q.library.private=request('https://hmu-student-library-test.eissaismail941.workers.dev/p9/files?block='+encodeURIComponent(block),false);
+ }
  window.__hpEarly=q;
 }catch(e){}})();
 </script>
@@ -3023,60 +3032,43 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 </style>
 
 <style id="hp-apple-header-style">
-/* Signed-in header only. Existing heights and workspace offsets are preserved. */
-#hp-appbar {
-    height:75px; padding:0 clamp(16px, 3vw, 42px); gap:20px;
-    background:rgba(255,255,255,.96); border-bottom:1px solid #e5e9ee;
-    box-shadow:0 3px 14px rgba(25,44,66,.025);
-    font-family:-apple-system,BlinkMacSystemFont,'Inter','DM Sans','Segoe UI',sans-serif;
-}
-#hp-appbar .hp-brand {gap:14px; flex:1 1 auto; min-width:0;}
-#hp-appbar .hp-crest, #hp-appbar .hp-fallback {width:44px;height:44px;flex:none;}
-#hp-appbar .hp-brand-copy {min-width:0; padding-left:14px; border-left:1px solid #e5e9ee;}
-#hp-appbar .hp-brand b {font-size:15px;line-height:1.3;font-weight:650;letter-spacing:-.38px;color:#172331;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#hp-appbar .hp-brand small {display:block;margin-top:4px;font-size:10px;line-height:1.3;letter-spacing:.65px;font-weight:600;color:#687789;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#hp-appbar .hp-account {gap:12px;flex:0 1 auto;min-width:0;}
-#hp-appbar .hp-profile {display:flex;align-items:center;gap:10px;min-width:0;padding:5px 13px 5px 5px;background:#f5f7fa;border:1px solid #e9edf2;border-radius:999px;}
-#hp-appbar .hp-account-avatar {display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(145deg,#e8f2ff,#dceaff);color:#2567be;border:1px solid #d6e5fa;font-size:15px;font-weight:650;flex:none;}
-#hp-appbar .hp-account-text {text-align:left;min-width:0;}
-#hp-appbar .hp-account-text b {font-size:12px;line-height:1.25;color:#243446;font-weight:650;}
-#hp-appbar .hp-account-text small {font-size:11px;line-height:1.25;color:#657487;margin-top:3px;max-width:220px;}
-#hp-appbar .hp-smallbtn {display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 13px;border-radius:12px;border:1px solid #e4e9ef;background:#fff;color:#425368;font-size:12px;font-weight:600;white-space:nowrap;flex:none;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;}
-#hp-appbar #hp-mobile-nav {display:none;}
-#hp-appbar #hp-signout svg {width:16px;height:16px;flex:none;}
-@media(hover:hover) {#hp-appbar .hp-smallbtn:hover {background:#f1f5fa;border-color:#dbe4ef;color:#243c5a;}}
-#hp-appbar .hp-smallbtn:active {transform:scale(.97);background:#edf2f8;}
-#hp-appbar .hp-smallbtn:focus-visible {outline:2px solid #1677ff;outline-offset:3px;}
-@media(max-width:900px) {
-    #hp-appbar {padding:0 18px;gap:12px;}
-    .hp-with-side #hp-appbar #hp-mobile-nav {display:inline-flex;width:40px;padding:0;}
-    #hp-appbar .hp-account-text small {max-width:160px;}
-}
-@media(max-width:600px) {
-    #hp-appbar {height:68px;padding:0 12px;gap:8px;}
-    #hp-appbar .hp-brand {gap:8px;}
-    #hp-appbar .hp-crest,#hp-appbar .hp-fallback {width:34px;height:34px;}
-    #hp-appbar .hp-brand-copy {padding-left:8px;}
-    #hp-appbar .hp-brand b {font-size:12px;white-space:normal;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-    #hp-appbar .hp-brand small {font-size:9px;letter-spacing:.15px;margin-top:3px;}
-    #hp-appbar .hp-account {gap:6px;}
-    #hp-appbar .hp-profile {padding:0;background:transparent;border:0;gap:0;}
-    #hp-appbar .hp-account-avatar {width:35px;height:35px;font-size:13px;}
-    #hp-appbar .hp-account-text {display:none;}
-    #hp-appbar #hp-signout {width:42px;height:42px;padding:0;}
-    #hp-appbar #hp-signout .hp-signout-label {display:none;}
-    #hp-appbar #hp-signout svg {width:18px;height:18px;}
-    #hp-appbar .hp-account > .hp-smallbtn:not(#hp-signout) {font-size:10px;padding:0 7px;max-width:82px;white-space:normal;line-height:1.2;}
-    .hp-with-side #hp-appbar #hp-mobile-nav {width:34px;min-height:38px;}
-}
-@media(max-width:360px) {
-    #hp-appbar {padding:0 8px;gap:6px;}
-    #hp-appbar .hp-brand {gap:5px;}
-    #hp-appbar .hp-brand-copy {padding-left:5px;}
-    #hp-appbar .hp-brand small {font-size:8px;}
-    #hp-appbar .hp-account {gap:4px;}
-}
-@media(prefers-reduced-motion:reduce) {#hp-appbar .hp-smallbtn {transition:none;}}
+/* Compact academic header with a single account control; no layout changes below. */
+#hp-appbar{height:75px;padding:0 clamp(16px,3vw,42px);gap:18px;background:#fff;border-bottom:1px solid #e8ecf0;box-shadow:none;font-family:-apple-system,BlinkMacSystemFont,'Inter','DM Sans','Segoe UI',sans-serif}
+#hp-appbar .hp-brand{gap:13px;flex:1 1 auto;min-width:0}
+#hp-appbar .hp-crest,#hp-appbar .hp-fallback{width:44px;height:44px;flex:none}
+#hp-appbar .hp-brand-copy{min-width:0;padding-left:13px;border-left:1px solid #e9edf1}
+#hp-appbar .hp-brand b{font-size:15px;line-height:1.3;font-weight:650;letter-spacing:-.4px;color:#172331;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hp-appbar .hp-brand small{display:block;margin-top:4px;font-size:10px;line-height:1.3;letter-spacing:.55px;font-weight:550;color:#748195;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hp-appbar .hp-account{position:relative;gap:0;flex:none;min-width:0}
+#hp-appbar .hp-profile{display:grid;place-items:center;width:46px;height:46px;border:0;border-radius:50%;padding:3px;background:transparent;cursor:pointer;transition:background .18s,transform .18s;-webkit-tap-highlight-color:transparent}
+#hp-appbar .hp-account-avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(145deg,#e8f3ff,#d5e7ff);color:#2867b9;border:1px solid #d5e6fb;font-size:17px;font-weight:650;line-height:1;flex:none;box-shadow:inset 0 1px 1px #ffffffb3}
+#hp-appbar .hp-profile[aria-expanded=true]{background:#edf4ff}
+#hp-appbar .hp-profile:active{transform:scale(.94)}
+#hp-appbar .hp-profile-menu{position:absolute;right:0;top:calc(100% + 12px);width:min(280px,calc(100vw - 24px));padding:14px 9px 8px;border:1px solid #e6ebf1;border-radius:18px;background:#fff;box-shadow:0 16px 48px #213c5d1a,0 2px 8px #213c5d09;z-index:32;transform-origin:top right;animation:hp-account-in .18s cubic-bezier(.2,.8,.2,1) both}
+@keyframes hp-account-in{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+#hp-appbar .hp-profile-caption{font-size:9px;font-weight:650;letter-spacing:1.2px;color:#7c8999;padding:0 10px;margin:2px 0 9px}
+#hp-appbar .hp-account-text{display:block;text-align:left;min-width:0;padding:0 10px 10px}
+#hp-appbar .hp-account-text b{font-size:14px;line-height:1.35;color:#243446;font-weight:650}
+#hp-appbar .hp-account-text small{font-size:12px;line-height:1.4;color:#657487;margin-top:4px;max-width:none;white-space:normal;overflow-wrap:anywhere}
+#hp-appbar .hp-profile-rule{height:1px;background:#edf0f4;margin:0 4px 5px}
+#hp-appbar .hp-smallbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 13px;border-radius:11px;border:1px solid #e4e9ef;background:#fff;color:#425368;font-size:12px;font-weight:600;white-space:nowrap;flex:none;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+#hp-appbar .hp-profile-menu .hp-smallbtn{display:flex;justify-content:flex-start;width:100%;min-height:42px;border:0;padding:0 10px;text-align:left;background:transparent;font-size:13px;font-weight:550}
+#hp-appbar #hp-signout svg{width:17px;height:17px;flex:none}
+#hp-appbar #hp-signout{color:#405169}
+#hp-appbar #hp-mobile-nav{display:none}
+@media(hover:hover){#hp-appbar .hp-profile:hover{background:#f0f5fb}#hp-appbar .hp-smallbtn:hover{background:#f2f6fb;color:#243c5a}}
+#hp-appbar .hp-smallbtn:active{transform:scale(.98);background:#edf2f8}
+#hp-appbar .hp-profile:focus-visible,#hp-appbar .hp-smallbtn:focus-visible{outline:2px solid #1677ff;outline-offset:2px}
+@media(max-width:900px){#hp-appbar{padding:0 18px;gap:12px}.hp-with-side #hp-appbar #hp-mobile-nav{display:inline-flex;width:40px;padding:0}}
+@media(max-width:600px){#hp-appbar{height:68px;padding:0 12px;gap:8px}#hp-appbar .hp-brand{gap:8px}#hp-appbar .hp-crest,#hp-appbar .hp-fallback{width:34px;height:34px}#hp-appbar .hp-brand-copy{padding-left:8px}#hp-appbar .hp-brand b{font-size:12px;white-space:normal;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}#hp-appbar .hp-brand small{font-size:9px;letter-spacing:.15px;margin-top:3px}#hp-appbar .hp-profile{width:44px;height:44px}#hp-appbar .hp-account-avatar{width:38px;height:38px;font-size:15px}.hp-with-side #hp-appbar #hp-mobile-nav{width:34px;min-height:38px}}
+@media(max-width:360px){#hp-appbar{padding:0 8px;gap:6px}#hp-appbar .hp-brand{gap:5px}#hp-appbar .hp-brand-copy{padding-left:5px}#hp-appbar .hp-brand small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){#hp-appbar .hp-profile-menu{animation:none}#hp-appbar .hp-profile,#hp-appbar .hp-smallbtn{transition:none}}
+#resources-count:empty{visibility:hidden}
+/* A quiet, non-interactive loading hint, only visible if the network is slow. */
+.hp-lecture-wait{grid-column:1/-1;min-height:60px;display:flex;justify-content:center;align-items:center;gap:8px;color:#748296;font:500 13px/1.5 Inter,system-ui,sans-serif;animation:hp-wait-in .18s .25s both}
+.hp-lecture-wait::before{content:'';width:12px;height:12px;border:1.5px solid #d9e5f4;border-top-color:#6194d5;border-radius:50%;animation:hp-wait-spin .85s linear infinite}
+@keyframes hp-wait-in{from{opacity:0}to{opacity:1}}@keyframes hp-wait-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.hp-lecture-wait,.hp-lecture-wait::before{animation:none}}
 </style>
 </head>
 
@@ -3107,7 +3099,7 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 <section id="hp-login" class="hp-login">
 <div class="hp-wrap"><header class="hp-top"><div class="hp-brand"><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-menu-wrap"><button type="button" id="hp-menu-toggle" class="hp-iconbtn" aria-label="Portal menu" aria-expanded="false" aria-controls="hp-menu"><span class="hp-menu-lines" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="hp-menu" id="hp-menu" hidden><button type="button" id="hp-about">About the portal</button><button type="button" id="hp-menu-help">Help &amp; support</button></div></div></header>
 <main class="hp-main"><section class="hp-panel" aria-labelledby="hp-login-title"><div class="hp-badge"><span class="hp-dot"></span> HMU ACADEMIC PORTAL · TEST</div><h1 id="hp-login-title">Sign in</h1><p class="hp-desc" id="hp-login-desc">Sign in with your university account. Your academic workspace opens automatically.</p><form id="hp-form"><label class="hp-field" for="hp-email">Email address<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg><input type="email" id="hp-email" placeholder="Enter your account email" autocomplete="username" required></span></label><label class="hp-field" for="hp-password">Password<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><input type="password" id="hp-password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" class="hp-show" id="hp-show" aria-pressed="false">Show</button></span></label><div class="hp-options"><span>Student &amp; administrator access</span><button type="button" id="hp-help" class="hp-help">Need help?</button></div><p id="hp-status" class="hp-status" role="status" aria-live="polite"></p><button type="submit" id="hp-submit" class="hp-submit">Sign in to portal <span aria-hidden="true">→</span></button></form><form id="hp-activation" hidden><label class="hp-field" for="hp-code">One-time activation code<span class="hp-input"><input id="hp-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="XXXX-XXXX-XXXX" required></span></label><p class="hp-status" id="hp-activation-status" role="status" aria-live="polite"></p><button class="hp-submit" id="hp-activate" type="submit">Activate account →</button><button type="button" id="hp-cancel-activation" class="hp-help" style="margin-top:15px">Back to sign in</button></form><div class="hp-note">College, stage, and permissions are assigned to your account. <b>No manual selection.</b></div></section></main><footer class="hp-footer"><span><b>Hawler Medical University</b> · Academic Portal</span><span>© 2026 · Test workspace</span></footer></div></section>
-<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div class="hp-brand-copy"><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><div class="hp-profile"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div></div><button type="button" id="hp-signout" class="hp-smallbtn" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m10-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg><span class="hp-signout-label">Sign out</span></button></div></header>
+<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div class="hp-brand-copy"><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><button type="button" class="hp-profile" id="hp-profile-toggle" aria-label="Account options" aria-expanded="false" aria-controls="hp-profile-menu"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span></button><div id="hp-profile-menu" class="hp-profile-menu" hidden><div class="hp-profile-caption">YOUR ACCOUNT</div><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div><div class="hp-profile-rule"></div><button type="button" id="hp-signout" class="hp-smallbtn" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m10-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg><span class="hp-signout-label">Sign out</span></button></div></div></header>
 <div id="hp-backdrop" class="hp-backdrop" hidden></div><aside id="hp-sidebar" class="hp-side" aria-label="Administrator navigation" hidden></aside>
 <section id="hp-dashboard" class="hp-view" hidden><div class="hp-content"><div class="hp-welcome"><div class="hp-eyebrow">ADMINISTRATION / WORKSPACE</div><h1 id="hp-dashboard-title">University overview</h1><p class="hp-lead">Manage your academic workspace across colleges and stages.</p></div><div class="hp-statgrid" id="hp-stats"></div><div id="hp-v1-quick" hidden><div class="hp-sectionhead"><h2>Management</h2></div><div class="hp-v1-quick" id="hp-v1-quick-buttons"></div></div><div class="hp-sectionhead"><h2>Colleges &amp; stages</h2></div><div id="hp-collegegrid" class="hp-collegegrid"></div></div></section>
 <section id="hp-directory" class="hp-view" hidden><div class="hp-content"><div class="hp-eyebrow">Administration / Directory</div><h1>Administrators</h1><p class="hp-lead">Verified administrator assignments from Supabase.</p><div class="hp-card"><div class="hp-sectionhead"><h2>Administrator directory</h2><div class="hp-v1-actions"><button id="hp-admin-manage" type="button" class="hp-v1-primary">Manage administrators</button><button id="hp-refresh-directory" type="button" class="hp-smallbtn">Refresh</button></div></div><div class="hp-directory-filter"><input id="hp-dir-search" type="search" placeholder="Search email, Student ID or role" aria-label="Search administrators"><select id="hp-dir-college" aria-label="Filter by college"><option value="all">All colleges</option><option value="global">University-wide</option><option value="medicine">Medicine</option><option value="dentistry">Dentistry</option><option value="pharmacy">Pharmacy</option><option value="nursing">Nursing</option><option value="health_sciences">Health Sciences</option></select><select id="hp-dir-filter" aria-label="Filter by status"><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div><p id="hp-dir-result" role="status" aria-live="polite"></p><p id="hp-directory-status" role="status"></p><div class="hp-tablewrap"><table class="hp-table"><thead><tr><th>Account</th><th>Student ID</th><th>Role</th><th>College</th><th>Stage</th><th>Status</th><th>Action</th></tr></thead><tbody id="hp-directory-rows"></tbody></table></div></div></div><dialog id="hp-admin-dialog" aria-labelledby="hp-am-title">
@@ -4821,7 +4813,7 @@ function paintPublicAcademic(saved){
     // Do not mount PDF links or lecture records until the account is verified.
     PAGES.forEach(p=>setShow(p,false));SUBVIEWS.forEach(p=>setShow(p,false));
     el('resources-title').textContent=subjectMap[st.key].title.replace(/\s+Resource Library\s*$/i,'').trim();
-    el('resources-count').textContent='';el('resource-grid').replaceChildren();setShow('resources-page',true);
+    el('resources-count').textContent='';showLectureWait();setShow('resources-page',true);
   }else if(st.v==='split'){
     // Reconstruct the split title/group from the trusted, bundled curriculum.
     const subject=subjectMap[st.key+'-theory'];if(!subject){clearPublicPaint();return;}
@@ -4941,22 +4933,29 @@ render=function(st){if(st?.v!=='hp-directory'||!isSuper())clearAdminDirectory();
 if(st.v.startsWith('hp-')){for(const p of PAGES)setShow(p,false);el('hp-'+st.v.slice(3)).hidden=false;if(st.v==='hp-dashboard')dashboard();else if(st.v==='hp-directory')directory();else if(st.v==='hp-students')loadStudentDirectory();else{el('hp-empty-college').textContent='College of '+collegeInfo(sc.college)[1];el('hp-empty-title').textContent='Stage '+sc.stage;}window.scrollTo(0,0);return;}if(!(publicPaint&&publicPaint.route===JSON.stringify(st)&&publicPaint.side===hasSide()&&!['res','split'].includes(st.v)))baseRender(st);};
 go=function(st){if(!account||!allowed(st))return;const sc=routeScope(st);baseGo(sc?{...st,...sc}:st);};
 goBack=function(){if(!account)return;if((history.state?.d||0)>0){baseBack();return;}if(hasSide()){const r=root();history.replaceState(r,'');render(r);}};
+function showLectureWait(){const grid=el('resource-grid');if(grid.firstElementChild?.classList.contains('hp-lecture-wait'))return;const n=make('div','Loading lectures…','hp-lecture-wait');n.setAttribute('role','status');grid.replaceChildren(n);}
 // Render database-supplied titles as text, not HTML. Keep the original lecture card styles.
 renderResources=function(items,group,subjectTitle){const grid=el('resource-grid');const d=currentLibraryScope(),entry=d?.block?blockCache.get(blockKey(d)):null;
-if(publicPending||(d?.block&&(!entry||entry.pending))){grid.replaceChildren();lastLibraryPaint=null;el('resources-count').textContent='Loading lectures…';return;}
+if(publicPending||(d?.block&&(!entry||entry.pending))){showLectureWait();lastLibraryPaint=null;el('resources-count').textContent='';return;}
 const combined=items.concat(currentPrivateItems());const count=combined.length+' files'+(entry?.error?' · Private list unavailable':'');
 if(lastLibraryPaint?.key===d?.key&&lastLibraryPaint?.items===items&&lastLibraryPaint?.entry===entry){el('resources-count').textContent=count;return;}
 lastLibraryPaint={key:d?.key,items,entry};grid.replaceChildren();const order=combined.slice().sort((a,b)=>{if(history.state?.key?.startsWith('s2b1m')&&/^Biochemistry/i.test(subjectTitle)){const key=x=>{const m=(String(x.description||'')+' '+String(x.title||'')).match(/\b(?:LECTURE|LEC)\s*[-_.#:]?\s*0*(\d+)\b/i);return m?Number(m[1]):-1;};const x=key(a),y=key(b);if(x>=0||y>=0)return x<0?1:y<0?-1:x-y;}const x=mhLectureSortKey(a),y=mhLectureSortKey(b);return x.rank-y.rank||(x.number===y.number?0:x.number-y.number);});order.forEach((item,i)=>{const card=make('article',undefined,'resource-card'+(group==='bbb'?' bbb-resource':''));card.append(make('div','📄','resource-icon'),make('div','PDF '+String(i+1).padStart(2,'0'),'resource-index'),make('h3',item.title||'Lecture'));if(item.description)card.append(make('p',item.description));if(item.privateFile&&item.privateFile.canManage&&isAdmin())addPrivateMenu(card,item);const meta=make('div',undefined,'mh-lecture-meta');meta.innerHTML=mhMetaCell('date',mhFormatLectureDate(item.lectureDate))+mhMetaCell('size',mhFormatFileSize(item.fileSizeBytes));card.append(meta);const actions=make('div',undefined,'resource-actions'),open=make('a','Open PDF','btn-link btn-open');if(!item.privateFile)open.href=viewerURL(item.url,readerTitleFor(item,items));else{open.href='#';open.onclick=e=>{e.preventDefault();openPrivate(item,false,open);};}const dl=make('button','Download','btn-link btn-download mh-download-pdf');dl.type='button';if(item.privateFile){dl.classList.remove('mh-download-pdf');dl.onclick=()=>openPrivate(item,true,dl);}else{dl.dataset.pdfUrl=item.url;dl.dataset.pdfTitle=readerTitleFor(item,items);}actions.append(open,dl);card.append(actions);grid.append(card);});el('resources-count').textContent=count;};
 const MSD_MIGRATED_IDS=new Set(["c36fdc04-c35a-458c-97cc-9b2dade3ad6e","3769a9f7-dc52-4831-9f4d-7e7b902560b4","1fdb8ba2-26f6-403b-9543-529ac146de12","c5513294-280c-4176-92f3-3e8b46e8c24f","a69ea21f-16cb-48a3-a5d3-e715a2d2f60d","0304036e-1dc0-4915-bb2a-4fb6b4ca3352","c378fffa-13d9-46ee-8728-feeb2c9db088","d4411eb6-3114-4e09-b9a5-a2b978f4a55c","ebd73d4f-9cd3-41e5-b0ab-0237ab90ff7a","22a4e40d-b810-44b7-8840-d803d8969b31","cac3913a-7f7b-4611-9573-e4150eed97fe","96367323-47ab-475e-9bbc-7cc4b34a51d6","65bab07c-338b-4bb3-9af9-bdbe4e1fb6fb","39cfddf7-83b1-4b72-8f5e-05dfd4dc4e6a","264c65f0-cb7a-4dbd-91ad-633996963be4","e1f8ff4b-21b1-42c1-b532-f10d25799490","e2167d42-d834-4cfc-b7cd-3fcd8bfb4483","6a461ab6-14ed-497d-ad60-71b07b94d434","744a4a04-5aea-4209-adc9-2c70126c33bf","cbf458da-cff4-4f20-bd96-7ad1e7767f55","3da67f37-a296-47fd-a74e-90cee7e04a55","d19fa712-aa6f-4993-803a-cf7413eed534","2c5438d3-cc23-4698-a5c1-c5c8728794d6","fa702322-fba4-43c4-a2be-f9677d04b8a0","f024bbff-b542-4e22-bcc1-809515c671d6","e97650f6-7330-4b28-b8ad-3987627d7a02","56365034-f75c-4321-b368-b9adf874b197","402dee4c-fc10-4355-8459-9f9608d3f4bc","eb560398-5cc2-4ea0-bdcd-ae3307210411","24f661f0-d162-4e0a-872e-b1f366fc5ac4","9baf7098-721f-4689-a6dd-6d52781da174","49c0bc5c-6f2c-4c6c-a095-25d60ce8c1bb","a276e879-5185-4e4a-88ab-f920c9f11bf4","7d1c9df6-5d22-46e3-9765-3e5bf701cf10","fcdd860b-c28e-4192-9ee5-25c291622a11","3caf94f8-572f-4e22-a406-6e4e9ed4aa67","6a5863c7-9ad4-4766-b8b9-9cb96cb08b9b"]);
-async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent='';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const r=await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){if(Number(r.stage)===2&&Number(r.block)===2&&MSD_MIGRATED_IDS.has(r.id))continue;const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';/* Render once both lecture sources have settled. */}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
+async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent='';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const pre=offset===0&&stages.length===1?await useEarlyList('public',stages[0],null,t):null;const r=Array.isArray(pre)?pre:await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){if(Number(r.stage)===2&&Number(r.block)===2&&MSD_MIGRATED_IDS.has(r.id))continue;const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';/* Render once both lecture sources have settled. */}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
 function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();store();renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');syncLibraryAccount();startPublicLectures();render(r);}
-async function logout(revoke=true){resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
+async function logout(revoke=true){closeProfile();earlyLibrary=null;resetActivation();const prev=auth;auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});}
 el('hp-form').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;setBusy(true);status('');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email:el('hp-email').value.trim(),password:el('hp-password').value}});setAuth(d);await resolveAccount();el('hp-password').value='';if(account)enter();}catch(e){await logout();status(e.message||'Could not sign in.');}finally{setBusy(false);}});
 el('hp-cancel-activation').onclick=()=>logout();
 el('hp-activation').addEventListener('submit',async e=>{e.preventDefault();if(busy||!auth)return;const b=el('hp-activate');busy=true;b.disabled=true;el('hp-activation-status').textContent='';try{const data=await studentApi('/api/v1/student/activate',{code:el('hp-code').value.trim()});if(data.ok!==true)throw Error('Activation could not be verified.');acceptStudent(data.student);resetActivation();enter();}catch(e){el('hp-activation-status').textContent=e.message;}finally{busy=false;b.disabled=false;}});
 el('hp-show').onclick=()=>{const i=el('hp-password'),show=i.type==='password';i.type=show?'text':'password';el('hp-show').textContent=show?'Hide':'Show';el('hp-show').setAttribute('aria-pressed',String(show));};
 function help(){el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('Contact your college administrator for account activation, stage assignments or password assistance.');}
-el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclick=()=>{el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('This is the HMU Academic Portal test. One account opens your assigned academic workspace automatically.');};el('hp-menu-toggle').onclick=()=>{el('hp-menu').hidden=!el('hp-menu').hidden;el('hp-menu-toggle').setAttribute('aria-expanded',String(!el('hp-menu').hidden));};el('hp-signout').onclick=()=>logout();el('hp-mobile-nav').onclick=()=>{const open=el('hp-sidebar').classList.toggle('open');el('hp-backdrop').hidden=!open;el('hp-mobile-nav').setAttribute('aria-expanded',String(open));};el('hp-backdrop').onclick=closeNav;el('hp-refresh-directory').onclick=directory;el('hp-dir-search').oninput=filterDirectory;el('hp-dir-filter').onchange=filterDirectory;el('hp-dir-college').onchange=filterDirectory;{const select=el('hp-dir-college');select.replaceChildren(new Option('All colleges','all'),new Option('University-wide','global'));for(const [key,label] of colleges)select.add(new Option(label,key));}
+el('hp-help').onclick=help;el('hp-menu-help').onclick=help;el('hp-about').onclick=()=>{el('hp-menu').hidden=true;el('hp-menu-toggle').setAttribute('aria-expanded','false');status('This is the HMU Academic Portal test. One account opens your assigned academic workspace automatically.');};el('hp-menu-toggle').onclick=()=>{el('hp-menu').hidden=!el('hp-menu').hidden;el('hp-menu-toggle').setAttribute('aria-expanded',String(!el('hp-menu').hidden));};const profileToggle=el('hp-profile-toggle'),profileMenu=el('hp-profile-menu');
+function closeProfile(restoreFocus=false){profileMenu.hidden=true;profileToggle.setAttribute('aria-expanded','false');if(restoreFocus)profileToggle.focus();}
+profileToggle.onclick=()=>{if(!account)return;const open=profileMenu.hidden;profileMenu.hidden=!open;profileToggle.setAttribute('aria-expanded',String(open));};
+document.addEventListener('click',e=>{if(!profileMenu.hidden&&!el('hp-appbar').querySelector('.hp-account').contains(e.target))closeProfile();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!profileMenu.hidden){e.preventDefault();closeProfile(true);}});
+window.addEventListener('popstate',()=>closeProfile());
+el('hp-signout').onclick=()=>{closeProfile();logout();};el('hp-mobile-nav').onclick=()=>{const open=el('hp-sidebar').classList.toggle('open');el('hp-backdrop').hidden=!open;el('hp-mobile-nav').setAttribute('aria-expanded',String(open));};el('hp-backdrop').onclick=closeNav;el('hp-refresh-directory').onclick=directory;el('hp-dir-search').oninput=filterDirectory;el('hp-dir-filter').onchange=filterDirectory;el('hp-dir-college').onchange=filterDirectory;{const select=el('hp-dir-college');select.replaceChildren(new Option('All colleges','all'),new Option('University-wide','global'));for(const [key,label] of colleges)select.add(new Option(label,key));}
 // Single-stage administrators see their assigned stage first; an optional test management link stays in the header.
 const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textContent='Lecture management';adminTools.hidden=true;el('hp-signout').before(adminTools);const oldEnter=enter;enter=function(restore){oldEnter(restore);adminTools.hidden=!(isAdmin()&&!hasSide()&&scope.some(x=>x.college==='medicine'));};
     const uploadIcon = (paths, size = 20, width = 2) =>
@@ -5326,7 +5325,17 @@ let privateEdit=null,privateBusy=false;
 // Session-only block cache: one request supplies every subject within that block.
 // No private metadata or PDF bytes go into browser storage or Service Worker caches.
 const blockCache=new Map(),BLOCK_TTL=30000;
-let cacheAccount=null,publicPending=false,publicRun=0,lastLibraryPaint=null;
+let cacheAccount=null,publicPending=false,publicRun=0,lastLibraryPaint=null,earlyLibrary=null;
+function acceptEarlyLibrary(early){
+ const d=currentLibraryScope(),h=early?.library;
+ earlyLibrary=account?.role==='student'&&d&&h&&early.id===auth.user.id&&early.token===auth.access_token&&h.key===d.key&&h.stage===d.stage&&(h.block||'')===d.block?{...h,owner:account,token:early.token}:null;
+}
+async function useEarlyList(kind,stage,block,t){
+ const e=earlyLibrary;
+ if(!e||e.owner!==account||e.token!==t||e.stage!==stage||(kind==='private'&&e.block!==block)||!e[kind])return null;
+ const pending=e[kind];e[kind]=null;const r=await pending;
+ return r?.error?null:r?.data??null;
+}
 function blockKey(d){return d.stage+'|'+d.block;}
 function syncLibraryAccount(){if(cacheAccount!==account){blockCache.clear();cacheAccount=account;lastLibraryPaint=null;uploadCatalog=null;uploadMetadataSupported=false;if(!account){publicPending=false;publicRun++;}}}
 function startPublicLectures(){const run=++publicRun,owner=account;publicPending=true;return refreshLectures().finally(()=>{if(run!==publicRun||account!==owner)return;publicPending=false;paintSettledLibrary();});}
@@ -5345,7 +5354,7 @@ function prepareBlock(d,force=false){
  entry.promise=(async()=>{try{let rows=[],cursor=null;const seen=new Set(),keys=new Set();do{
  if(!still())return;const params=new URLSearchParams({block:d.block});if(!student)params.set('stage',d.stage);if(cursor)params.set('cursor',cursor);
  // Both list endpoints already enforce the current account and block on the server.
- const data=student?await studentLibraryRequest('/p9/files?'+params):await upRequest('/v6/files?'+params);
+ const pre=student&&!force&&!cursor?await useEarlyList('private',d.stage,d.block,await token()):null;if(!still())return;const data=pre&&Array.isArray(pre.files)&&pre.stage===d.stage&&pre.block===d.block?pre:student?await studentLibraryRequest('/p9/files?'+params):await upRequest('/v6/files?'+params);
  if(!Array.isArray(data.files)||(student&&(data.stage!==d.stage||data.block!==d.block)))throw Error('Invalid private file list');
  for(const f of data.files)if(privateKeyValid(f.key,d)&&typeof f.subject==='string'&&!keys.has(f.key)){keys.add(f.key);rows.push(f);}
  cursor=data.nextCursor||null;if(cursor&&seen.has(cursor))throw Error('Invalid pagination response');if(cursor)seen.add(cursor);
@@ -5450,7 +5459,7 @@ function setPrivateMode(mode){if(!privateEdit)return;privateEdit.mode=mode;const
 for(const b of el('hp-private-actions').querySelectorAll('button'))b.onclick=()=>setPrivateMode(b.dataset.mode);el('hp-private-close').onclick=()=>{if(!privateBusy)manageDialog.close();};el('hp-private-back').onclick=()=>{if(!privateBusy)setPrivateMode(null);};manageDialog.addEventListener('cancel',e=>{if(privateBusy)e.preventDefault();});manageDialog.addEventListener('close',()=>{privateEdit=null;document.documentElement.classList.remove('mh-lock');});
 el('hp-private-form').onsubmit=async e=>{e.preventDefault();if(privateBusy||!privateEdit?.mode)return;const {item,mode}=privateEdit;const err=el('hp-private-error');err.hidden=true;privateBusy=true;const controls=[...manageDialog.querySelectorAll('button,input,select')];controls.forEach(x=>x.disabled=true);try{assertPrivate(item,true);let result;if(mode==='edit'){const payload={title:el('hp-private-edit-title').value.trim(),kind:el('hp-private-kind').value,label:el('hp-private-label').value.trim(),lectureDate:el('hp-private-date').value};if(payload.title.length<2)throw Error('Enter a title of at least two characters.');result=await upRequest(privatePath(item),{method:'PATCH',body:JSON.stringify(payload)});if(result.label!==payload.label||(result.lectureDate||'')!==payload.lectureDate)throw Error('Edit saved but label/date not confirmed. Install the metadata edit Worker update, then reload the library.');}else if(mode==='replace'){const file=el('hp-private-file').files[0];if(!file||!/\.pdf$/i.test(file.name)||file.size<5||file.size>20*1024*1024)throw Error('Select a PDF up to 20 MB.');const body=new FormData();body.append('file',file,file.name);result=await upRequest('/v6/replace?key='+encodeURIComponent(item.privateFile.key),{method:'POST',body});}else if(mode==='delete'){result=await upRequest(privatePath(item),{method:'DELETE'});}if(!result?.ok)throw Error('Operation not confirmed. Reload before retrying.');manageDialog.close();await loadPrivateTestFiles(item.privateScope);}catch(error){err.textContent=error.message;err.hidden=false;}finally{privateBusy=false;controls.forEach(x=>x.disabled=false);updatePrivateDateClear();if(manageDialog.open&&privateEdit?.mode==='replace'){const file=el('hp-private-file').files[0];el('hp-private-save').disabled=!file||!/\.pdf$/i.test(file.name)||file.size<5||file.size>20*1024*1024;}}};
 const oldUploadRender=render;render=function(st){
- syncLibraryAccount();lastLibraryPaint=null;testFiles.hidden=true;testFiles.replaceChildren();
+ closeProfile();syncLibraryAccount();lastLibraryPaint=null;testFiles.hidden=true;testFiles.replaceChildren();
  const d=currentLibraryScope();if(d?.block)prepareBlock(d);else{const pre=prefetchScope(st);if(pre)prepareBlock(pre);}
  const result=oldUploadRender(st),up=currentUploadScope();upFab.hidden=!up;document.body.classList.toggle('mh-has-fab',!!up);
  if(!up&&upSheet.open&&!uploadBusy)upSheet.close();if(manageDialog.open&&!privateBusy&&(!up||!sameUploadScope(up,privateEdit?.item?.privateScope)))manageDialog.close();
@@ -5499,7 +5508,7 @@ async function verifySavedSession(saved,early,force=false){
         early=null;await pause(attempt===0?250:700);
       }
     }
-    if(account)enter(true);else render(null);
+    if(account){acceptEarlyLibrary(early);enter(true);}else render(null);
     finish();
   }catch(e){
     if(terminalSessionError(e)){await logout(false);status(e.accessDenied?e.message:'Your session has expired. Please sign in again.');finish();}
