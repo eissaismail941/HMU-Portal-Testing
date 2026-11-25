@@ -3021,6 +3021,63 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 
 #hp-admin-dialog [hidden]{display:none!important} #hp-admin-dialog .hp-v1-form{grid-template-columns:1fr} #hp-admin-dialog button:disabled{opacity:.48;cursor:not-allowed} #hp-directory .hp-admin-more{width:40px;min-height:36px;display:inline-grid;place-items:center;padding:0;font-size:21px;line-height:1} #hp-directory .hp-admin-id{font-variant-numeric:tabular-nums;overflow-wrap:anywhere} #hp-directory .hp-directory-filter{flex-wrap:wrap} #hp-directory #hp-dir-result{margin:8px 0;color:#53677c;font-size:13px} #hp-directory #hp-dir-result[data-error="true"]{color:#a33d38}
 </style>
+
+<style id="hp-apple-header-style">
+/* Signed-in header only. Existing heights and workspace offsets are preserved. */
+#hp-appbar {
+    height:75px; padding:0 clamp(16px, 3vw, 42px); gap:20px;
+    background:rgba(255,255,255,.96); border-bottom:1px solid #e5e9ee;
+    box-shadow:0 3px 14px rgba(25,44,66,.025);
+    font-family:-apple-system,BlinkMacSystemFont,'Inter','DM Sans','Segoe UI',sans-serif;
+}
+#hp-appbar .hp-brand {gap:14px; flex:1 1 auto; min-width:0;}
+#hp-appbar .hp-crest, #hp-appbar .hp-fallback {width:44px;height:44px;flex:none;}
+#hp-appbar .hp-brand-copy {min-width:0; padding-left:14px; border-left:1px solid #e5e9ee;}
+#hp-appbar .hp-brand b {font-size:15px;line-height:1.3;font-weight:650;letter-spacing:-.38px;color:#172331;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#hp-appbar .hp-brand small {display:block;margin-top:4px;font-size:10px;line-height:1.3;letter-spacing:.65px;font-weight:600;color:#687789;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#hp-appbar .hp-account {gap:12px;flex:0 1 auto;min-width:0;}
+#hp-appbar .hp-profile {display:flex;align-items:center;gap:10px;min-width:0;padding:5px 13px 5px 5px;background:#f5f7fa;border:1px solid #e9edf2;border-radius:999px;}
+#hp-appbar .hp-account-avatar {display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(145deg,#e8f2ff,#dceaff);color:#2567be;border:1px solid #d6e5fa;font-size:15px;font-weight:650;flex:none;}
+#hp-appbar .hp-account-text {text-align:left;min-width:0;}
+#hp-appbar .hp-account-text b {font-size:12px;line-height:1.25;color:#243446;font-weight:650;}
+#hp-appbar .hp-account-text small {font-size:11px;line-height:1.25;color:#657487;margin-top:3px;max-width:220px;}
+#hp-appbar .hp-smallbtn {display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 13px;border-radius:12px;border:1px solid #e4e9ef;background:#fff;color:#425368;font-size:12px;font-weight:600;white-space:nowrap;flex:none;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;}
+#hp-appbar #hp-mobile-nav {display:none;}
+#hp-appbar #hp-signout svg {width:16px;height:16px;flex:none;}
+@media(hover:hover) {#hp-appbar .hp-smallbtn:hover {background:#f1f5fa;border-color:#dbe4ef;color:#243c5a;}}
+#hp-appbar .hp-smallbtn:active {transform:scale(.97);background:#edf2f8;}
+#hp-appbar .hp-smallbtn:focus-visible {outline:2px solid #1677ff;outline-offset:3px;}
+@media(max-width:900px) {
+    #hp-appbar {padding:0 18px;gap:12px;}
+    .hp-with-side #hp-appbar #hp-mobile-nav {display:inline-flex;width:40px;padding:0;}
+    #hp-appbar .hp-account-text small {max-width:160px;}
+}
+@media(max-width:600px) {
+    #hp-appbar {height:68px;padding:0 12px;gap:8px;}
+    #hp-appbar .hp-brand {gap:8px;}
+    #hp-appbar .hp-crest,#hp-appbar .hp-fallback {width:34px;height:34px;}
+    #hp-appbar .hp-brand-copy {padding-left:8px;}
+    #hp-appbar .hp-brand b {font-size:12px;white-space:normal;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+    #hp-appbar .hp-brand small {font-size:9px;letter-spacing:.15px;margin-top:3px;}
+    #hp-appbar .hp-account {gap:6px;}
+    #hp-appbar .hp-profile {padding:0;background:transparent;border:0;gap:0;}
+    #hp-appbar .hp-account-avatar {width:35px;height:35px;font-size:13px;}
+    #hp-appbar .hp-account-text {display:none;}
+    #hp-appbar #hp-signout {width:42px;height:42px;padding:0;}
+    #hp-appbar #hp-signout .hp-signout-label {display:none;}
+    #hp-appbar #hp-signout svg {width:18px;height:18px;}
+    #hp-appbar .hp-account > .hp-smallbtn:not(#hp-signout) {font-size:10px;padding:0 7px;max-width:82px;white-space:normal;line-height:1.2;}
+    .hp-with-side #hp-appbar #hp-mobile-nav {width:34px;min-height:38px;}
+}
+@media(max-width:360px) {
+    #hp-appbar {padding:0 8px;gap:6px;}
+    #hp-appbar .hp-brand {gap:5px;}
+    #hp-appbar .hp-brand-copy {padding-left:5px;}
+    #hp-appbar .hp-brand small {font-size:8px;}
+    #hp-appbar .hp-account {gap:4px;}
+}
+@media(prefers-reduced-motion:reduce) {#hp-appbar .hp-smallbtn {transition:none;}}
+</style>
 </head>
 
 <body class="hp-lock">
@@ -3050,7 +3107,7 @@ body.mh-has-fab #resources-page { padding-bottom: 130px; }
 <section id="hp-login" class="hp-login">
 <div class="hp-wrap"><header class="hp-top"><div class="hp-brand"><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div><b>Hawler Medical University</b><small>ACADEMIC PORTAL</small></div></div><div class="hp-menu-wrap"><button type="button" id="hp-menu-toggle" class="hp-iconbtn" aria-label="Portal menu" aria-expanded="false" aria-controls="hp-menu"><span class="hp-menu-lines" aria-hidden="true"><i></i><i></i><i></i></span></button><div class="hp-menu" id="hp-menu" hidden><button type="button" id="hp-about">About the portal</button><button type="button" id="hp-menu-help">Help &amp; support</button></div></div></header>
 <main class="hp-main"><section class="hp-panel" aria-labelledby="hp-login-title"><div class="hp-badge"><span class="hp-dot"></span> HMU ACADEMIC PORTAL · TEST</div><h1 id="hp-login-title">Sign in</h1><p class="hp-desc" id="hp-login-desc">Sign in with your university account. Your academic workspace opens automatically.</p><form id="hp-form"><label class="hp-field" for="hp-email">Email address<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg><input type="email" id="hp-email" placeholder="Enter your account email" autocomplete="username" required></span></label><label class="hp-field" for="hp-password">Password<span class="hp-input"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><input type="password" id="hp-password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" class="hp-show" id="hp-show" aria-pressed="false">Show</button></span></label><div class="hp-options"><span>Student &amp; administrator access</span><button type="button" id="hp-help" class="hp-help">Need help?</button></div><p id="hp-status" class="hp-status" role="status" aria-live="polite"></p><button type="submit" id="hp-submit" class="hp-submit">Sign in to portal <span aria-hidden="true">→</span></button></form><form id="hp-activation" hidden><label class="hp-field" for="hp-code">One-time activation code<span class="hp-input"><input id="hp-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="XXXX-XXXX-XXXX" required></span></label><p class="hp-status" id="hp-activation-status" role="status" aria-live="polite"></p><button class="hp-submit" id="hp-activate" type="submit">Activate account →</button><button type="button" id="hp-cancel-activation" class="hp-help" style="margin-top:15px">Back to sign in</button></form><div class="hp-note">College, stage, and permissions are assigned to your account. <b>No manual selection.</b></div></section></main><footer class="hp-footer"><span><b>Hawler Medical University</b> · Academic Portal</span><span>© 2026 · Test workspace</span></footer></div></section>
-<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div><button type="button" id="hp-signout" class="hp-smallbtn">Sign out</button></div></header>
+<header class="hp-appbar" id="hp-appbar" hidden><div class="hp-brand"><button type="button" class="hp-smallbtn hp-mobile-nav" id="hp-mobile-nav" aria-label="Open navigation" aria-expanded="false">☰</button><img class="hp-crest" src="/MedHub/reader/assets/hmu-logo.png" alt="HMU crest" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="hp-fallback" hidden>HMU</span><div class="hp-brand-copy"><b>Hawler Medical University</b><small id="hp-context">ACADEMIC PORTAL</small></div></div><div class="hp-account"><div class="hp-profile"><span class="hp-account-avatar" id="hp-account-avatar" aria-hidden="true"></span><div class="hp-account-text"><b id="hp-role"></b><small id="hp-account-email"></small></div></div><button type="button" id="hp-signout" class="hp-smallbtn" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5m5 5H3m10-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg><span class="hp-signout-label">Sign out</span></button></div></header>
 <div id="hp-backdrop" class="hp-backdrop" hidden></div><aside id="hp-sidebar" class="hp-side" aria-label="Administrator navigation" hidden></aside>
 <section id="hp-dashboard" class="hp-view" hidden><div class="hp-content"><div class="hp-welcome"><div class="hp-eyebrow">ADMINISTRATION / WORKSPACE</div><h1 id="hp-dashboard-title">University overview</h1><p class="hp-lead">Manage your academic workspace across colleges and stages.</p></div><div class="hp-statgrid" id="hp-stats"></div><div id="hp-v1-quick" hidden><div class="hp-sectionhead"><h2>Management</h2></div><div class="hp-v1-quick" id="hp-v1-quick-buttons"></div></div><div class="hp-sectionhead"><h2>Colleges &amp; stages</h2></div><div id="hp-collegegrid" class="hp-collegegrid"></div></div></section>
 <section id="hp-directory" class="hp-view" hidden><div class="hp-content"><div class="hp-eyebrow">Administration / Directory</div><h1>Administrators</h1><p class="hp-lead">Verified administrator assignments from Supabase.</p><div class="hp-card"><div class="hp-sectionhead"><h2>Administrator directory</h2><div class="hp-v1-actions"><button id="hp-admin-manage" type="button" class="hp-v1-primary">Manage administrators</button><button id="hp-refresh-directory" type="button" class="hp-smallbtn">Refresh</button></div></div><div class="hp-directory-filter"><input id="hp-dir-search" type="search" placeholder="Search email, Student ID or role" aria-label="Search administrators"><select id="hp-dir-college" aria-label="Filter by college"><option value="all">All colleges</option><option value="global">University-wide</option><option value="medicine">Medicine</option><option value="dentistry">Dentistry</option><option value="pharmacy">Pharmacy</option><option value="nursing">Nursing</option><option value="health_sciences">Health Sciences</option></select><select id="hp-dir-filter" aria-label="Filter by status"><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div><p id="hp-dir-result" role="status" aria-live="polite"></p><p id="hp-directory-status" role="status"></p><div class="hp-tablewrap"><table class="hp-table"><thead><tr><th>Account</th><th>Student ID</th><th>Role</th><th>College</th><th>Stage</th><th>Status</th><th>Action</th></tr></thead><tbody id="hp-directory-rows"></tbody></table></div></div></div><dialog id="hp-admin-dialog" aria-labelledby="hp-am-title">
