@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HMU Push Security Test</title>
+<style>body{font:16px system-ui,sans-serif;background:#f4f7fb;color:#162238;margin:0;padding:24px}main{max-width:620px;margin:9vh auto;background:white;padding:28px;border:1px solid #e0e7ef;border-radius:22px}h1{font-size:25px}p{line-height:1.55;color:#516075}button{font:inherit;font-weight:600;background:#1677ff;border:0;border-radius:12px;color:white;padding:14px 20px;width:100%}button:disabled{opacity:.55}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fa;padding:16px;border-radius:12px;font:15px system-ui;line-height:1.55}</style></head>
+<body><main><h1>HMU · Push security test</h1><p>Use a separate browser that has never subscribed to the HMU testing portal. This test uses a fictional identity, never a real student ID. No notifications are sent and no notification permission is requested.</p><button id="run" disabled>Run security test</button><pre id="result" role="status" aria-live="polite">Connecting to OneSignal…</pre><p>After testing, close this page. Do not use it to sign in.</p></main>
+<script>
+const appId='423f1264-5447-48a4-afd3-a51e41d6d761';
+const btn=document.getElementById('run'), result=document.getElementById('result');
+const show=t=>result.textContent=t;
+const enc=new TextEncoder();
+const b64=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const jwtPart=o=>b64(enc.encode(JSON.stringify(o)));
+let sdk, running=false;
+async function run(){
+ if(running)return;running=true;btn.disabled=true;
+ if(sdk.User.externalId||sdk.User.PushSubscription.optedIn||Notification.permission==='granted'){
+  show('STOP — This browser already has an account or notification permission. Use a fresh browser profile.');return;
+ }
+ const alias='hmu-security-probe-'+crypto.randomUUID();
+ let invalidated=false, settled=false, timer;
+ const onInvalid=e=>{if(e?.externalId===alias){invalidated=true;if(!settled)show('PASS — OneSignal rejected the invalid identity token. No real student identity was used.');}};
+ try{
+  const key=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},false,['sign','verify']);
+  const unsigned=jwtPart({alg:'ES256',typ:'JWT'})+'.'+jwtPart({iss:appId,exp:Math.floor(Date.now()/1000)+300,identity:{external_id:alias}});
+  const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},key.privateKey,enc.encode(unsigned));
+  const invalidToken=unsigned+'.'+b64(sig);
+  sdk.User.addEventListener('userJwtInvalidated',onInvalid);
+  show('Testing a token signed with an unrelated temporary key…');
+  timer=setTimeout(()=>{if(!settled&&!invalidated)show('INCONCLUSIVE — No rejection was confirmed. Close this page; do not enable automatic delivery yet.');},20000);
+  try{
+   await sdk.login(alias,invalidToken);
+   settled=true;
+   show('FAIL — The login resolved instead of rejecting the invalid token. Keep dry-run enabled. Fictional test ID: '+alias);
+   try{await sdk.logout();}catch{}
+  }catch{
+   // A network or other SDK error alone is not proof of enforcement.
+   await new Promise(r=>setTimeout(r,1200));settled=true;
+   show(invalidated?'PASS — OneSignal rejected the invalid identity token. No real student identity was used.':'INCONCLUSIVE — Login failed, but an identity-token rejection was not confirmed. Keep dry-run enabled.');
+  }
+ }catch{show('INCONCLUSIVE — Could not run the test. Keep dry-run enabled.');}
+ finally{clearTimeout(timer);sdk.User.removeEventListener('userJwtInvalidated',onInvalid);}
+}
+if(location.origin!=='https://eissaismail941.github.io'||location.pathname!=='/HMU-Portal-Testing/hmu-push-security-test.html'){
+ show('Upload this file to the root of HMU-Portal-Testing on GitHub Pages and open its HTTPS URL.');
+}else{
+ window.OneSignalDeferred=window.OneSignalDeferred||[];
+ window.OneSignalDeferred.push(async OneSignal=>{
+  try{await OneSignal.init({appId,serviceWorkerPath:'HMU-Portal-Testing/push/onesignal/OneSignalSDKWorker.js',serviceWorkerParam:{scope:'/HMU-Portal-Testing/push/onesignal/'},notifyButton:{enable:false},promptOptions:{slidedown:{prompts:[{type:'push',autoPrompt:false}]}},welcomeNotification:{disable:true}});sdk=OneSignal;if(!sdk.Notifications.isPushSupported()){show('INCONCLUSIVE — Use a supported browser in normal browsing mode.');return;}show('Ready. Tap Run security test.');btn.disabled=false;}catch{show('INCONCLUSIVE — SDK could not initialize.');}
+ });
+ btn.onclick=run;
+ const script=document.createElement('script');script.src='https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';script.async=true;script.onerror=()=>show('INCONCLUSIVE — SDK could not load.');document.head.append(script);
+}
+</script></body></html>
