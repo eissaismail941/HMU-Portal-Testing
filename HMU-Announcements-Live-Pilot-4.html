@@ -156,15 +156,15 @@ $('modal').addEventListener('click',e=>{if(e.target===$('modal')&&!savingPermiss
 // Live Pilot 4: real message actions. All mutations are authorized again by Supabase.
 let messageSaving=false;
 function canManageMessage(m){return !!(m&&channel()?.can_publish&&(m.is_mine||isSuper()));}
-function messageButton(m){return `<button class="iconbtn msgmenu" data-message="${esc(m.message_id)}" aria-label="Message actions" title="Message actions">${svg('more')}</button>`;}
+function messageButton(m){if(!canManageMessage(m))return '';return `<button class="iconbtn msgmenu" data-message="${esc(m.message_id)}" aria-label="Message actions" title="Message actions">${svg('more')}</button>`;}
 function findMessage(id){return rows.find(m=>String(m.message_id)===String(id));}
 function bindMessageActions(){
     for(const b of $('stream').querySelectorAll('[data-message]'))b.onclick=()=>messageActions(b.dataset.message);
 }
 function messageActions(id){
     if(!session||busy||managing||savingPermissions||messageSaving||$('modal').open)return;
-    const m=findMessage(id);if(!m)return;
-    const actions=canManageMessage(m)?[['edit','Edit message','edit'],['pin',m.is_pinned?'Unpin message':'Pin message',m.is_pinned?'unpin':'pin'],['copy','Copy text','copy'],['trash','Delete message','delete']]:[['copy','Copy text','copy']];
+    const m=findMessage(id);if(!canManageMessage(m))return;
+    const actions=[['edit','Edit message','edit'],['pin',m.is_pinned?'Unpin message':'Pin message',m.is_pinned?'unpin':'pin'],['copy','Copy text','copy'],['trash','Delete message','delete']];
     modalContent(modalTitle('Message')+`<div class="message-preview">${esc(m.body)}</div>`+actions.map(([i,t,a])=>`<button class="action ${a==='delete'?'danger':''}" data-message-action="${a}">${svg(i)}${esc(t)}</button>`).join(''));
     for(const b of $('modalBody').querySelectorAll('[data-message-action]'))b.onclick=async()=>{
         const a=b.dataset.messageAction, latest=findMessage(id);
