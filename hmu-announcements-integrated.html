@@ -86,6 +86,24 @@ html,body{margin:0;padding:0;background:#f7f8fa;height:100%;overflow:hidden;-web
 @media(min-width:721px) and (max-width:950px){.app{padding:15px}.layout{grid-template-columns:minmax(260px,300px) minmax(0,1fr);gap:12px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<style id="hmu-pearl-announcements">
+/* HMU Pearl — light, compact academic workspace. */
+:root{--ink:#172638;--muted:#657589;--line:#e5eaf0;--bg:#f5f7fa;--blue:#1677ff;--white:#fff;--soft:#eaf2ff;font-family:Inter,'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+html,body,#integrated-error{background:#f5f7fa}.app{max-width:1280px;padding:22px}.layout{gap:16px;grid-template-columns:minmax(300px,365px) minmax(0,1fr)}
+.sidebar,.conversation{border-radius:22px;border:1px solid #e5eaf0;box-shadow:0 4px 18px #20364d08;background:#f5f7fa}
+.sidehead{padding:28px 20px 8px;text-align:left}.eyebrow{font-size:10px;font-weight:650;letter-spacing:1.05px;color:#60758c;text-transform:uppercase}
+.sidehead h1{font-size:clamp(27px,3.4vw,34px);font-weight:730;letter-spacing:-1.35px;line-height:1.14;margin:9px 0 8px;color:#162435}.sub{font-size:13px;color:#64758a;font-weight:500}
+.search{margin-top:24px;background:#fff;border:1px solid #e1e7ee;border-radius:15px;padding:12px 13px;min-height:45px;box-shadow:0 2px 6px #243a4c04;color:#7c8b9d}.search input{font-size:14px;color:#223247}.search input::placeholder{color:#758397}.search:focus-within{border-color:#a9cafa;background:#fff;box-shadow:0 0 0 3px #1677ff0b}
+.channels{padding:4px 16px 22px}.sectionlabel{font-size:12px;letter-spacing:0;text-transform:none;font-weight:600;color:#66778b;padding:12px 5px 10px}
+.channel{background:linear-gradient(180deg,#fff 0%,#fdfefe 100%);min-height:76px;margin:0 0 9px;border:1px solid #e4e9ef;border-radius:18px;gap:12px;padding:13px 12px;box-shadow:0 2px 5px #1e3e5d05,inset 0 1px 0 #fff;transition:background .16s,transform .16s,border-color .16s}.channel:active:not(:disabled){transform:scale(.985)}.channel:hover{background:#fafdff;border-color:#dce6f3}.channel.selected{background:#eaf2ff;border-color:#cddfff}.channel.has-unread{border-color:#d6e5f7}
+.channel-icon,.channel-icon.college,.channel-icon.general{width:45px;height:45px;border-radius:15px;background:linear-gradient(150deg,#f2f7ff,#e5efff);box-shadow:inset 0 1px 0 #fff;color:#2772d9;border:1px solid #e1ebfa;font-weight:650}.channel-title{font-size:14px;color:#182638;font-weight:650;letter-spacing:-.22px}.channel-last{font-size:12px;color:#6b7b8d;margin-top:5px}.channel-meta{font-size:10px;gap:6px;color:#6b7b8d;font-variant-numeric:tabular-nums}.has-unread .channel-time{color:#236ac5}.count{background:#1677ff;min-width:20px;height:20px;font-size:10px;box-shadow:0 2px 5px #1677ff20}
+.sidefoot{background:transparent;justify-content:center;color:#718095;border-color:#e5eaf0;font-size:11px;padding:16px}.sidefoot svg{color:#758ba5}
+.conversation{background:#f5f7fa}.chathead,.composer,.readonly{background:#fff;border-color:#e5eaf0}.chathead{height:68px}.chatname{font-weight:650}.date{background:#e9eef5;color:#62748a}.bubble{background:#fff;border:1px solid #e3e9ef;box-shadow:0 2px 6px #21384c05;border-radius:18px 18px 18px 6px}.mine .bubble{background:#e8f1ff;border-color:#d6e5fc}.composefield{border-radius:18px;background:#f5f7fa}.send{box-shadow:0 3px 8px #1677ff25}.modal{border-radius:22px}.boot-list{padding:12px 16px}.boot-item{background:white;border:1px solid #e4e9ef;border-radius:18px;padding:13px}.boot-sub{margin:9px 0 20px}.boot-search{background:white;border:1px solid #e1e7ee;border-radius:15px}
+@media(max-width:720px){.app{padding:0;height:100dvh}.layout{gap:0}.sidebar,.conversation{border:0;border-radius:0;box-shadow:none}.sidehead{padding:30px 22px 8px}.sidehead h1{font-size:clamp(28px,7.5vw,34px)}.channels{padding:4px 20px 20px}.channel{min-height:76px;margin-bottom:9px}.sidefoot{padding:16px 20px max(16px,env(safe-area-inset-bottom))}.chathead{height:64px}.boot-list{padding:12px 20px}.search{margin-top:24px}}
+@media(max-width:360px){.sidehead{padding-inline:16px}.channels{padding-inline:14px}.channel{gap:9px;padding:12px 10px}.channel-icon,.channel-icon.college,.channel-icon.general{width:40px;height:40px}.channel-title{font-size:13px}.channel-meta{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
 <script>
 'use strict';
 const $=id=>document.getElementById(id), svg=n=>`<svg aria-hidden="true"><use href="#${n}"/></svg>`, esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
