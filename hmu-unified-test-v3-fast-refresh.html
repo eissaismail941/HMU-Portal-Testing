@@ -5105,7 +5105,7 @@ lastLibraryPaint={key:d?.key,items,entry};grid.replaceChildren();const order=com
 const MSD_MIGRATED_IDS=new Set(["c36fdc04-c35a-458c-97cc-9b2dade3ad6e","3769a9f7-dc52-4831-9f4d-7e7b902560b4","1fdb8ba2-26f6-403b-9543-529ac146de12","c5513294-280c-4176-92f3-3e8b46e8c24f","a69ea21f-16cb-48a3-a5d3-e715a2d2f60d","0304036e-1dc0-4915-bb2a-4fb6b4ca3352","c378fffa-13d9-46ee-8728-feeb2c9db088","d4411eb6-3114-4e09-b9a5-a2b978f4a55c","ebd73d4f-9cd3-41e5-b0ab-0237ab90ff7a","22a4e40d-b810-44b7-8840-d803d8969b31","cac3913a-7f7b-4611-9573-e4150eed97fe","96367323-47ab-475e-9bbc-7cc4b34a51d6","65bab07c-338b-4bb3-9af9-bdbe4e1fb6fb","39cfddf7-83b1-4b72-8f5e-05dfd4dc4e6a","264c65f0-cb7a-4dbd-91ad-633996963be4","e1f8ff4b-21b1-42c1-b532-f10d25799490","e2167d42-d834-4cfc-b7cd-3fcd8bfb4483","6a461ab6-14ed-497d-ad60-71b07b94d434","744a4a04-5aea-4209-adc9-2c70126c33bf","cbf458da-cff4-4f20-bd96-7ad1e7767f55","3da67f37-a296-47fd-a74e-90cee7e04a55","d19fa712-aa6f-4993-803a-cf7413eed534","2c5438d3-cc23-4698-a5c1-c5c8728794d6","fa702322-fba4-43c4-a2be-f9677d04b8a0","f024bbff-b542-4e22-bcc1-809515c671d6","e97650f6-7330-4b28-b8ad-3987627d7a02","56365034-f75c-4321-b368-b9adf874b197","402dee4c-fc10-4355-8459-9f9608d3f4bc","eb560398-5cc2-4ea0-bdcd-ae3307210411","24f661f0-d162-4e0a-872e-b1f366fc5ac4","9baf7098-721f-4689-a6dd-6d52781da174","49c0bc5c-6f2c-4c6c-a095-25d60ce8c1bb","a276e879-5185-4e4a-88ab-f920c9f11bf4","7d1c9df6-5d22-46e3-9765-3e5bf701cf10","fcdd860b-c28e-4192-9ee5-25c291622a11","3caf94f8-572f-4e22-a406-6e4e9ed4aa67","6a5863c7-9ad4-4766-b8b9-9cb96cb08b9b"]);
 async function refreshLectures(){if(!account||!scope.some(x=>x.college==='medicine'&&x.stage<=2))return;const epoch=++lectureEpoch;const stages=scope.filter(x=>x.college==='medicine'&&x.stage<=2).map(x=>x.stage);el('hp-library-note').textContent='';try{const t=await token(),rows=[];for(let offset=0;;offset+=1000){const pre=offset===0&&stages.length===1?await useEarlyList('public',stages[0],null,t):null;const r=Array.isArray(pre)?pre:await api('/rest/v1/lectures?select=*&stage=in.('+stages.join(',')+')&order=sort_order.asc,created_at.asc,id.asc&limit=1000&offset='+offset,{token:t});if(!Array.isArray(r))throw Error('Invalid lecture response');rows.push(...r);if(r.length<1000)break;}if(epoch!==lectureEpoch||!account)return;for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();for(const r of rows){if(Number(r.stage)===2&&Number(r.block)===2&&MSD_MIGRATED_IDS.has(r.id))continue;const c=catalog.find(x=>x.key===r.subject&&x.stage===Number(r.stage)&&x.block===Number(r.block));const path=r.file_path;if(!c||!can('medicine',c.stage)||typeof path!=='string'||!path||path.includes('..')||path.startsWith('/'))continue;const isR2=path.startsWith('r2:');const encoded=(isR2?path.slice(3):path).split('/').map(encodeURIComponent).join('/');const url=(isR2?'https://pub-681ff110769849699153517b61f29a22.r2.dev/':URL_BASE+'/storage/v1/object/public/lectures/')+encoded;subjectMap[c.key].resources.push({title:r.title,description:r.description||r.category,url,lectureDate:r.lecture_date||null,fileSizeBytes:Number(r.file_size_bytes)||null,row:r});}el('hp-library-note').textContent='';/* Render once both lecture sources have settled. */}catch(e){if(epoch===lectureEpoch&&account)el('hp-library-note').textContent='Uploaded lectures could not be refreshed. Original lectures remain available. Reload to retry.';}}
 function enter(restore=false){auth.uiRole=account.role;auth.uiSide=hasSide();rememberOnEntry();store();renderNav();let r=restore&&allowed(history.state)?history.state:root();history.replaceState(r,'');syncLibraryAccount();startPublicLectures();render(r);pushAccountEntered();}
-async function logout(revoke=true){closeProfile();closePush();const pushCleanup=pushAccountLeft();earlyLibrary=null;resetActivation();const prev=auth;rememberRequested=false;clearRemembered(prev);auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});await pushCleanup;}
+async function logout(revoke=true){closeProfile();closePush(false,false);const pushCleanup=pushAccountLeft();earlyLibrary=null;resetActivation();const prev=auth;rememberRequested=false;clearRemembered(prev);auth=null;account=null;scope=[];active=null;lectureEpoch++;directoryEpoch++;store();try{sessionStorage.removeItem('hmu-r2-phase5-session-v1');}catch{}for(const [k,items] of Object.entries(original))subjectMap[k].resources=items.slice();directoryRows=[];el('hp-dir-search').value='';el('hp-dir-filter').value='all';el('hp-directory-rows').replaceChildren();el('resource-grid').replaceChildren();el('hp-sidebar').replaceChildren();closeNav();history.replaceState({v:'hp-login',d:0},'');render(null);el('hp-password').value='';status('');if(revoke&&prev?.access_token)api('/auth/v1/logout',{method:'POST',token:prev.access_token}).catch(()=>{});await pushCleanup;}
 el('hp-form').addEventListener('submit',async e=>{e.preventDefault();if(busy)return;setBusy(true);status('');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email:el('hp-email').value.trim(),password:el('hp-password').value}});rememberRequested=el('hp-remember').checked;try{localStorage.removeItem(REMEMBER_KEY);}catch{}setAuth(d);await resolveAccount();el('hp-password').value='';if(account)enter();}catch(e){await logout();status(e.message||'Could not sign in.');}finally{setBusy(false);}});
 el('hp-cancel-activation').onclick=()=>logout();
 el('hp-activation').addEventListener('submit',async e=>{e.preventDefault();if(busy||!auth)return;const b=el('hp-activate');busy=true;b.disabled=true;el('hp-activation-status').textContent='';try{const data=await studentApi('/api/v1/student/activate',{code:el('hp-code').value.trim()});if(data.ok!==true)throw Error('Activation could not be verified.');acceptStudent(data.student);resetActivation();enter();}catch(e){el('hp-activation-status').textContent=e.message;}finally{busy=false;b.disabled=false;}});
@@ -5138,7 +5138,7 @@ async function checkPushWorker(){
 const PUSH_LINK_MARKER='hmu-push-linked-device-v1';
 function pushMarker(value){try{if(value===undefined)return localStorage.getItem(PUSH_LINK_MARKER)==='1';if(value)localStorage.setItem(PUSH_LINK_MARKER,'1');else localStorage.removeItem(PUSH_LINK_MARKER);}catch{}return false;}
 function studentPushId(){return account?.role==='student'&&scope[0]?.college==='medicine'?auth?.user?.id||null:null;}
-function closePush(focus=false){pushPanel.hidden=true;pushToggle.setAttribute('aria-expanded','false');if(focus)pushToggle.focus();}
+function closePush(focus=false, acknowledge=true){const wasOpen=!pushPanel.hidden;pushPanel.hidden=true;pushToggle.setAttribute('aria-expanded','false');if(wasOpen&&acknowledge)autoReadInbox();if(focus)pushToggle.focus();}
 function paintPush(){
   const id=studentPushId(), supported=pushSDK&&pushSDK.Notifications.isPushSupported();
   const permission=typeof Notification!=='undefined'?Notification.permission:'default';
@@ -5221,7 +5221,7 @@ function pushAccountLeft(){
     finally{paintPush();}
   });
 }
-pushToggle.onclick=()=>{if(!inboxCurrent())return;const open=pushPanel.hidden;closeProfile();pushPanel.hidden=!open;pushToggle.setAttribute('aria-expanded',String(open));if(open)refreshInbox();};
+pushToggle.onclick=()=>{if(!inboxCurrent())return;if(!pushPanel.hidden){closePush();return;}closeProfile();pushPanel.hidden=false;pushToggle.setAttribute('aria-expanded','true');refreshInbox();};
 pushAction.onclick=async()=>{
   const id=studentPushId(),epoch=pushEpoch;if(!id)return;
   if(pushActionStalled){location.reload();return;}
@@ -5305,15 +5305,43 @@ async function refreshInbox(){
   }catch(e){if(epoch===inboxEpoch&&inboxCurrent()){inboxError='Could not load notifications. Tap refresh to retry.';inboxRows=[];annInboxPositions=[];inboxUnread=0;inboxReady=false;}}
   finally{if(epoch===inboxEpoch){inboxLoading=false;inboxPaint();}}
 }
-async function markInbox(ids){
+// Acknowledge only the loaded notification snapshot, not newer server-side events.
+function autoReadInbox(){
+  if(!inboxCurrent()||!inboxReady||inboxWriting)return;
+  const rows=inboxRows.filter(n=>!n.read_at),ids=[],latest=new Map();
+  for(const n of rows){
+    if(n.kind==='lecture'&&inboxUUID.test(n.id))ids.push(n.id);
+    else if(n.kind==='announcement'&&validAnnPosition(n)){
+      const old=latest.get(n.channel_id);
+      if(!old||old.message_id<n.message_id)latest.set(n.channel_id,{channel_id:n.channel_id,message_id:n.message_id});
+    }
+  }
+  if(ids.length||latest.size)void markInbox(ids,[...latest.values()],true);
+}
+async function markInbox(ids,explicitPositions=null,optimistic=false){
   if(!inboxCurrent()||inboxWriting||!inboxReady)return;const owner=inboxOwner;
-  const positions=ids===null?annInboxPositions.slice():[];
-  inboxEpoch++;const writeEpoch=inboxEpoch;inboxLoading=false;inboxWriting=true;inboxPaint();
+  const positions=explicitPositions??(ids===null?annInboxPositions.slice():[]);
+  if(ids!==null&&!ids.length&&!positions.length)return;
+  inboxEpoch++;const writeEpoch=inboxEpoch;inboxLoading=false;inboxWriting=true;
+  const previousRows=inboxRows,previousUnread=inboxUnread;
+  if(optimistic){
+    const selected=new Set(ids),watermarks=new Map(positions.map(p=>[p.channel_id,p.message_id]));let acknowledged=0;
+    inboxRows=inboxRows.map(n=>{
+      if(n.read_at||!(n.kind==='lecture'?selected.has(n.id):n.message_id<=(watermarks.get(n.channel_id)??0)))return n;
+      acknowledged++;return {...n,read_at:new Date().toISOString()};
+    });
+    inboxUnread=Math.max(0,inboxUnread-acknowledged);
+  }
+  inboxPaint();let failed=false;
   try{
-    const results=await Promise.allSettled([inboxRPC('hmu_pilot_inbox_read',{p_ids:ids},owner,writeEpoch),...positions.map(p=>inboxRPC('hmu_ann_pilot_mark_read',{p_channel_id:p.channel_id,p_seen_message_id:p.message_id},owner,writeEpoch).then(v=>{if(v!==true)throw Error('Read failed');}))]);
+    const jobs=ids===null||ids.length?[inboxRPC('hmu_pilot_inbox_read',{p_ids:ids},owner,writeEpoch)]:[];
+    jobs.push(...positions.map(p=>inboxRPC('hmu_ann_pilot_mark_read',{p_channel_id:p.channel_id,p_seen_message_id:p.message_id},owner,writeEpoch).then(v=>{if(v!==true)throw Error('Read failed');})));
+    const results=await Promise.allSettled(jobs);
     if(results.some(x=>x.status==='rejected'))throw Error('Some notifications could not be marked as read');
-  }catch{if(writeEpoch===inboxEpoch&&inboxCurrent())inboxError='Could not mark every notification as read. Try again.';}
-  finally{if(writeEpoch===inboxEpoch){inboxWriting=false;inboxPaint();refreshInbox();}}
+  }catch{if(writeEpoch===inboxEpoch&&inboxCurrent()){
+    failed=true;if(optimistic){inboxRows=previousRows;inboxUnread=previousUnread;}
+    inboxError='Could not mark every notification as read. Try again.';
+  }}finally{if(writeEpoch===inboxEpoch){inboxWriting=false;inboxPaint();await refreshInbox();if(failed&&writeEpoch===inboxEpoch&&inboxCurrent()&&!inboxError&&inboxUnread){inboxError='Some notifications could not be marked as read. Try again.';inboxPaint();}}}
 }
 async function inboxOpenAnnouncement(n){
   if(!inboxCurrent()||!inboxRows.includes(n)||!validAnnPosition(n))return;
@@ -5325,7 +5353,6 @@ async function inboxOpenAnnouncement(n){
 function inboxOpenLecture(n){
   if(!inboxCurrent()||!inboxRows.includes(n))return;
   const c=catalog.find(c=>c.stage===n.stage&&(c.stage===1?'stage1':c.block===1?'ibs':c.block===2?'msd':'')===n.block&&subjectMap[c.key].title.replace(/\s+Resource Library\s*$/i,'').trim()===n.subject);
-  if(!n.read_at)markInbox([n.id]);
   if(!c||!allowed({v:'res',key:c.key})){inboxSummary.textContent='This subject is not available in your portal.';return;}
   inboxTarget={id:n.id,key:c.key,owner:account};closePush();go({v:'res',key:c.key});
   const d=currentLibraryScope();if(d?.block){const e=prepareBlock(d,true);if(e)e.promise.then(inboxFocusLecture);}
