@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f5f7fa"><title>HMU · Announcements</title>
+<style>
+:root{--blue:#1677ff;--ink:#17263a;--muted:#79879a;--line:#e8edf3;--bg:#f4f6f9;--white:#fff;--soft:#e9f1ff;--shadow:0 15px 50px #243b5510;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);font-size:15px}*{box-sizing:border-box}body{margin:0;background:#edf1f6}button,input,textarea,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:3px}button:disabled{cursor:default;opacity:.42}svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}button,.channel,.bubble{transition:background .18s,transform .18s,box-shadow .18s}button:active:not(:disabled){transform:scale(.97)}.app{height:100dvh;max-width:1440px;margin:auto;display:flex;flex-direction:column;background:var(--white);overflow:hidden}.top{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid var(--line);gap:16px;background:#fff}.brand{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;height:40px;width:40px;border-radius:13px;background:#eaf2ff;color:#165cbd;font-size:12px;font-weight:850;letter-spacing:-.6px}.brand strong{display:block;font-size:14px;letter-spacing:-.25px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.topright{display:flex;align-items:center;gap:12px}.demo{font-size:11px;color:#7f8a98;letter-spacing:.02em}.role{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:24px;padding:6px 10px 6px 6px;font-weight:600;font-size:12px;white-space:nowrap}.avatar{display:grid;place-items:center;width:30px;height:30px;background:#e8f1ff;color:#1677ff;border-radius:50%;font-size:13px;font-weight:650}.role svg{width:14px;height:14px;color:var(--muted)}.layout{display:grid;grid-template-columns:340px 1fr;min-height:0;flex:1}.sidebar{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:#fff}.sidehead{padding:28px 23px 13px}.eyebrow{color:#8793a3;font-size:10px;letter-spacing:.105em;font-weight:650;text-transform:uppercase}.sidehead h1{font-size:29px;letter-spacing:-1.1px;margin:7px 0 5px;font-weight:700}.sub{color:var(--muted);font-size:13px}.search{display:flex;align-items:center;gap:8px;background:#f3f5f8;border-radius:12px;padding:10px 12px;margin-top:21px;color:#8995a5}.search svg{width:17px;height:17px}.search input{border:none;background:transparent;outline:none;width:100%;min-width:0;font-size:13px}.scope{display:flex;align-items:center;gap:9px;margin:14px 0 0}.scope select{background:white;border:1px solid var(--line);border-radius:9px;padding:7px 9px;font-size:12px;min-width:0}.channels{padding:8px 12px 24px;overflow:auto;flex:1}.sectionlabel{padding:13px 13px 8px;color:#99a3b0;text-transform:uppercase;font-size:10px;font-weight:650;letter-spacing:.09em}.channel{display:flex;align-items:center;text-align:left;width:100%;padding:13px 11px;gap:12px;border-radius:14px;min-width:0;margin:2px 0}.channel:hover{background:#f6f8fb}.channel.selected{background:#edf4ff}.channel-icon{width:49px;height:49px;border-radius:50%;display:grid;place-items:center;flex:none;background:#eff3f8;color:#58738f;font-weight:600;font-size:18px}.channel-icon.general{background:#e5efff;color:#1677ff}.channel-icon.college{background:#e8edf6;color:#5271a2}.channel-icon svg{width:23px;height:23px}.channel-info{flex:1;min-width:0}.channel-title{font-weight:650;font-size:14px;letter-spacing:-.14px}.channel-last{font-size:12px;color:#7a8798;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:5px}.channel-meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;color:#96a1af;font-size:10px;flex:none}.count{min-width:19px;height:19px;padding:0 5px;border-radius:12px;display:grid;place-items:center;background:var(--blue);color:white;font-size:10px;font-weight:650}.sidefoot{display:flex;align-items:center;gap:8px;color:#8995a5;font-size:11px;padding:17px 23px;border-top:1px solid var(--line)}.sidefoot svg{width:15px;height:15px;color:#7890ab}.conversation{min-width:0;min-height:0;display:flex;flex-direction:column;background:#f4f6f9;position:relative}.chathead{height:74px;flex:none;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 27px;z-index:2}.chathead .channel-icon{width:42px;height:42px}.chathead .channel-icon svg{width:21px;height:21px}.chatname{font-size:16px;font-weight:650;letter-spacing:-.25px}.chatdesc{font-size:11px;color:#8995a5;margin-top:4px}.headtext{flex:1;min-width:0}.iconbtn{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;color:#718096;flex:none}.iconbtn:hover{background:#eff3f8;color:#1677ff}.back{display:none;color:var(--blue)}.pinned{display:flex;align-items:center;gap:11px;background:#fcfdff;border-bottom:1px solid #e5edf8;padding:10px 27px;flex:none;cursor:pointer}.pinbar{height:32px;width:3px;background:var(--blue);border-radius:6px}.pinned strong{font-size:11px;color:var(--blue);display:block;margin-bottom:3px}.pinned span{font-size:12px;color:#64748b;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.pinned svg{color:#7b9ed3;width:17px;height:17px}.pinned[hidden]{display:none}.chatsearch{display:flex;gap:8px;background:#fff;padding:10px 27px;border-bottom:1px solid var(--line)}.chatsearch[hidden]{display:none}.chatsearch input{width:100%;border:1px solid var(--line);padding:9px 12px;border-radius:10px}.scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:25px 28px 22px;scroll-behavior:smooth}.stream{max-width:760px;margin:auto;display:flex;flex-direction:column;gap:14px}.date{align-self:center;color:#8591a1;font-size:11px;font-weight:550;padding:5px 13px;border-radius:30px;background:#e8edf3;margin:5px 0 9px}.msg{display:flex;gap:9px;align-items:flex-end;animation:appear .23s ease both}.msg.mine{justify-content:flex-end}.mini{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#e4ecf8;color:#57769d;font-size:10px;font-weight:700;flex:none;margin-bottom:2px}.bubble{max-width:min(83%,530px);min-width:126px;background:#fff;border:1px solid #eaf0f5;border-radius:17px 17px 17px 5px;padding:12px 14px 9px;box-shadow:0 2px 6px #1d314006;position:relative;overflow-wrap:anywhere}.mine .bubble{background:#dfeaff;border-color:#dce7fc;border-radius:17px 17px 5px 17px}.sender{font-size:11px;color:#3975c9;font-weight:650;display:flex;gap:5px;align-items:center;margin-bottom:6px}.sender svg{width:13px;height:13px}.text{font-size:14px;line-height:1.62;white-space:pre-wrap}.meta{display:flex;align-items:center;justify-content:flex-end;gap:5px;color:#8b9aad;font-size:10px;margin-top:7px}.meta svg{width:15px;height:15px;color:#548be0}.msgmenu{color:#8191a6;opacity:0;align-self:center;width:31px;height:31px}.msg:hover .msgmenu,.msgmenu:focus-visible{opacity:1}.filecard{display:flex;align-items:center;gap:10px;background:#edf3fc;padding:11px;border-radius:12px;margin-top:8px;text-decoration:none;color:var(--ink);min-width:0}.fileicon{width:36px;height:38px;border-radius:10px;background:#dfebff;color:#1677ff;display:grid;place-items:center;flex:none}.filecard strong{display:block;font-size:12px;overflow-wrap:anywhere}.filecard small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.filecard>svg{color:var(--blue);width:18px;height:18px}.attachment-image{display:block;max-width:100%;max-height:270px;object-fit:contain;border-radius:11px;margin-top:9px}.composer{background:#fff;border-top:1px solid var(--line);padding:13px 25px max(14px,env(safe-area-inset-bottom));flex:none}.compose-inner{max-width:760px;margin:auto}.compose-row{display:flex;gap:10px;align-items:flex-end}.add{background:#f0f4fa;color:var(--blue);width:42px;height:42px}.composefield{flex:1;min-width:0;display:flex;align-items:center;border:1px solid #e6ebf1;background:#f7f8fa;border-radius:23px;padding:10px 15px;min-height:43px}.composefield textarea{background:transparent;border:0;outline:0;resize:none;width:100%;line-height:21px;max-height:120px;min-height:21px;font-size:14px}.send{width:42px;height:42px;border-radius:50%;background:var(--blue);color:white;display:grid;place-items:center;flex:none;box-shadow:0 3px 9px #1677ff2a}.send:disabled{box-shadow:none}.compose-note{font-size:10px;color:#9aa5b3;padding:8px 4px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}.compose-note svg{width:12px;height:12px}.readonly{display:flex;align-items:center;justify-content:center;gap:7px;color:#8794a6;font-size:12px;padding:19px;background:#fff;border-top:1px solid var(--line);flex:none}.readonly svg{width:14px;height:14px}.draftfile,.editing{display:flex;align-items:center;gap:10px;background:#eef4ff;padding:8px 12px;border-radius:10px;margin-bottom:9px;font-size:12px;color:#4174b7}.draftfile[hidden],.editing[hidden]{display:none}.draftfile button,.editing button{margin-left:auto;color:#64748b}.attachmenu{display:flex;gap:16px;background:#fff;padding:15px 5px;border-bottom:1px solid var(--line);margin-bottom:10px}.attachmenu[hidden]{display:none}.attachmenu button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;color:#6a788b}.attachmenu button span{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:#eaf2ff;color:var(--blue)}.empty{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;color:#8695a8}.empty-icon{display:grid;place-items:center;width:68px;height:68px;border-radius:24px;background:#e6edf8;color:#6e94c7;margin:0 auto 15px}.empty-icon svg{width:31px;height:31px}.empty strong{display:block;font-size:17px;color:#43556c;margin-bottom:7px}.empty p{font-size:13px;line-height:1.6;margin:0}.blank{flex:1;display:grid;place-items:center}.modal{border:none;border-radius:23px;padding:0;width:min(420px,calc(100% - 32px));max-height:85dvh;box-shadow:0 25px 90px #14233835;color:var(--ink)}.modal::backdrop{background:#15263d55;backdrop-filter:blur(4px)}.modal-body{padding:24px}.modal-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:20px;letter-spacing:-.4px;font-weight:700;margin-bottom:6px}.modal p{color:var(--muted);font-size:13px;line-height:1.55;margin:5px 0 17px}.role-option{display:flex;align-items:center;text-align:left;gap:12px;width:100%;padding:13px;border-radius:13px;margin:4px 0;background:#f5f7fa}.role-option.active{background:#e8f1ff;color:var(--blue)}.role-option span{flex:1}.role-option small{display:block;font-size:11px;margin-top:4px;color:#8290a1}.settingsline{display:flex;align-items:center;gap:10px;margin:14px 0}.settingsline label{font-size:12px;color:var(--muted)}.settingsline select{flex:1;padding:8px;border:1px solid var(--line);border-radius:10px;background:white}.primary{background:var(--blue);color:white;border-radius:12px;padding:11px 18px;font-weight:600;width:100%;margin-top:8px}.quiet{display:block;color:#8b98a8;font-size:11px;margin:15px auto 0}.action{display:flex;align-items:center;gap:12px;width:100%;padding:13px 6px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}.action:last-child{border-bottom:0}.action svg{color:#71859e}.action.danger{color:#d84949}.action.danger svg{color:#d84949}.toast{position:fixed;z-index:99;left:50%;bottom:25px;transform:translateX(-50%);background:#26384c;color:white;font-size:12px;padding:12px 17px;border-radius:25px;box-shadow:var(--shadow);max-width:90%;text-align:center}.toast[hidden]{display:none}.newsep{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--blue);margin:4px 0}.newsep:before,.newsep:after{content:'';height:1px;background:#cbdcf7;flex:1}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:1100px){body{padding:24px}.app{height:calc(100dvh - 48px);border:1px solid #e3e9f0;border-radius:24px;box-shadow:0 16px 70px #283c5711}.layout{grid-template-columns:350px 1fr}}@media(max-width:720px){.app{height:100dvh}.top{height:62px;padding:0 17px}.brand{gap:9px}.brand strong{font-size:13px}.brand small{font-size:10px}.mark{width:34px;height:34px;border-radius:11px}.demo{display:none}.topright{gap:4px}.role{font-size:11px;padding-right:8px}.role .avatar{width:26px;height:26px}.layout{display:flex;position:relative}.sidebar,.conversation{width:100%;border:0}.conversation{display:none}.layout.inchat .sidebar{display:none}.layout.inchat .conversation{display:flex}.sidehead{padding:25px 21px 10px}.sidehead h1{font-size:30px}.channels{padding:8px 10px}.channel{padding:14px 11px}.sidefoot{padding:15px 20px max(15px,env(safe-area-inset-bottom))}.back{display:grid;width:30px;margin-left:-7px}.chathead{height:65px;padding:0 15px;gap:9px}.chathead .channel-icon{width:38px;height:38px}.chatname{font-size:15px}.chatdesc{font-size:10px}.chathead .iconbtn{width:32px;height:32px}.scroll{padding:18px 13px}.stream{gap:12px}.bubble{max-width:85%;padding:11px 12px 8px}.text{font-size:14px}.mini{width:25px;height:25px;font-size:9px}.msg{gap:6px}.msgmenu{opacity:1;width:24px;height:28px}.msgmenu svg{width:17px;height:17px}.pinned{padding:9px 16px}.composer{padding:11px 12px max(10px,env(safe-area-inset-bottom))}.compose-row{gap:8px}.compose-note{font-size:9px}.readonly{padding:17px 10px max(17px,env(safe-area-inset-bottom))}.chatsearch{padding:9px 14px}.layout.inchat~.top{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style><style>#roleBtn:disabled{opacity:1;cursor:default}.login-screen{display:none!important}#integrated-error{position:fixed;inset:0;background:#fcfcfb;display:grid;place-content:center;text-align:center;padding:24px;color:#435269;font-size:14px;line-height:1.6}#integrated-error button{color:#1677ff;font-weight:600;margin:12px auto}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs><symbol id="refresh" viewBox="0 0 24 24"><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></symbol>
+<symbol id="users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M16 3a4 4 0 0 1 0 8M21 21v-2a4 4 0 0 0-3-3.9"/><circle cx="9.5" cy="7" r="4"/></symbol>
+<symbol id="search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></symbol>
+<symbol id="chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol><symbol id="down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></symbol>
+<symbol id="pin" viewBox="0 0 24 24"><path d="m16 3 5 5-4 2-3 5v3l-8-8h3l5-3zM10 14l-7 7"/></symbol>
+<symbol id="send" viewBox="0 0 24 24"><path d="M12 20V4m-7 7 7-7 7 7"/></symbol><symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="file" viewBox="0 0 24 24"><path d="M13 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10zM13 3v7h7M8 14h8M8 17h6"/></symbol>
+<symbol id="image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="2"/><path d="m21 16-5-5L5 21"/></symbol>
+<symbol id="paperclip" viewBox="0 0 24 24"><path d="m21 11-9 9a6 6 0 0 1-8-8L14 2a4 4 0 0 1 6 6L10 18a2 2 0 0 1-3-3l9-9"/></symbol><symbol id="download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol><symbol id="double" viewBox="0 0 24 24"><path d="m2 12 4 4L16 6m-5 10L21 6"/></symbol>
+<symbol id="shield" viewBox="0 0 24 24"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H3l2-4a8.5 8.5 0 1 1 16-4.5Z"/><path d="M8 11h9M8 14h5"/></symbol>
+<symbol id="megaphone" viewBox="0 0 24 24"><path d="m3 10 15-6v16L3 14zM7 16l2 5h4l-2-4M21 9v6"/></symbol>
+<symbol id="edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L21 6l-4-4L4 15z"/></symbol><symbol id="trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V3h8v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol><symbol id="copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 5V3H3v13h2"/></symbol>
+<symbol id="forward" viewBox="0 0 24 24"><path d="m14 4 7 7-7 7v-4H9c-4 0-6 2-6 6V11a5 5 0 0 1 5-5h6z"/></symbol><symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<div id="bootRoot" class="app boot-shell" role="status" aria-label="Restoring announcements">
+<header class="top"><div class="brand"><div class="mark">HMU</div><div><strong>Hawler Medical University</strong><small>Academic Portal · Medicine</small></div></div><div class="boot-profile" aria-hidden="true"></div></header>
+<div class="layout"><aside class="sidebar" aria-hidden="true"><div class="sidehead"><div class="eyebrow">College of Medicine</div><h1>Announcements</h1><div class="boot-line boot-sub"></div><div class="boot-search"></div></div><div class="boot-list"><div class="boot-item"><i></i><span><b></b><em></em></span></div><div class="boot-item"><i></i><span><b></b><em></em></span></div><div class="boot-item"><i></i><span><b></b><em></em></span></div><div class="boot-item"><i></i><span><b></b><em></em></span></div></div><div class="sidefoot">Official academic communication</div></aside><main class="conversation boot-conversation" aria-hidden="true"></main></div></div>
+<section id="integrated-error" hidden role="status"><strong id="integrated-error-text">Announcements unavailable.</strong><button type="button" id="integrated-retry">Try again</button></section><div id="login" class="login-screen" hidden><form id="loginForm" class="login-card"><div class="mark">HMU</div><h1>Announcements</h1><p>Sign in with your existing HMU account to access the live announcement pilot.</p><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><label class="remember-option" for="rememberSession"><input id="rememberSession" type="checkbox"><span>Keep me signed in on this device</span></label><button class="primary" id="loginSubmit" type="submit">Sign in</button><button id="retrySession" type="button" class="session-retry" hidden>Retry saved session</button><div id="loginError" role="alert"></div><small>Restricted pilot · No push notifications<br>Use a personal device to stay signed in.</small></form></div><div class="app" id="appRoot" hidden><header class="top"><div class="brand"><div class="mark">HMU</div><div><strong>Hawler Medical University</strong><small>Academic Portal · Medicine</small></div></div><div class="topright"><button class="manage" id="manageBtn" aria-label="Manage announcement permissions" hidden><svg><use href="#shield"/></svg><span>Permissions</span></button><button class="role" id="roleBtn" aria-label="Account role" disabled><span class="avatar" id="roleAvatar">A</span><span id="roleName">Student</span></button></div></header>
+<div class="layout" id="layout"><aside class="sidebar"><div class="sidehead"><div class="eyebrow">College of Medicine</div><h1>Announcements</h1><div class="sub" id="sideSub"></div><label class="search"><svg><use href="#search"/></svg><input id="channelSearch" placeholder="Search channels" aria-label="Search channels" autocomplete="off"></label><div class="scope" id="stageScope"></div></div><div class="channels" id="channels"></div><div class="sidefoot"><svg><use href="#shield"/></svg><span>Official academic communication</span></div></aside><main class="conversation" id="conversation"><div class="blank" id="blank"><div class="empty"><div><div class="empty-icon"><svg><use href="#chat"/></svg></div><strong>Your academic updates</strong><p>Choose a channel to view live announcements.</p></div></div></div><header class="chathead" id="chathead" hidden><button class="iconbtn back" id="backBtn" aria-label="Back to channels"><svg><use href="#back"/></svg></button><div id="chatIcon"></div><div class="headtext"><div class="chatname" id="chatName"></div><div class="chatdesc" id="chatDesc"></div></div><span class="live-state" id="liveState" data-state="idle" role="status" aria-live="polite">Connecting…</span><button class="iconbtn" id="searchBtn" aria-label="Search messages"><svg><use href="#search"/></svg></button><button class="iconbtn" id="infoBtn" aria-label="Refresh messages" title="Refresh messages"><svg><use href="#refresh"/></svg></button></header><div class="chatsearch" id="chatSearch" hidden><input id="msgSearch" placeholder="Search loaded messages" aria-label="Search messages"><button class="iconbtn" id="closeSearch" aria-label="Close search"><svg><use href="#x"/></svg></button></div><div class="pinned" id="pinned" hidden><div class="pinbar"></div><div class="headtext"><strong>Pinned message</strong><span id="pinText"></span></div><svg><use href="#pin"/></svg></div><div class="scroll" id="scroll" hidden><div class="stream" id="stream"></div></div><div class="readonly" id="readonly" hidden><svg><use href="#lock"/></svg> Official channel · Read only</div><div class="composer" id="composer" hidden><div class="compose-inner"><div class="editing" id="editing" hidden>Editing message <button id="cancelEdit" aria-label="Cancel editing"><svg><use href="#x"/></svg></button></div><div class="draftfile" id="draftfile" hidden></div><div class="attachmenu" id="attachMenu" hidden><button id="photoBtn"><span><svg><use href="#image"/></svg></span>Photo</button><button id="docBtn"><span><svg><use href="#file"/></svg></span>Document</button></div><input type="file" id="fileInput" hidden><div class="compose-row"><button class="iconbtn add" id="attachBtn" aria-label="Add attachment" disabled><svg><use href="#paperclip"/></svg></button><div class="composefield"><textarea id="message" rows="1" maxlength="4000" placeholder="Write an announcement…" aria-label="Write announcement"></textarea></div><button class="send" id="sendBtn" disabled aria-label="Send announcement"><svg><use href="#send"/></svg></button></div><div class="compose-note"><span id="recipientNote"></span><span>PDF &amp; images · 20 MB</span></div></div></div></main></div></div>
+<dialog class="modal" id="modal"><div class="modal-body" id="modalBody"></div></dialog><div class="toast" id="toast" role="status" hidden></div>
+<style>
+/* V2: quiet academic design, local assets only */
+:root{--ink:#203047;--muted:#68778a;--line:#e8ebef;--bg:#f7f7f5;--soft:#eaf2ff;--shadow:0 18px 60px #243b5510}body{background:#eef0f2}.app{max-width:1500px}.top{height:64px;background:#fcfcfb;padding-inline:26px}.mark{background:#e8f0fd;color:#2868b8;border-radius:12px;letter-spacing:-.3px}.brand strong{font-size:13px;font-weight:650}.brand small{color:#788596}.role{background:#fff;border-color:#e7ebf0;padding:5px 10px 5px 5px;max-width:240px}.role #roleName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.avatar{background:#e9f0fb;color:#326ab5}.sidebar{background:#fcfcfb}.sidehead{padding:28px 24px 12px}.eyebrow{font-size:10px;color:#718196;letter-spacing:.07em;text-transform:none}.sidehead h1{font-size:27px;font-weight:650;letter-spacing:-1px}.sub{font-size:12px;color:#718095}.search{background:#f0f1f3;margin-top:19px;border:1px solid transparent;padding:9px 12px}.search:focus-within{border-color:#a9c9f5;background:white}.channel{border-radius:12px;padding:12px 10px;gap:11px}.channel.selected{background:#e9f1fc}.channel-icon{width:44px;height:44px;background:#eaeef1;color:#56718a;font-size:15px;font-weight:650}.channel-icon.general{background:#e4eefc;color:#266dcc}.channel-icon.college{background:#e8ecef;color:#536b85}.channel-title{font-weight:600}.channel-last{color:#68798c}.channel-meta{color:#77869a}.sectionlabel{color:#718096;letter-spacing:.035em;text-transform:none;font-size:11px}.sidefoot{color:#718096}.conversation{background:#f5f5f2}.chathead{height:69px;background:#fcfcfb;padding-inline:24px}.chatdesc{color:#728095}.pinned{background:#f9fafb;padding:9px 25px}.scroll{padding:26px 30px 24px;scroll-behavior:auto}.stream{max-width:820px;gap:16px}.date{background:#e9ebea;color:#68798a;font-size:11px;padding:5px 11px}.bubble{background:#fff;border-color:#eaecea;box-shadow:0 2px 4px #1d314004;border-radius:17px 17px 17px 6px;padding:13px 15px 9px}.mine .bubble{background:#e0edff;border-color:#dce8fb;border-radius:17px 17px 6px 17px}.sender{font-size:11px;color:#2b66b3;letter-spacing:.015em}.text{color:#23344a;line-height:1.65;font-size:14px}.meta{color:#697e95}.mini{background:#e4eaf0;color:#526e88}.composer{background:#fcfcfb;padding:13px 24px max(12px,env(safe-area-inset-bottom))}.compose-inner{max-width:820px}.composefield{background:#f2f3f4;border-color:#e8eaed}.composefield:focus-within{background:white;border-color:#b9d3f7}.send{box-shadow:none}.compose-note{color:#6f8094}.readonly{background:#fcfcfb;color:#728196}.manage{display:flex;align-items:center;gap:6px;font-size:12px;color:#256bc0;background:#eaf2ff;border-radius:20px;padding:8px 11px}.manage svg,.lockmark svg{width:14px;height:14px}.lockmark{color:#8796a7}.modal{border:1px solid #e9edf0;border-radius:22px;max-height:85dvh}.modal-body{padding:22px;overflow:auto}.role-option{background:#f5f6f7;border-radius:12px}.role-option strong{font-size:13px;font-weight:600}.perm-options{display:grid;gap:8px}.perm-options label{display:flex;align-items:center;gap:10px;padding:12px;background:#f4f6f8;border-radius:10px;font-size:13px}.perm-options input,.perm-grid input{accent-color:var(--blue)}.perm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.perm-grid label{position:relative}.perm-grid input{position:absolute;opacity:0}.perm-grid span{display:grid;place-items:center;padding:12px;background:#f0f3f6;border-radius:10px;color:#51647d;font-weight:600}.perm-grid input:checked+span{background:#1677ff;color:white}.perm-grid input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}.primary{border-radius:12px}.msgmenu{opacity:.55}.msg:hover .msgmenu{opacity:1}.empty-icon{background:#e9edf0;color:#6682a2}.empty strong{font-weight:600}.empty p{color:#697c90}@media(min-width:1100px){body{padding:22px}.app{height:calc(100dvh - 44px);border-radius:20px}.layout{grid-template-columns:330px 1fr}}@media(max-width:720px){.top{padding:0 14px;height:60px}.brand strong{font-size:12px}.brand small{font-size:10px}.role{max-width:132px;font-size:10px}.manage{padding:8px}.manage span{display:none}.topright{gap:5px}.sidehead{padding:24px 19px 10px}.sidehead h1{font-size:28px}.chathead{padding-inline:13px;height:62px}.scroll{padding:18px 12px}.bubble{padding:11px 12px 8px}.composer{padding:10px 12px max(10px,env(safe-area-inset-bottom))}.pinned{padding-inline:16px}.stream{gap:12px}.msgmenu{opacity:.85}.compose-note{font-size:10px}.app:has(.layout.inchat)>.top{display:none}}@media(max-width:380px){.brand small{display:none}.brand strong{max-width:135px}.topright{gap:3px}.role{max-width:105px}}
+[hidden]{display:none!important}.login-screen{min-height:calc(100dvh - 44px);display:grid;place-items:center;padding:20px}.login-card{width:min(100%,390px);padding:30px;background:#fcfcfb;border:1px solid #e5e8eb;border-radius:23px;box-shadow:0 12px 45px #243b5510}.login-card .mark{margin:0 auto 18px}.login-card h1{text-align:center;font-size:26px;letter-spacing:-.9px;margin:0}.login-card p{text-align:center;font-size:13px;line-height:1.6;color:var(--muted);margin:12px 0 24px}.login-card label{display:block;font-size:12px;font-weight:600;margin:13px 0 6px}.login-card input{width:100%;padding:12px;border:1px solid var(--line);background:white;border-radius:10px;font-size:16px}.login-card .primary{margin-top:20px}.login-card small{display:block;text-align:center;font-size:11px;line-height:1.6;color:var(--muted);margin-top:15px}#loginError{color:#b83232;font-size:12px;line-height:1.5;margin-top:9px}.older{align-self:center;color:var(--blue);font-size:12px;padding:9px 15px;border-radius:20px;background:#e9f1fc}.channel:disabled{opacity:1}.admin-entry>span:nth-child(2){min-width:0;overflow-wrap:anywhere}.admin-entry small{line-height:1.5}.stage-grant{display:flex;align-items:center;gap:9px;padding:13px 10px;margin-top:10px;font-size:13px;border:1px solid var(--line);border-radius:10px}.stage-grant input{accent-color:var(--blue)}.perm-summary{background:#edf3fb;border-radius:11px;padding:12px;margin-top:14px;font-size:12px;color:#305580;line-height:1.5}.perm-error{color:#b83232!important;overflow-wrap:anywhere}.admin-email{overflow-wrap:anywhere}.sidebar .sidehead{flex:none}.modal-body{max-height:80dvh;overflow:auto} .live-state{font-size:11px;white-space:nowrap;display:flex;align-items:center;gap:5px;color:#68798c;flex:none}.live-state:before{content:'';width:6px;height:6px;border-radius:50%;background:#9aa8b5}.live-state[data-state="live"]{color:#287a61}.live-state[data-state="live"]:before{background:#39a17c}.live-state[data-state="fallback"]:before{background:#c49a55}@media(max-width:720px){.live-state{font-size:10px;gap:4px}.chathead .headtext{min-width:0}.chatdesc{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chatname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}@media(max-width:380px){.live-state{font-size:9px}.chathead{gap:5px}}
+.message-preview{background:#f3f5f8;border-radius:12px;padding:12px 14px;margin:10px 0 8px;color:#52647a;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;max-height:100px;overflow:auto}.edit-text{width:100%;padding:12px 14px;resize:vertical;min-height:100px;max-height:40dvh;background:#f6f7f8;border:1px solid #e2e8ef;border-radius:13px;line-height:1.6;font-size:16px;outline:none}.edit-text:focus{border-color:#9ec4fa}.delete-primary{background:#c94141}.msgmenu{opacity:.65;flex:none}.msgmenu:hover,.msgmenu:focus-visible{opacity:1}.msg .bubble{min-width:0}.msg:not(.mine) .bubble{max-width:min(78%,530px)}@media(max-width:720px){.msg:not(.mine) .bubble{max-width:calc(100% - 61px)}.msg.mine .bubble{max-width:calc(100% - 33px)}.msgmenu{opacity:.85}}
+</style>
+
+<style>
+.filecard{width:100%;text-align:left;cursor:pointer;background:#f2f5f9;border:1px solid #e4eaf2;min-width:min(200px,100%)}.mine .filecard{background:#f0f5ff;border-color:#d5e2f5}.filecard:hover{background:#e8eff9}.filecard .fileinfo,.draftfile .fileinfo{flex:1;min-width:0;overflow-wrap:anywhere}.fileicon.pdf{background:#fce9e7;color:#ba5b53}.draftfile{flex-wrap:wrap}.draftfile .fileinfo strong{display:block;font-size:12px;color:#304964}.draftfile .fileinfo small{display:block;font-size:11px;color:#687f98}.draftfile progress{width:100%;height:5px;accent-color:var(--blue)}.draftfile button{padding:6px}.attachmenu{background:transparent}.file-preview-image{display:block;max-width:100%;max-height:48dvh;margin:14px auto;object-fit:contain;border-radius:12px}.file-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.file-actions a{display:flex;align-items:center;justify-content:center;gap:7px;flex:1;padding:12px;background:#eaf2ff;color:#256bc0;border-radius:10px;text-decoration:none;font-size:13px;font-weight:600}.file-actions a.primary-link{background:var(--blue);color:#fff}.attachment-status{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.filecard:focus-visible{outline:2px solid var(--blue)}
+
+/* Pilot 6: stable, compact channel summaries. */
+.channel .channel-meta{min-width:25px;gap:6px;align-self:center;justify-content:center}
+.channel .channel-meta[hidden]{display:none!important}
+.channel-time{font-size:10px;white-space:nowrap;line-height:1.2;font-variant-numeric:tabular-nums;color:#7b8795}
+.channel-unread{display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:12px;background:var(--blue);color:#fff;font-size:11px;font-weight:650;line-height:1;font-variant-numeric:tabular-nums}
+.channel.has-unread .channel-time{color:#176bcf}
+.channel.has-unread .channel-last{color:#4b6078}
+.channel-last .preview-icon{width:13px;height:13px;vertical-align:-2px;margin-right:4px;stroke-width:1.7}
+.channel-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Pilot 6.1: inline photos, not document cards. */
+.photo-bubble{width:min(340px,78%);padding:6px 6px 8px!important;overflow:hidden}
+.msg:not(.mine) .photo-bubble{width:min(340px,78%)}
+.photo-bubble .sender{margin:5px 8px 8px}.photo-bubble .text{padding:8px 8px 0}.photo-bubble .meta{padding:0 7px;margin-top:6px}
+.photo-frame{display:grid;place-items:center;position:relative;width:100%;min-height:90px;border-radius:12px;overflow:hidden;background:#e8edf1;padding:0;text-align:center;cursor:zoom-in;isolation:isolate;transition:none}
+.photo-frame:not(.ready){aspect-ratio:4/3}.photo-frame:active:not(:disabled){transform:none}
+.photo-frame img{display:block;width:100%;height:auto;max-height:min(350px,52dvh);object-fit:contain;pointer-events:none}
+.photo-frame.ready{background:#e8edf1}.photo-frame .photo-state{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;color:#63758a;font-size:11px;padding:14px;min-width:0}.photo-state svg{width:27px;height:27px;opacity:.7}
+.photo-frame[data-state="loading"] .photo-state{animation:photo-pulse 1.8s ease-in-out infinite}.photo-frame[data-state="error"]{cursor:pointer}
+@keyframes photo-pulse{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){.photo-frame .photo-state{animation:none!important}}
+.photo-draft-thumb{width:58px;height:58px;object-fit:cover;border-radius:9px;background:#e1e8f1;flex:none}.photo-draft-thumb[hidden]{display:none}
+.photo-viewer{width:min(92vw,840px);max-width:92vw}.photo-viewer .modal-body{max-height:88dvh;padding:18px}.photo-viewer .file-preview-image{max-height:65dvh;max-width:100%;margin:8px auto 0;border-radius:10px}.photo-viewer .attachment-status{margin:8px 0}.photo-viewer .file-actions{margin-top:12px}
+@media(max-width:720px){.photo-bubble,.msg:not(.mine) .photo-bubble{width:min(310px,calc(100% - 61px))}.msg.mine .photo-bubble{width:min(310px,calc(100% - 33px))}.photo-viewer .modal-body{padding:14px}}
+
+.login-card .remember-option{display:flex;align-items:center;gap:9px;font-weight:500;font-size:12px;color:var(--muted);margin:16px 0 0;cursor:pointer}.login-card .remember-option input{appearance:auto;accent-color:var(--blue);width:17px;height:17px;margin:0;padding:0;flex:none}.login-card .session-retry{display:block;margin:12px auto 0;background:transparent;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer}.login-card[aria-busy="true"] .remember-option{opacity:.55}
+/* Neutral startup shell: never render account or message data before authorization. */
+.boot-shell{pointer-events:none}.boot-profile,.boot-line,.boot-search,.boot-item i,.boot-item b,.boot-item em{background:#e8ebed;border-radius:8px}.boot-profile{height:36px;width:36px;border-radius:50%}.boot-sub{width:94px;height:9px;margin:11px 0 21px}.boot-search{height:38px;width:100%;border-radius:12px}.boot-list{padding:20px 23px;display:grid;gap:25px;flex:1;align-content:start}.boot-item{display:flex;align-items:center;gap:12px}.boot-item i{width:43px;height:43px;flex:none;border-radius:50%}.boot-item span{display:grid;gap:8px;flex:1}.boot-item b{width:59%;height:10px}.boot-item em{width:82%;height:8px;opacity:.7}.boot-shell .boot-conversation{display:flex;min-width:0}.boot-shell .sidefoot{margin-top:auto}.boot-shell .boot-item:nth-child(2) b{width:45%}.boot-shell .boot-item:nth-child(3) b{width:50%}.boot-shell .boot-item:nth-child(4) em{width:62%}@media(max-width:720px){.boot-shell .boot-conversation{display:none}.boot-list{padding:18px 22px}} 
+</style><script>
+'use strict';
+const $=id=>document.getElementById(id), svg=n=>`<svg aria-hidden="true"><use href="#${n}"/></svg>`, esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const URL_BASE="https://lxmxsymxmpulkkngjfjo.supabase.co", PUB="sb_publishable_-7LnL-kzS1omjDFD5va_0A_Tjdh3m8h";
+let session=null, all=[], active=null, rows=[], stage=2, query='', busy=false, loading=false, older=false, request=null, generation=0, toastTimer, refreshing=null, managing=false, savingPermissions=false;
+const ATTACH_API='https://hmu-announcements-worker.eissaismail941.workers.dev';
+const ATTACH_MAX=20*1024*1024, ATTACH_TYPES=new Set(['application/pdf','image/jpeg','image/png','image/webp']);
+const ATTACH_UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+let draft=null, preview=null;
+let draftPhotoUrl=null, draftPhotoFile=null;
+const photoCache=new Map(),photoJobs=new Map();
+let photoObserver=null,photoEpoch=0,photoRunning=0;
+const PHOTO_BUDGET=48*1024*1024, PHOTO_COUNT=16;
+function isPhoto(a){return !!a&&['image/jpeg','image/png','image/webp'].includes(a.content_type);}
+function clearInlinePhotos(){photoEpoch++;photoObserver?.disconnect();photoObserver=null;for(const j of photoJobs.values())j.controller?.abort();photoJobs.clear();for(const x of photoCache.values())URL.revokeObjectURL(x.url);photoCache.clear();$('stream').replaceChildren();}
+function resetDraftPhoto(){if(draftPhotoUrl)URL.revokeObjectURL(draftPhotoUrl);draftPhotoUrl=draftPhotoFile=null;}
+function photoNode(id){return [...$('stream').querySelectorAll('[data-photo]')].find(b=>b.dataset.photo===id);}
+function nearPhotoBottom(){const sc=$('scroll');return sc.scrollHeight-sc.scrollTop-sc.clientHeight<100;}
+function showInlinePhoto(b,entry){if(!b||b.classList.contains('ready')&&b.querySelector('img')?.src===entry.url)return;const img=document.createElement('img');img.alt=b.dataset.name||'Announcement photo';img.decoding='async';img.draggable=false;img.onload=()=>{if(!b.isConnected||photoCache.get(b.dataset.photo)!==entry)return;const stick=nearPhotoBottom();b.classList.add('ready');b.dataset.state='ready';b.replaceChildren(img);if(stick){$('scroll').scrollTop=$('scroll').scrollHeight;queueRead();}};img.onerror=()=>{if(!b.isConnected||photoCache.get(b.dataset.photo)!==entry)return;URL.revokeObjectURL(entry.url);photoCache.delete(b.dataset.photo);photoError(b);};img.src=entry.url;}
+function photoError(b){if(!b)return;b.classList.remove('ready');b.dataset.state='error';b.innerHTML=`<span class="photo-state">${svg('image')}<span>Photo unavailable · Tap to retry</span></span>`;}
+function photoVisible(b){if(!b||!b.isConnected)return false;const r=b.getBoundingClientRect(),s=$('scroll').getBoundingClientRect();return r.bottom>=s.top-180&&r.top<=s.bottom+180;}
+function trimPhotos(keep){let bytes=[...photoCache.values()].reduce((n,x)=>n+x.size,0);for(const [id,x] of photoCache){if(bytes<=PHOTO_BUDGET&&photoCache.size<=PHOTO_COUNT)break;if(id===keep||photoVisible(photoNode(id)))continue;const b=photoNode(id);if(b){b.classList.remove('ready');b.dataset.state='idle';b.innerHTML=`<span class="photo-state">${svg('image')}<span>Photo</span></span>`;photoObserver?.observe(b);}URL.revokeObjectURL(x.url);photoCache.delete(id);bytes-=x.size;}}
+function prunePhotos(){const ids=new Set(rows.filter(m=>isPhoto(m.attachment)).map(m=>m.attachment.attachment_id));for(const [id,x] of photoCache)if(!ids.has(id)){URL.revokeObjectURL(x.url);photoCache.delete(id);}for(const [id,j] of photoJobs)if(!ids.has(id)){j.controller?.abort();photoJobs.delete(id);}}
+function queuePhoto(b,force=false){const id=b.dataset.photo,a=rows.find(m=>m.attachment?.attachment_id===id)?.attachment;if(!session||!channel()||!isPhoto(a)||document.hidden)return;const cached=photoCache.get(id);if(cached){showInlinePhoto(b,cached);return;}if(photoJobs.has(id)||(!force&&b.dataset.state==='error'))return;photoJobs.set(id,{a,epoch:photoEpoch,user:session.user.id,channel:active,controller:null});b.dataset.state='loading';pumpPhotos();}
+function pumpPhotos(){if(document.hidden)return;while(photoRunning<2){const pair=[...photoJobs].find(([id,j])=>!j.controller&&photoVisible(photoNode(id)));if(!pair)return;const [id,j]=pair;j.controller=new AbortController();photoRunning++;fetchPhoto(id,j).finally(()=>{photoRunning--;if(photoJobs.get(id)===j)photoJobs.delete(id);pumpPhotos();});}}
+async function fetchPhoto(id,j){const timer=setTimeout(()=>j.controller.abort(),90000);const valid=()=>j.epoch===photoEpoch&&j.user===session?.user.id&&j.channel===active&&photoJobs.get(id)===j&&rows.some(m=>m.attachment?.attachment_id===id);try{const jwt=await token();if(!valid())return;const r=await fetch(ATTACH_API+'/file/'+encodeURIComponent(id)+'?view=1',{headers:{Authorization:'Bearer '+jwt},signal:j.controller.signal,cache:'no-store',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer'});if(!r.ok||(r.headers.get('Content-Type')||'').split(';')[0].toLowerCase()!==j.a.content_type)throw Error('Photo unavailable');const blob=await r.blob();if(blob.size!==Number(j.a.size_bytes)||blob.size>ATTACH_MAX)throw Error('Incomplete photo');if(!valid())return;const entry={url:URL.createObjectURL(blob),size:blob.size};photoCache.set(id,entry);showInlinePhoto(photoNode(id),entry);trimPhotos(id);}catch{if(valid())photoError(photoNode(id));}finally{clearTimeout(timer);}}
+function bindInlinePhotos(){photoObserver?.disconnect();prunePhotos();const buttons=[...$('stream').querySelectorAll('[data-photo]')];if(!buttons.length)return;photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)queuePhoto(e.target);pumpPhotos();},{root:$('scroll'),rootMargin:'180px 0px'});for(const b of buttons){const id=b.dataset.photo,cached=photoCache.get(id);if(cached)showInlinePhoto(b,cached);else if(photoJobs.has(id))b.dataset.state='loading';photoObserver.observe(b);b.onclick=()=>{if(b.dataset.state==='error'){b.dataset.state='idle';b.innerHTML=`<span class="photo-state">${svg('image')}<span>Loading photo…</span></span>`;queuePhoto(b,true);}else openAttachment(id);};}}
+$('scroll').addEventListener('scroll',()=>{trimPhotos(null);pumpPhotos();},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){for(const b of $('stream').querySelectorAll('[data-photo]'))if(photoVisible(b))queuePhoto(b);pumpPhotos();}});
+
+function fileSize(n){return n>=1048576?(n/1048576).toFixed(1)+' MB':n>=1024?Math.ceil(n/1024)+' KB':n+' B';}
+function fileType(t){return t==='application/pdf'?'PDF document':({ 'image/jpeg':'JPEG image','image/png':'PNG image','image/webp':'WebP image'})[t]||'Attachment';}
+function fileIcon(t){return `<span class="fileicon ${t==='application/pdf'?'pdf':''}">${svg(t==='application/pdf'?'file':'image')}</span>`;}
+function attachmentCard(a){if(!a)return '';if(isPhoto(a))return `<button class="photo-frame" data-photo="${esc(a.attachment_id)}" data-name="${esc(a.file_name)}" data-state="idle" aria-label="Open photo ${esc(a.file_name)}"><span class="photo-state">${svg('image')}<span>Loading photo…</span></span></button>`;return `<button class="filecard" data-attachment="${esc(a.attachment_id)}" aria-label="Open attachment ${esc(a.file_name)}">${fileIcon(a.content_type)}<span class="fileinfo"><strong>${esc(a.file_name)}</strong><small>${esc(fileSize(a.size_bytes))} · ${esc(fileType(a.content_type))}</small></span>${svg('download')}</button>`;}
+function bindAttachments(){for(const b of $('stream').querySelectorAll('[data-attachment]'))b.onclick=()=>openAttachment(b.dataset.attachment);bindInlinePhotos();}
+async function hydrateAttachments(c,next,prior){
+    // Attachment records are immutable; fetch only IDs not already checked in this channel.
+    const known=new Map(prior.filter(m=>Object.hasOwn(m,'attachment')).map(m=>[String(m.message_id),m.attachment]));
+    const missing=next.filter(m=>!known.has(String(m.message_id))).map(m=>m.message_id);
+    for(let i=0;i<missing.length;i+=200){const ids=missing.slice(i,i+200),allowed=new Set(ids.map(String));
+        const data=await rpc('hmu_ann_pilot_attachments',{p_channel_id:c,p_message_ids:ids});
+        if(!Array.isArray(data))throw Error('Attachment metadata unavailable');
+        for(const id of ids)known.set(String(id),null);
+        for(const a of data){if(allowed.has(String(a.message_id))&&ATTACH_UUID.test(a.attachment_id)&&ATTACH_TYPES.has(a.content_type)&&Number(a.size_bytes)>0&&Number(a.size_bytes)<=ATTACH_MAX)known.set(String(a.message_id),a);}
+    }
+    return next.map(m=>({...m,attachment:known.get(String(m.message_id))||null}));
+}
+function drawDraft(status=null,percent=null){const el=$('draftfile');el.hidden=!draft;if(!draft){resetDraftPhoto();el.replaceChildren();return;}if(draftPhotoFile!==draft.file){resetDraftPhoto();if(isPhoto({content_type:draft.type})){draftPhotoFile=draft.file;draftPhotoUrl=URL.createObjectURL(draft.file);}}
+    el.innerHTML=(draftPhotoUrl?`<img class="photo-draft-thumb" alt="Selected photo" src="${esc(draftPhotoUrl)}">`:fileIcon(draft.type))+`<span class="fileinfo"><strong>${esc(draft.file.name)}</strong><small>${esc(status||fileSize(draft.file.size)+' · '+fileType(draft.type))}</small></span><button id="removeFile" aria-label="Remove attachment" ${busy?'disabled':''}>${svg('x')}</button>`+(percent===null?'':`<progress max="100" value="${Math.max(0,Math.min(100,percent))}" aria-label="Upload progress"></progress>`);
+    $('removeFile').onclick=()=>{if(busy)return;draft=null;request=null;$('fileInput').value='';drawDraft();updateComposer();};
+}
+function chooseFile(accept){if(busy||!channel()?.can_publish)return;$('attachMenu').hidden=true;const el=$('fileInput');el.accept=accept;el.value='';el.click();}
+function selectFile(){const file=$('fileInput').files?.[0];if(!file||busy||!channel()?.can_publish)return;
+    const type=file.type||({pdf:'application/pdf',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp'})[file.name.split('.').pop().toLowerCase()];
+    if(!ATTACH_TYPES.has(type)){toast('Choose a PDF, JPEG, PNG or WebP file.');return;}
+    if(!file.size||file.size>ATTACH_MAX){toast('Choose a nonempty file up to 20 MB.');return;}
+    if(!file.name.trim()||[...file.name.trim()].length>255||/[\x00-\x1f\x7f/\\]/.test(file.name)){toast('Please rename this file.');return;}
+    draft={file,type};request=null;drawDraft();updateComposer();
+}
+async function uploadAttachment(r){const jwt=await token();const caption=encodeURIComponent(r.body);
+    if(caption.length>12000)throw Error('Attachment caption is too long; shorten it');
+    return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST',ATTACH_API+'/upload');xhr.timeout=120000;
+        xhr.setRequestHeader('Authorization','Bearer '+jwt);xhr.setRequestHeader('Content-Type',r.file.type);xhr.setRequestHeader('X-HMU-Channel',r.c);xhr.setRequestHeader('X-HMU-Request',r.id);xhr.setRequestHeader('X-HMU-Name',encodeURIComponent(r.file.file.name));xhr.setRequestHeader('X-HMU-Caption',caption);
+        xhr.upload.onprogress=e=>{if(e.lengthComputable){const percent=Math.round(e.loaded/e.total*100);drawDraft(percent===100?'Publishing announcement…':`Uploading · ${percent}%`,percent);}};
+        xhr.onload=()=>{let d;try{d=JSON.parse(xhr.responseText);}catch{}if(xhr.status>=200&&xhr.status<300&&Number.isSafeInteger(d?.message_id)&&ATTACH_UUID.test(d?.attachment_id||''))resolve(d);else reject(Error(d?.error||'Upload not confirmed'));};
+        xhr.onerror=()=>reject(Error('Attachment network error'));xhr.ontimeout=()=>reject(Error('Upload timed out'));xhr.onabort=()=>reject(Error('Upload interrupted'));xhr.send(r.file.file);
+    });
+}
+function disposePreview(){$('modal').classList.remove('photo-viewer');const p=preview;preview=null;if(!p)return;p.controller.abort();if(p.url){const url=p.url;if(p.used)setTimeout(()=>URL.revokeObjectURL(url),60000);else URL.revokeObjectURL(url);}}
+function closeAttachmentPreview(){if(preview){disposePreview();if($('modal').open)$('modal').close();}}
+async function openAttachment(id){if(!session||!channel()||busy||$('modal').open)return;
+    const a=rows.find(m=>m.attachment?.attachment_id===id)?.attachment;if(!a)return;
+    disposePreview();const p={controller:new AbortController(),url:null,used:false,channel:active,user:session.user.id,attachmentId:id};preview=p;
+    if(isPhoto(a))$('modal').classList.add('photo-viewer');
+    modalContent(modalTitle(isPhoto(a)?'Photo':fileType(a.content_type))+(isPhoto(a)?'':`<div class="filecard" style="cursor:default">${fileIcon(a.content_type)}<span class="fileinfo"><strong>${esc(a.file_name)}</strong><small>${esc(fileSize(a.size_bytes))}</small></span></div>`)+`<p id="attachmentStatus" class="attachment-status" role="status">Retrieving private attachment…</p><div id="attachmentPreview"></div>`);
+    const timer=setTimeout(()=>p.controller.abort(),90000);
+    try{const jwt=await token();if(preview!==p)return;
+        const r=await fetch(ATTACH_API+'/file/'+encodeURIComponent(id)+'?view=1',{headers:{Authorization:'Bearer '+jwt},signal:p.controller.signal,cache:'no-store',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer'});
+        if(!r.ok){const err=await r.json().catch(()=>null);throw Error(err?.error||'Attachment unavailable');}
+        if((r.headers.get('Content-Type')||'').split(';')[0].toLowerCase()!==a.content_type)throw Error('Unexpected file type');
+        const blob=await r.blob();if(blob.size!==Number(a.size_bytes)||blob.size>ATTACH_MAX)throw Error('Incomplete attachment');
+        if(preview!==p||active!==p.channel||session?.user.id!==p.user||!$('modal').open)return;
+        p.url=URL.createObjectURL(blob);$('attachmentStatus').textContent=a.content_type==='application/pdf'?'PDF ready. Open it in your browser or download a copy.':'Image ready.';
+        const el=$('attachmentPreview');if(isPhoto(a)){const img=document.createElement('img');img.className='file-preview-image';img.alt=a.file_name;img.src=p.url;el.append(img);$('attachmentStatus').hidden=true;}
+        const actions=document.createElement('div');actions.className='file-actions';
+        const open=document.createElement('a');open.className='primary-link';open.href=p.url;open.target='_blank';open.rel='noopener noreferrer';open.textContent=a.content_type==='application/pdf'?'Open PDF':'Open image';open.onclick=()=>{p.used=true;};
+        const download=document.createElement('a');download.href=p.url;download.download=a.file_name;download.textContent='Download';download.onclick=()=>{p.used=true;};actions.append(open,download);el.append(actions);
+    }catch(e){if(preview===p&&$('modal').open)$('attachmentStatus').textContent=e.name==='AbortError'?'Attachment request timed out. Close and try again.':e.message;}
+    finally{clearTimeout(timer);}
+}
+function toast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4500)}
+async function api(path,body,token){const c=new AbortController(), t=setTimeout(()=>c.abort(),18000);try{const r=await fetch(URL_BASE+path,{method:'POST',headers:{apikey:PUB,Accept:'application/json','Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(body),signal:c.signal,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});const d=await r.json().catch(()=>null);if(!r.ok){let e=new Error(d?.message||d?.msg||d?.error_description||'Request failed');e.status=r.status;throw e}return d}catch(e){if(e.name==='AbortError')throw Error('Connection timed out. Try again.');throw e}finally{clearTimeout(t)}}
+const VIEW_KEY='hmu-ann-integrated-view';
+let remember=false,authBusy=false;
+function savedView(){try{const v=JSON.parse(sessionStorage.getItem(VIEW_KEY)||'null');return v&&v.user===session?.user.id&&typeof v.channel==='string'?v.channel:null;}catch{return null;}}
+function saveView(id){try{if(session?.user.id&&id)sessionStorage.setItem(VIEW_KEY,JSON.stringify({user:session.user.id,channel:id}));else if(session)sessionStorage.removeItem(VIEW_KEY);}catch{}}
+function showLogin(){ $('bootRoot').hidden=true;$('appRoot').hidden=true;$('login').hidden=true;$('integrated-error').hidden=false; }
+function showBoot(){ $('integrated-error').hidden=true;$('login').hidden=true;$('appRoot').hidden=true;$('bootRoot').hidden=false; }
+async function token(){if(!session)throw Error('Portal session unavailable');return parent.__hmuAnnouncementsBridge.access(window,session.user.id);}
+async function rpc(name,body={}){return api('/rest/v1/rpc/'+name,body,await token())}
+function channel(){return all.find(c=>c.channel_id===active)}
+function isSuper(){return all.length===15&&all.every(c=>c.can_publish)}
+function applyIdentity(){const superAdmin=isSuper(), publisher=all.some(c=>c.can_publish);$('roleName').textContent=superAdmin?'Super admin':publisher?'Administrator':'Read-only account';$('roleAvatar').textContent=superAdmin?'S':publisher?'A':'P';$('manageBtn').hidden=!superAdmin;}
+function list(){return all.filter(c=>c.scope==='college'||c.stage===stage)}
+function title(c){return c.title}function desc(c){return c.scope==='college'?'College-wide · Stages 1–6':`Medicine · Stage ${c.stage} · ${c.scope==='group'?'Group '+String.fromCharCode(64+c.group_no):'All groups'}`}
+function icon(c){return `<span class="channel-icon ${c.scope==='college'?'college':c.scope==='stage'?'general':''}">${c.scope==='college'?svg('megaphone'):c.scope==='stage'?svg('users'):esc(String.fromCharCode(64+c.group_no))}</span>`}
+function time(t){return new Intl.DateTimeFormat('en',{hour:'numeric',minute:'2-digit'}).format(new Date(t))}function day(t){let d=new Date(t);return d.toDateString()===new Date().toDateString()?'Today':new Intl.DateTimeFormat('en',{day:'numeric',month:'long',year:'numeric'}).format(d)}
+function sidebar(){const stages=[...new Set(all.map(c=>c.stage).filter(x=>x!==null))].sort((a,b)=>a-b);$('sideSub').textContent=`Stage ${stage} · Live pilot`;$('stageScope').innerHTML=stages.length>1?`<select id="stagePick" aria-label="Select stage">${stages.map(n=>`<option value="${n}" ${n===stage?'selected':''}>Stage ${n}</option>`).join('')}</select>`:'';if($('stagePick')){$('stagePick').disabled=busy;$('stagePick').onchange=e=>{stage=Number(e.target.value);closeChat();sidebar()}}let q=$('channelSearch').value.toLowerCase().trim(),sc=$('channels'),top=sc.scrollTop;sc.innerHTML='<div class="sectionlabel">Available channels</div>'+list().filter(c=>title(c).toLowerCase().includes(q)).map(c=>`<button class="channel ${active===c.channel_id?'selected':''}" data-channel="${esc(c.channel_id)}" ${busy?'disabled':''}>${icon(c)}<div class="channel-info"><div class="channel-title">${esc(title(c))}</div><div class="channel-last"></div></div><span class="channel-meta"><span class="channel-time" hidden></span><span class="channel-unread" hidden></span></span></button>`).join('');for(let b of sc.querySelectorAll('[data-channel]'))b.onclick=()=>openChannel(b.dataset.channel);paintSummaries();sc.scrollTop=top;}
+
+function clearDraft(){request=null;draft=null;$('fileInput').value='';$('attachMenu').hidden=true;drawDraft();$('message').value='';$('message').style.height='auto';updateComposer()}
+function closeChat(){saveView(null);closeAttachmentPreview();clearInlinePhotos();stopLive();generation++;active=null;rows=[];older=false;loading=false;query='';$('msgSearch').value='';$('chatSearch').hidden=true;$('layout').classList.remove('inchat');clearDraft();render()}
+function render(bottom=false){let c=channel();$('blank').hidden=!!c;$('chathead').hidden=!c;$('scroll').hidden=!c;$('composer').hidden=!c||!c.can_publish;$('readonly').hidden=!c||c.can_publish;$('pinned').hidden=true;if(!c)return;$('chatIcon').innerHTML=icon(c);$('chatName').textContent=title(c);$('chatDesc').textContent=desc(c);$('recipientNote').textContent='To: '+desc(c);let filtered=rows.filter(m=>!query||m.body.toLowerCase().includes(query)), out=older&&!query?'<button class="older" id="olderBtn">Load earlier messages</button>':'';let d='';for(const m of filtered){let next=day(m.created_at);if(next!==d){out+=`<div class="date">${esc(next)}</div>`;d=next}out+=`<article class="msg ${m.is_mine?'mine':''}" id="m-${esc(m.message_id)}">${m.is_mine?'':'<div class="mini">HMU</div>'}${m.is_mine?messageButton(m):''}<div class="bubble ${isPhoto(m.attachment)?'photo-bubble':''}" data-bubble="${esc(m.message_id)}">${m.is_mine?'':`<div class="sender">Administration ${svg('shield')}</div>`}${isPhoto(m.attachment)?attachmentCard(m.attachment)+(m.body===m.attachment.file_name?'':`<div class="text">${esc(m.body)}</div>`):`<div class="text">${esc(m.body)}</div>${attachmentCard(m.attachment)}`}<div class="meta">${m.is_pinned?svg('pin'):''}${m.edited_at?'Edited · ':''}${esc(time(m.created_at))}${m.is_mine?svg('check'):''}</div></div>${m.is_mine?'':messageButton(m)}</article>`}if(!filtered.length)out+=`<div class="empty" style="min-height:220px"><div><div class="empty-icon">${svg('chat')}</div><strong>${loading?'Loading announcements…':query?'No matching messages':'No announcements loaded'}</strong><p>${loading?'Connecting to HMU':query?'Try another search.':'Send a test message or tap refresh to check again.'}</p></div></div>`;$('stream').innerHTML=out;bindMessageActions();bindAttachments();let p=rows.filter(m=>m.is_pinned).at(-1);if(p&&!query){$('pinned').hidden=false;$('pinText').textContent=p.body;$('pinned').onclick=()=>$('m-'+p.message_id)?.scrollIntoView({block:'center',behavior:'smooth'})}if($('olderBtn'))$('olderBtn').onclick=()=>load(true);if(bottom)requestAnimationFrame(()=>{$('scroll').scrollTop=$('scroll').scrollHeight});updateComposer()}
+async function openChannel(id){if(busy||!all.some(c=>c.channel_id===id))return;closeAttachmentPreview();clearInlinePhotos();stopLive();generation++;active=id;saveView(id);rows=[];older=false;loading=false;query='';$('msgSearch').value='';$('chatSearch').hidden=true;clearDraft();$('layout').classList.add('inchat');sidebar();await load();if(active===id){startLive();queueRead();}}
+async function load(previous=false,automatic=false){
+    if(!active||loading)return false;
+    const g=generation,c=active,before=previous?rows[0]?.message_id:null;
+    const sc=$('scroll'),oldHeight=sc.scrollHeight,oldTop=sc.scrollTop;
+    const nearBottom=oldHeight-oldTop-sc.clientHeight<90;
+    loading=true;if(!rows.length)render();
+    try{
+        let d=await rpc('hmu_ann_pilot_messages',{p_channel_id:c,p_before_id:before??null,p_limit:30});
+        if(g!==generation)return false;
+        if(!Array.isArray(d))throw Error('Unexpected server response');
+        let asc=[...d].reverse(),prior=rows,nextRows;
+        if(previous){const ids=new Set(prior.map(m=>String(m.message_id)));nextRows=[...asc.filter(m=>!ids.has(String(m.message_id))),...prior];older=d.length===30;}
+        else{
+            // Reconcile the currently loaded history, not just the newest page.
+            // Normal conversations still require a single 30-message request.
+            let more=d.length===30, combined=[...asc], target=prior.length;
+            while(more&&combined.length<target&&combined.length){
+                const page=await rpc('hmu_ann_pilot_messages',{p_channel_id:c,p_before_id:combined[0].message_id,p_limit:30});
+                if(g!==generation)return false;
+                if(!Array.isArray(page))throw Error('Unexpected server response');
+                more=page.length===30;
+                const ids=new Set(combined.map(m=>String(m.message_id))), unique=[...page].reverse().filter(m=>!ids.has(String(m.message_id)));
+                if(!unique.length)break;
+                combined=[...unique,...combined];
+            }
+            nextRows=combined;older=more;
+        }
+        nextRows=await hydrateAttachments(c,nextRows,prior);
+        if(g!==generation||active!==c)return false;
+        rows=nextRows;
+        if(preview&&!rows.some(m=>m.attachment?.attachment_id===preview.attachmentId))closeAttachmentPreview();
+        loading=false;
+        const changed=JSON.stringify(prior)!==JSON.stringify(rows);
+        if(changed||!prior.length||previous||!automatic){render(!previous&&(!automatic||nearBottom));if(previous)sc.scrollTop=oldTop+sc.scrollHeight-oldHeight;else if(automatic&&!nearBottom)sc.scrollTop=oldTop;}
+        if(!previous){queueRead();if(changed||!automatic)queueSummaries();}
+        return true;
+    }catch(e){if(g===generation){loading=false;render();if(!automatic)toast(e.message);}return false;}
+    finally{if(g===generation)loading=false;}
+}
+function updateComposer(){$('sendBtn').disabled=busy||!channel()?.can_publish||(!draft&&!$('message').value.trim());$('attachBtn').disabled=busy||!channel()?.can_publish;$('fileInput').disabled=busy;$('message').disabled=busy;$('backBtn').disabled=busy;$('roleBtn').disabled=busy;$('manageBtn').disabled=busy||managing;$('infoBtn').disabled=busy}
+async function send(){
+    if(busy||!channel()?.can_publish)return;
+    const body=$('message').value.trim(),c=active,file=draft;
+    if(!body&&!file)return;
+    if(channel().scope!=='group'&&!confirm('Publish a real pilot announcement to '+desc(channel())+'?'))return;
+    if(!request||request.body!==body||request.c!==c||request.file!==file)request={body,c,file,id:crypto.randomUUID()};
+    const r=request;busy=true;$('attachMenu').hidden=true;updateComposer();sidebar();drawDraft(file?'Preparing upload…':null);
+    try{
+        if(file)await uploadAttachment(r);
+        else{const id=await rpc('hmu_ann_pilot_send',{p_channel_id:c,p_body:body,p_request_id:r.id});if(id==null)throw Error('No message ID returned');}
+        clearDraft();toast(file?'Attachment published':'Announcement saved to Supabase');
+        if(loading){generation++;loading=false;}await load();
+    }catch(e){toast('Send not confirmed: '+e.message+' — retry the same draft.');}
+    finally{busy=false;updateComposer();sidebar();drawDraft();}
+}
+function resetSession(){stopSummaries();stopLive();if($('modal').open)$('modal').close();$('manageBtn').hidden=true;session=null;remember=false;refreshing=null;all=[];closeChat();showLogin();}
+async function enterSession(restoring=false){const ch=await rpc('hmu_ann_pilot_channels');if(!Array.isArray(ch)||!ch.length)throw Error('This account is not approved for announcements.');all=ch;const stages=all.map(c=>c.stage).filter(x=>x!==null);stage=stages.includes(2)?2:stages[0]||2;applyIdentity();const previous=restoring?savedView():null,permitted=all.find(c=>c.channel_id===previous);if(permitted?.stage!=null)stage=permitted.stage;$('login').hidden=true;$('appRoot').hidden=false;$('bootRoot').hidden=true;sidebar();render();startSummaries();if(permitted)openChannel(permitted.channel_id);else if(restoring)saveView(null);}
+$('roleBtn').onclick=null;$('channelSearch').oninput=sidebar;$('backBtn').onclick=()=>{if(!busy){closeChat();sidebar()}};$('searchBtn').onclick=()=>{$('chatSearch').hidden=!$('chatSearch').hidden;if(!$('chatSearch').hidden)$('msgSearch').focus();else{query='';$('msgSearch').value='';render()}};$('closeSearch').onclick=()=>{$('chatSearch').hidden=true;query='';$('msgSearch').value='';render()};$('msgSearch').oninput=e=>{query=e.target.value.toLowerCase().trim();render()};$('infoBtn').onclick=()=>refreshChannels();$('message').oninput=()=>{let m=$('message');m.style.height='auto';m.style.height=Math.min(m.scrollHeight,120)+'px';updateComposer()};$('message').onkeydown=e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}};$('sendBtn').onclick=send;
+$('attachBtn').onclick=()=>{if(!busy&&channel()?.can_publish)$('attachMenu').hidden=!$('attachMenu').hidden;};
+$('photoBtn').onclick=()=>chooseFile('image/jpeg,image/png,image/webp');$('docBtn').onclick=()=>chooseFile('application/pdf,.pdf');$('fileInput').onchange=selectFile;
+$('modal').addEventListener('close',()=>{if(!$('modal').open)disposePreview();});
+
+
+const GROUP_CHANNELS=Array.from({length:8},(_,i)=>'medicine:s2:g'+(i+1));
+const STAGE_CHANNEL='medicine:s2:all';
+const STAGE_CHANNELS=[STAGE_CHANNEL,...GROUP_CHANNELS];
+function permissionSummary(ids){
+    if(!ids.length)return 'No publishing access';
+    if(STAGE_CHANNELS.every(id=>ids.includes(id)))return 'All Stage 2 channels';
+    const labels=ids.map(id=>id===STAGE_CHANNEL?'All groups':GROUP_CHANNELS.includes(id)?'Group '+String.fromCharCode(65+GROUP_CHANNELS.indexOf(id)):'Other channel');
+    return labels.join(' · ');
+}
+function modalTitle(t){return `<div class="modal-title">${esc(t)}<button class="iconbtn" data-close aria-label="Close">${svg('x')}</button></div>`;}
+function modalContent(html){$('modalBody').innerHTML=html;if(!$('modal').open)$('modal').showModal();$('modalBody').querySelector('[data-close]')?.addEventListener('click',()=>{if(!savingPermissions&&!messageSaving)$('modal').close()});}
+function modalError(t){const box=$('permError');if(box){box.hidden=false;box.textContent=t;}}
+async function managePermissions(){
+    if(!session||!isSuper()||busy||managing||savingPermissions)return;
+    const accountSession=session.user.id;
+    managing=true;updateComposer();
+    modalContent(modalTitle('Publishing access')+'<p>Loading authorized administrators…</p>');
+    try{
+        const list=await rpc('hmu_ann_pilot_admin_list');
+        if(session?.user.id!==accountSession||!$('modal').open)return;
+        if(!Array.isArray(list))throw Error('Unexpected administrator list');
+        modalContent(modalTitle('Publishing access')+'<p>Medicine · Stage 2. Select an existing administrator to manage announcement publishing. Lecture permissions are unchanged.</p>'+(list.length?list.map((a,i)=>`<button class="role-option admin-entry" data-admin-index="${i}"><span class="avatar">${esc((a.email||'A')[0].toUpperCase())}</span><span><strong>${esc(a.email||'Administrator')}</strong><small>${esc(permissionSummary(a.channel_ids||[]))}</small></span>${svg('chevron')}</button>`).join(''):'<p>No eligible Stage 2 content administrators found.</p>'));
+        for(const btn of $('modalBody').querySelectorAll('[data-admin-index]'))btn.onclick=()=>editPermissions(list[Number(btn.dataset.adminIndex)]);
+    }catch(e){if($('modal').open&&session?.user.id===accountSession){modalContent(modalTitle('Publishing access')+`<p class="perm-error">${esc(e.message)}</p><button class="primary" id="retryAdmins">Try again</button>`);$('retryAdmins').onclick=managePermissions;}}
+    finally{managing=false;updateComposer();}
+}
+function editPermissions(a){
+    if(!isSuper()||!a||savingPermissions)return;
+    const ids=Array.isArray(a.channel_ids)?a.channel_ids:[];
+    const mode=ids.length===0?'none':STAGE_CHANNELS.every(id=>ids.includes(id))?'all':'specific';
+    modalContent(modalTitle('Publishing permissions')+`<p class="admin-email">${esc(a.email||'Administrator')}<br>Medicine · Stage 2</p><div class="perm-options">${[['specific','Specific channels'],['all','All Stage 2 channels'],['none','No publishing access']].map(([v,t])=>`<label><input type="radio" name="permScope" value="${v}" ${mode===v?'checked':''}>${t}</label>`).join('')}</div><div id="permDetails" ${mode==='specific'?'':'hidden'}><label class="stage-grant"><input type="checkbox" id="stageGrant" ${ids.includes(STAGE_CHANNEL)?'checked':''}> All groups (stage-wide channel)</label><div class="perm-grid">${GROUP_CHANNELS.map((id,i)=>`<label><input type="checkbox" value="${id}" aria-label="Group ${String.fromCharCode(65+i)}" ${ids.includes(id)?'checked':''}><span>${String.fromCharCode(65+i)}</span></label>`).join('')}</div></div><div class="perm-summary" id="permSummary"></div><p id="permError" class="perm-error" role="alert" hidden></p><button class="primary" id="savePerm">Save permissions</button><button class="quiet" id="backPerm">Back to administrators</button>`);
+    function selected(){const v=$('modalBody').querySelector('[name=permScope]:checked').value;return v==='all'?[...STAGE_CHANNELS]:v==='none'?[]:[...($('stageGrant').checked?[STAGE_CHANNEL]:[]),...Array.from($('permDetails').querySelectorAll('.perm-grid input:checked'),el=>el.value)];}
+    function update(){const v=$('modalBody').querySelector('[name=permScope]:checked').value;$('permDetails').hidden=v!=='specific';$('permSummary').textContent=permissionSummary(selected());$('permError').hidden=true;$('savePerm').disabled=v==='specific'&&!selected().length;}
+    for(const input of $('modalBody').querySelectorAll('input'))input.onchange=update;
+    update();$('backPerm').onclick=managePermissions;
+    $('savePerm').onclick=async()=>{
+        if(savingPermissions||!isSuper())return;
+        const chosen=selected();
+        if(!confirm('Save real publishing permissions for this administrator?\n'+permissionSummary(chosen)))return;
+        savingPermissions=true;for(const el of $('modalBody').querySelectorAll('button,input'))el.disabled=true;
+        $('savePerm').textContent='Saving…';$('permError').hidden=true;
+        try{
+            const result=await rpc('hmu_ann_pilot_set_permissions',{p_user_id:a.user_id,p_channel_ids:chosen});
+            if(result!==true)throw Error('Save was not confirmed by the server. Reload permissions before retrying.');
+            toast('Publishing permissions saved');savingPermissions=false;await managePermissions();
+        }catch(e){modalError('Save not confirmed: '+e.message);for(const el of $('modalBody').querySelectorAll('button,input'))el.disabled=false;$('savePerm').textContent='Save permissions';}
+        finally{savingPermissions=false;}
+    };
+}
+async function refreshChannels(){
+    if(!session||busy)return;
+    const who=session.user.id, g=generation;
+    try{const ch=await rpc('hmu_ann_pilot_channels');if(session?.user.id!==who||g!==generation)return;if(!Array.isArray(ch))throw Error('Unexpected channel response');all=ch;applyIdentity();if(!all.length){resetSession();$('integrated-error-text').textContent='This account has no active announcement access.';return;}if(active&&!channel()){closeChat();toast('Channel access changed');}else if(active){if(!channel().can_publish)clearDraft();if(loading){generation++;loading=false;}await load();}sidebar();render();queueSummaries();}catch(e){if(session?.user.id===who)toast(e.message);}
+}
+$('manageBtn').onclick=managePermissions;
+$('modal').addEventListener('cancel',e=>{if(savingPermissions||messageSaving)e.preventDefault();});
+$('modal').addEventListener('click',e=>{if(e.target===$('modal')&&!savingPermissions&&!messageSaving)$('modal').close();});
+
+// Live Pilot 6: real message actions. All mutations are authorized again by Supabase.
+let messageSaving=false;
+function canManageMessage(m){return !!(m&&channel()?.can_publish&&(m.is_mine||isSuper()));}
+function messageButton(m){if(!canManageMessage(m))return '';return `<button class="iconbtn msgmenu" data-message="${esc(m.message_id)}" aria-label="Message actions" title="Message actions">${svg('more')}</button>`;}
+function findMessage(id){return rows.find(m=>String(m.message_id)===String(id));}
+function bindMessageActions(){
+    for(const b of $('stream').querySelectorAll('[data-message]'))b.onclick=()=>messageActions(b.dataset.message);
+}
+function messageActions(id){
+    if(!session||busy||managing||savingPermissions||messageSaving||$('modal').open)return;
+    const m=findMessage(id);if(!canManageMessage(m))return;
+    const actions=[['edit','Edit message','edit'],['pin',m.is_pinned?'Unpin message':'Pin message',m.is_pinned?'unpin':'pin'],['copy','Copy text','copy'],['trash','Delete message','delete']];
+    modalContent(modalTitle('Message')+`<div class="message-preview">${esc(m.body)}</div>`+actions.map(([i,t,a])=>`<button class="action ${a==='delete'?'danger':''}" data-message-action="${a}">${svg(i)}${esc(t)}</button>`).join(''));
+    for(const b of $('modalBody').querySelectorAll('[data-message-action]'))b.onclick=async()=>{
+        const a=b.dataset.messageAction, latest=findMessage(id);
+        if(!latest){$('modal').close();toast('Message is no longer available');return;}
+        if(a==='copy'){try{await navigator.clipboard.writeText(latest.body);$('modal').close();toast('Message copied');}catch{toast('Copy unavailable in this browser');}return;}
+        if(!canManageMessage(latest)){$('modal').close();toast('Publishing permission required');return;}
+        if(a==='edit'){editMessage(id);return;}
+        if(a==='delete'){confirmDelete(id);return;}
+        await manageMessage(id,a);
+    };
+}
+function editMessage(id){
+    const m=findMessage(id);if(!canManageMessage(m))return;
+    modalContent(modalTitle('Edit message')+'<p>Changes will synchronize with students viewing this channel.</p><textarea id="editText" class="edit-text" maxlength="4000" rows="5" aria-label="Edit announcement"></textarea><p id="messageError" class="perm-error" role="alert" hidden></p><button class="primary" id="saveEdit">Save changes</button>');
+    const t=$('editText'),b=$('saveEdit');t.value=m.body;
+    const update=()=>{b.disabled=!t.value.trim()||t.value.trim()===m.body;};t.oninput=update;update();
+    b.onclick=()=>manageMessage(id,'edit',t.value.trim());t.focus();t.setSelectionRange(t.value.length,t.value.length);
+}
+function confirmDelete(id){
+    const m=findMessage(id);if(!canManageMessage(m))return;
+    modalContent(modalTitle('Delete announcement?')+'<p>This message will disappear from the conversation for all readers.</p><p id="messageError" class="perm-error" role="alert" hidden></p><button class="primary delete-primary" id="confirmDelete">Delete message</button><button class="quiet" id="cancelDelete">Cancel</button>');
+    $('confirmDelete').onclick=()=>manageMessage(id,'delete');$('cancelDelete').onclick=()=>$('modal').close();
+}
+async function manageMessage(id,action,body=null){
+    if(busy||messageSaving||!canManageMessage(findMessage(id)))return;
+    if(action==='edit'&&(!body||body.length>4000))return;
+    const g=generation,c=active;messageSaving=true;busy=true;updateComposer();sidebar();
+    const els=[...$('modalBody').querySelectorAll('button,textarea')],wasDisabled=els.map(el=>el.disabled);els.forEach(el=>el.disabled=true);
+    try{
+        const result=await rpc('hmu_ann_pilot_manage_message',{p_message_id:id,p_action:action,p_body:body});
+        if(result!==true)throw Error('Change not confirmed by server');
+        if($('modal').open)$('modal').close();
+        toast(({edit:'Message updated',delete:'Message deleted',pin:'Message pinned',unpin:'Message unpinned'})[action]);
+        if(active===c&&generation===g){if(loading){generation++;loading=false;}await load(false,true);}
+    }catch(e){
+        let err=$('messageError');if(!err){err=document.createElement('p');err.id='messageError';err.className='perm-error';err.setAttribute('role','alert');$('modalBody').append(err);}
+        err.hidden=false;err.textContent='Change not confirmed: '+e.message;toast('Unable to confirm change');
+        if(active===c&&generation===g&&!loading)await load(false,true);
+    }finally{messageSaving=false;busy=false;els.forEach((el,i)=>el.disabled=wasDisabled[i]);updateComposer();sidebar();}
+}
+
+// Live Pilot 6: private Broadcast invalidation only. All content still comes from authorized RPCs.
+let liveEpoch=0, liveClient=null, liveChannel=null, liveTimer=null, liveWake=null, liveRetry=null, liveStatus='idle', sdkPromise=null;
+function liveLabel(state){liveStatus=state;const el=$('liveState');el.dataset.state=state;el.textContent=({idle:'Connecting…',connecting:'Connecting…',live:'Live',fallback:'Syncing',offline:'Offline'})[state]||'Syncing';el.title=state==='live'?'Private Realtime channel connected':state==='fallback'?'Live connection unavailable; automatic refresh active':state==='offline'?'Waiting for internet connection':'Connecting to private announcement channel';}
+function liveEligible(){return !!(session&&active&&channel()&&!document.hidden&&navigator.onLine!==false);}
+function loadSDK(){
+    if(window.supabase?.createClient)return Promise.resolve(window.supabase);
+    if(!sdkPromise){sdkPromise=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';el.async=true;el.referrerPolicy='no-referrer';let timer=setTimeout(()=>{el.remove();reject(Error('Realtime library unavailable'));},12000);el.onload=()=>{clearTimeout(timer);window.supabase?.createClient?resolve(window.supabase):reject(Error('Realtime library unavailable'));};el.onerror=()=>{clearTimeout(timer);el.remove();reject(Error('Realtime library unavailable'));};document.head.appendChild(el);}).catch(e=>{sdkPromise=null;throw e;});}
+    return sdkPromise;
+}
+function stopLive(){
+    liveEpoch++;clearTimeout(liveTimer);clearTimeout(liveWake);clearTimeout(liveRetry);liveTimer=liveWake=liveRetry=null;
+    const client=liveClient,ch=liveChannel;liveClient=liveChannel=null;
+    if(client){try{if(ch)Promise.resolve(client.removeChannel(ch)).catch(()=>{});client.realtime.disconnect();}catch{}}
+    liveLabel(navigator.onLine===false?'offline':'idle');
+}
+function scheduleSync(e,delay=220){
+    if(e!==liveEpoch||!liveEligible())return;
+    if(liveWake!==null)return;
+    liveWake=setTimeout(async()=>{liveWake=null;if(e!==liveEpoch||!liveEligible())return;if(busy||loading){scheduleSync(e,350);return;}const ok=await load(false,true);if(e===liveEpoch&&!ok&&liveEligible()&&liveStatus==='live')scheduleSync(e,3500);},delay+Math.random()*120);
+}
+function periodic(e){
+    clearTimeout(liveTimer);
+    if(e!==liveEpoch||!liveEligible())return;
+    const delay=liveStatus==='live'?90000+Math.random()*30000:25000+Math.random()*10000;
+    liveTimer=setTimeout(async()=>{
+        if(e!==liveEpoch||!liveEligible())return;
+        if(!busy&&!loading&&!savingPermissions){
+            try{const c=active, ch=await rpc('hmu_ann_pilot_channels');if(e!==liveEpoch||active!==c)return;if(!Array.isArray(ch))throw Error('Unexpected channel response');all=ch;applyIdentity();if(!channel()){closeChat();sidebar();toast('Channel access changed');return;}if(!channel().can_publish)clearDraft();sidebar();updateComposer();scheduleSync(e,0);}catch{scheduleSync(e,1000);}
+        }
+        if(e!==liveEpoch)return;
+        if(!liveClient){startLive();scheduleSync(liveEpoch,0);return;}
+        periodic(e);
+    },delay);
+}
+async function startLive(){
+    stopLive();if(!liveEligible())return;const e=liveEpoch,c=active,who=session.user.id;
+    liveLabel('connecting');periodic(e);
+    try{
+        const sdk=await loadSDK();if(e!==liveEpoch||!liveEligible()||active!==c)return;
+        const jwt=await token();if(e!==liveEpoch||!liveEligible()||active!==c)return;
+        const client=sdk.createClient(URL_BASE,PUB,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},accessToken:async()=>{if(e!==liveEpoch||session?.user.id!==who)throw Error('Session changed');return token();}});
+        liveClient=client;
+        await client.realtime.setAuth(jwt);
+        if(e!==liveEpoch||!liveEligible()||active!==c){try{client.realtime.disconnect();}catch{}return;}
+        const ch=client.channel('hmu-ann:'+c,{config:{private:true,broadcast:{self:false}}});liveChannel=ch;
+        ch.on('broadcast',{event:'announcement_changed'},()=>{scheduleSync(e);queueSummaries();}).subscribe(status=>{
+            if(e!==liveEpoch||!liveEligible())return;
+            if(status==='SUBSCRIBED'){liveLabel('live');scheduleSync(e,0);queueSummaries();periodic(e);}
+            else if(['CHANNEL_ERROR','TIMED_OUT','CLOSED'].includes(status)){liveLabel('fallback');periodic(e);clearTimeout(liveRetry);liveRetry=setTimeout(()=>{if(e===liveEpoch&&liveEligible()&&liveStatus!=='live')startLive();},35000+Math.random()*10000);}
+        });
+    }catch(e2){if(e===liveEpoch&&liveEligible()){if(liveClient){try{liveClient.realtime.disconnect();}catch{}liveClient=liveChannel=null;}liveLabel('fallback');periodic(e);}}
+}
+function resumeLive(){if(liveEligible()){startLive();scheduleSync(liveEpoch,0);}else stopLive();}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopLive();else resumeLive();});
+window.addEventListener('offline',stopLive);window.addEventListener('online',resumeLive);window.addEventListener('pagehide',stopLive);window.addEventListener('pageshow',e=>{if(e.persisted)resumeLive();});
+
+
+// Pilot 6: batched summaries, with a separate foreground-only timer.
+// No additional WebSocket subscriptions; other channels refresh on the timer.
+let summaries=new Map(),summaryEpoch=0,summaryTimer=null,summaryWake=null,summaryFlight=false,summaryPending=false;
+let readTimer=null,readFlight=new Map(),readConfirmed=new Map();
+function idNumber(x){const v=Number(x);return Number.isSafeInteger(v)&&v>0?v:0;}
+function summaryEligible(){return !!(session&&!document.hidden&&navigator.onLine!==false);}
+function summaryTime(t){const d=new Date(t),now=new Date();if(!Number.isFinite(d.getTime()))return '';if(d.toDateString()===now.toDateString())return time(t);const y=new Date(now);y.setDate(y.getDate()-1);if(d.toDateString()===y.toDateString())return 'Yesterday';return new Intl.DateTimeFormat('en',{month:'short',day:'numeric',...(d.getFullYear()===now.getFullYear()?{}:{year:'2-digit'})}).format(d);}
+function paintSummaries(){for(const b of $('channels').querySelectorAll('[data-channel]')){const c=all.find(x=>x.channel_id===b.dataset.channel);if(!c)continue;const a=summaries.get(c.channel_id),last=b.querySelector('.channel-last'),t=b.querySelector('.channel-time'),badge=b.querySelector('.channel-unread'),meta=b.querySelector('.channel-meta');let preview=a?.latest_preview||'',file=a?.latest_file_name||'',n=Math.min(100,Math.max(0,Number(a?.unread_count)||0));const has=!!a?.latest_message_id;
+    last.textContent=has?(file?(a.latest_attachment_type?.startsWith('image/')?(preview&&preview!==file?'Photo · '+preview:'Photo'):(preview&&preview!==file?preview+' · '+file:file)):preview||'Announcement'):(a?'No announcements yet':(c.can_publish?'Publishing enabled':'Read only'));
+    if(has&&file){const node=document.createElementNS('http://www.w3.org/2000/svg','svg');node.classList.add('preview-icon');node.setAttribute('aria-hidden','true');const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href',a.latest_attachment_type==='application/pdf'?'#file':'#image');node.append(use);last.prepend(node);}
+    t.textContent=has?summaryTime(a.latest_created_at):'';t.hidden=!t.textContent;badge.textContent=n>99?'99+':String(n);badge.hidden=!n;meta.hidden=t.hidden&&badge.hidden;b.classList.toggle('has-unread',n>0);b.setAttribute('aria-label',title(c)+(n?', '+(n>99?'99+':n)+' unread':'')+(has?', '+last.textContent:''));
+}}
+function stopSummaries(){summaryEpoch++;clearTimeout(summaryTimer);clearTimeout(summaryWake);clearTimeout(readTimer);summaryTimer=summaryWake=readTimer=null;summaryFlight=summaryPending=false;summaries.clear();readFlight.clear();readConfirmed.clear();}
+function startSummaries(){stopSummaries();queueSummaries(0);planSummaries();}
+function planSummaries(){clearTimeout(summaryTimer);if(!summaryEligible())return;const e=summaryEpoch;summaryTimer=setTimeout(()=>{if(e!==summaryEpoch)return;queueSummaries(0);planSummaries();},25000+Math.random()*10000);}
+function queueSummaries(delay=180){if(!summaryEligible())return;if(summaryFlight){summaryPending=true;return;}if(summaryWake!==null)return;const e=summaryEpoch;summaryWake=setTimeout(()=>{summaryWake=null;if(e===summaryEpoch)fetchSummaries(e);},delay);}
+async function fetchSummaries(e){if(e!==summaryEpoch||!summaryEligible())return;if(summaryFlight){summaryPending=true;return;}summaryFlight=true;try{const data=await rpc('hmu_ann_pilot_channel_summaries');if(e!==summaryEpoch||!session||!Array.isArray(data))return;const next=new Map();for(const a of data){if(!a||typeof a.channel_id!=='string'||!all.some(c=>c.channel_id===a.channel_id))continue;const local=readConfirmed.get(a.channel_id)||0,remote=idNumber(a.last_read_id);readConfirmed.set(a.channel_id,Math.max(local,remote));if(local>remote&&idNumber(a.latest_message_id)<=local){a.unread_count=0;a.last_read_id=local;}next.set(a.channel_id,a);}summaries=next;paintSummaries();}catch{/* Keep last successful summaries; retry on next foreground tick. */}finally{if(e===summaryEpoch){summaryFlight=false;if(summaryPending){summaryPending=false;queueSummaries();}}}}
+function queueRead(){clearTimeout(readTimer);if(!summaryEligible())return;const e=summaryEpoch,g=generation,c=active;readTimer=setTimeout(()=>{if(e===summaryEpoch&&g===generation&&c===active)markVisibleRead(e,g,c);},350);}
+async function markVisibleRead(e,g,c){const sc=$('scroll');if(e!==summaryEpoch||g!==generation||!c||c!==active||!summaryEligible()||!channel()||loading||query||!$('chatSearch').hidden||$('modal').open||sc.hidden||!sc.getClientRects().length||sc.clientHeight===0||sc.scrollHeight-sc.scrollTop-sc.clientHeight>90)return;const seen=idNumber(rows.at(-1)?.message_id);if(!seen||seen<=(readConfirmed.get(c)||0)||readFlight.has(c))return;const ticket={seen};readFlight.set(c,ticket);try{const ok=await rpc('hmu_ann_pilot_mark_read',{p_channel_id:c,p_seen_message_id:seen});if(e!==summaryEpoch||ok!==true)return;readConfirmed.set(c,Math.max(readConfirmed.get(c)||0,seen));const a=summaries.get(c);if(a&&idNumber(a.latest_message_id)<=seen){summaries.set(c,{...a,unread_count:0,last_read_id:seen});paintSummaries();}queueSummaries(0);}catch{/* Do not clear unread on failure; retry on the next successful load or scroll. */}finally{if(e===summaryEpoch&&readFlight.get(c)===ticket){readFlight.delete(c);if(c===active&&g===generation&&idNumber(rows.at(-1)?.message_id)>seen)queueRead();}}}
+$('scroll').addEventListener('scroll',queueRead,{passive:true});
+$('modal').addEventListener('close',queueRead);
+$('closeSearch').addEventListener('click',queueRead);
+$('searchBtn').addEventListener('click',queueRead);
+function pauseSummaries(){clearTimeout(summaryTimer);clearTimeout(summaryWake);clearTimeout(readTimer);summaryTimer=summaryWake=readTimer=null;}
+function resumeSummaries(){if(summaryEligible()){queueSummaries(0);planSummaries();queueRead();}else pauseSummaries();}
+document.addEventListener('visibilitychange',resumeSummaries);
+window.addEventListener('offline',pauseSummaries);window.addEventListener('online',resumeSummaries);
+window.addEventListener('pagehide',pauseSummaries);window.addEventListener('pageshow',resumeSummaries);
+
+async function startIntegrated(){if(authBusy||session)return;showBoot();authBusy=true;try{if(parent===window)throw Error('Open Announcements from the HMU Academic Portal.');const id=parent.__hmuAnnouncementsBridge.identity(window).id;session={user:{id},sid:null};remember=false;await enterSession(true);$('integrated-error').hidden=true;}catch(e){resetSession();$('integrated-error-text').textContent=e.message||'Could not open announcements.';}finally{authBusy=false;}}
+$('loginForm').onsubmit=e=>e.preventDefault();$('roleBtn').onclick=null;$('retrySession').onclick=null;$('integrated-retry').onclick=startIntegrated;void startIntegrated();
+</script></body></html>
