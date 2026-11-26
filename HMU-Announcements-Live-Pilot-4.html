@@ -160,13 +160,6 @@ function messageButton(m){return `<button class="iconbtn msgmenu" data-message="
 function findMessage(id){return rows.find(m=>String(m.message_id)===String(id));}
 function bindMessageActions(){
     for(const b of $('stream').querySelectorAll('[data-message]'))b.onclick=()=>messageActions(b.dataset.message);
-    for(const b of $('stream').querySelectorAll('[data-bubble]')){
-        let timer=null,x=0,y=0;const cancel=()=>{clearTimeout(timer);timer=null;};
-        b.oncontextmenu=e=>{e.preventDefault();cancel();messageActions(b.dataset.bubble);};
-        b.onpointerdown=e=>{cancel();if(e.button!==0||e.pointerType==='mouse')return;x=e.clientX;y=e.clientY;timer=setTimeout(()=>{timer=null;messageActions(b.dataset.bubble);},600);};
-        b.onpointermove=e=>{if(Math.abs(e.clientX-x)>9||Math.abs(e.clientY-y)>9)cancel();};
-        for(const ev of ['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,cancel);
-    }
 }
 function messageActions(id){
     if(!session||busy||managing||savingPermissions||messageSaving||$('modal').open)return;
