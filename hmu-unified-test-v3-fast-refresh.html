@@ -5216,7 +5216,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&pushSDK){
 
 // Account-scoped inbox. No student notification records are cached on the device.
 const inboxList=el('hp-inbox-list'),inboxSummary=el('hp-inbox-summary'),inboxRead=el('hp-inbox-read'),inboxRefreshButton=el('hp-inbox-refresh'),pushPrefs=el('hp-push-preferences'),pushPrefsButton=el('hp-push-settings');
-let inboxOwner=null,inboxEpoch=0,inboxRows=[],inboxUnread=0,inboxLoading=false,inboxReady=false,inboxError='',inboxWriting=false,inboxTarget=null;
+let inboxOwner=null,inboxEpoch=0,inboxRows=[],inboxUnread=0,inboxLoading=false,inboxReady=false,inboxError='',inboxWriting=false,inboxTarget=null,annInboxPositions=[];
 const inboxUUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function inboxCurrent(){return studentPushId()&&account===inboxOwner;}
 function inboxPaint(){
@@ -5226,40 +5226,63 @@ function inboxPaint(){
   pushToggle.setAttribute('aria-label',eligible&&inboxReady&&inboxUnread?`Notifications, ${inboxUnread} unread`:'Notifications');
   inboxRead.disabled=!eligible||!inboxReady||inboxWriting||!inboxUnread;
   inboxRefreshButton.disabled=!eligible||inboxLoading||inboxWriting;
-  inboxSummary.textContent=!eligible?'Notifications are available for student accounts.':inboxError?inboxError:inboxLoading&&!inboxReady?'Checking for updates…':inboxReady?(inboxUnread?`${inboxUnread} unread`:'You’re all caught up'):'Your academic updates';
+  inboxSummary.textContent=!eligible?'Notifications are available for student accounts.':inboxError?inboxError:inboxLoading&&!inboxReady?'Checking for updates…':inboxReady?(inboxUnread?`${inboxUnread>99?'99+':inboxUnread} unread`:'You’re all caught up'):'Your academic updates';
   inboxList.replaceChildren();
   if(!eligible||!inboxReady)return;
-  if(!inboxRows.length){const empty=make('div',undefined,'hp-inbox-empty');empty.append(make('span','○','hp-inbox-empty-icon'),make('b','No notifications yet'),make('p','New lectures will appear here automatically.'));inboxList.append(empty);return;}
+  if(!inboxRows.length){const empty=make('div',undefined,'hp-inbox-empty');empty.append(make('span','○','hp-inbox-empty-icon'),make('b','No notifications yet'),make('p','New lectures and announcements will appear here automatically.'));inboxList.append(empty);return;}
   let lastDay='';
   for(const n of inboxRows){
     const dt=new Date(n.created_at),day=dt.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
     if(day!==lastDay){inboxList.append(make('div',day,'hp-inbox-day'));lastDay=day;}
-    const row=make('button',undefined,'hp-inbox-item'+(!n.read_at?' hp-inbox-unread':''));row.type='button';row.setAttribute('aria-label',(n.read_at?'':'Unread: ')+n.title);
-    const symbol=make('span',undefined,'hp-inbox-icon');symbol.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/></svg>';
-    const words=make('span',undefined,'hp-inbox-words');words.append(make('span','New '+n.subject+' lecture','hp-inbox-heading'),make('span',n.title+(n.label?' · '+n.label:''),'hp-inbox-title'),make('span',dt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}),'hp-inbox-time'));
+    const row=make('button',undefined,'hp-inbox-item'+(!n.read_at?' hp-inbox-unread':''));row.type='button';row.setAttribute('aria-label',(n.read_at?'':'Unread: ')+(n.kind==='announcement'?'New '+n.channel_title+' announcement: ':'')+n.title);
+    const symbol=make('span',undefined,'hp-inbox-icon');symbol.innerHTML=n.kind==='announcement'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.4-3.2A7.5 7.5 0 1 1 20 11.5Z M9 10h6M9 13h4"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/></svg>';
+    const words=make('span',undefined,'hp-inbox-words');words.append(make('span',n.kind==='announcement'?(n.channel_title==='All groups'?'New Stage '+n.stage+' announcement':n.channel_title==='All Medicine students'?'New Medicine announcement':'New '+n.channel_title+' announcement'):'New '+n.subject+' lecture','hp-inbox-heading'),make('span',n.title+(n.label?' · '+n.label:''),'hp-inbox-title'),make('span',dt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}),'hp-inbox-time'));
     row.append(symbol,words);if(!n.read_at)row.append(make('span',undefined,'hp-inbox-blue-dot'));
-    row.onclick=()=>inboxOpenLecture(n);inboxList.append(row);
+    row.onclick=()=>n.kind==='announcement'?inboxOpenAnnouncement(n):inboxOpenLecture(n);inboxList.append(row);
   }
   inboxList.append(make('p','Showing the latest 50 updates.','hp-inbox-end'));
 }
-function inboxReset(owner=null){inboxEpoch++;inboxOwner=owner;inboxRows=[];inboxUnread=0;inboxReady=false;inboxLoading=false;inboxWriting=false;inboxError='';inboxTarget=null;inboxPaint();}
+function inboxReset(owner=null){inboxEpoch++;inboxOwner=owner;inboxRows=[];annInboxPositions=[];inboxUnread=0;inboxReady=false;inboxLoading=false;inboxWriting=false;inboxError='';inboxTarget=null;inboxPaint();}
 async function inboxRPC(name,body,owner,epoch){const t=await token();if(account!==owner||epoch!==inboxEpoch||!inboxCurrent())throw Error('Account changed');return api('/rest/v1/rpc/'+name,{method:'POST',body,token:t});}
+// Fetch two independent authorized inboxes. An announcement failure never hides working lecture notifications.
+const inboxChannel=/^medicine:(?:college|s[1-6]:(?:all|g[1-8]))$/;
+function validAnnPosition(x){return x&&inboxChannel.test(x.channel_id)&&Number.isSafeInteger(x.message_id)&&x.message_id>0;}
 async function refreshInbox(){
   if(!inboxCurrent()||inboxLoading||inboxWriting)return;const owner=inboxOwner,epoch=inboxEpoch;
   inboxLoading=true;inboxError='';inboxPaint();
-  try{const d=await inboxRPC('hmu_pilot_inbox_list',{},owner,epoch);if(epoch!==inboxEpoch||!inboxCurrent())return;
-    if(!Array.isArray(d?.items)||!Number.isSafeInteger(d.unread)||d.unread<0)throw Error('Invalid inbox response');
-    inboxRows=d.items.filter(n=>inboxUUID.test(n.id)&&n.stage===scope[0]?.stage&&typeof n.title==='string'&&typeof n.subject==='string'&&Number.isFinite(Date.parse(n.created_at)));inboxUnread=d.unread;inboxReady=true;
-  }catch(e){if(epoch===inboxEpoch&&inboxCurrent()){inboxError='Could not load notifications. Tap refresh to retry.';if(e.status===401||e.status===403){inboxRows=[];inboxUnread=0;inboxReady=false;}}}
+  try{
+    const [lecture,ann]=await Promise.allSettled([
+      inboxRPC('hmu_pilot_inbox_list',{},owner,epoch),
+      inboxRPC('hmu_ann_pilot_inbox_list',{},owner,epoch)
+    ]);
+    if(epoch!==inboxEpoch||!inboxCurrent())return;
+    const valid=x=>x.status==='fulfilled'&&Array.isArray(x.value?.items)&&Number.isSafeInteger(x.value.unread)&&x.value.unread>=0;
+    const lOK=valid(lecture),aOK=valid(ann)&&Array.isArray(ann.value.positions);
+    const lectures=lOK?lecture.value.items.filter(n=>inboxUUID.test(n.id)&&n.stage===scope[0]?.stage&&typeof n.title==='string'&&typeof n.subject==='string'&&Number.isFinite(Date.parse(n.created_at))).map(n=>({...n,kind:'lecture'})):[];
+    const announcements=aOK?ann.value.items.filter(n=>validAnnPosition(n)&&typeof n.channel_title==='string'&&typeof n.title==='string'&&Number.isFinite(Date.parse(n.created_at))).map(n=>({...n,kind:'announcement'})):[];
+    annInboxPositions=aOK?ann.value.positions.filter(validAnnPosition):[];
+    inboxRows=[...lectures,...announcements].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).slice(0,50);
+    inboxUnread=(lOK?lecture.value.unread:0)+(aOK?ann.value.unread:0);inboxReady=lOK||aOK;
+    if(!lOK||!aOK)inboxError=lOK?'Announcement history unavailable. Tap refresh to retry.':aOK?'Lecture history unavailable. Tap refresh to retry.':'Could not load notifications. Tap refresh to retry.';
+  }catch(e){if(epoch===inboxEpoch&&inboxCurrent()){inboxError='Could not load notifications. Tap refresh to retry.';inboxRows=[];annInboxPositions=[];inboxUnread=0;inboxReady=false;}}
   finally{if(epoch===inboxEpoch){inboxLoading=false;inboxPaint();}}
 }
 async function markInbox(ids){
-  if(!inboxCurrent()||inboxWriting||!inboxReady)return;const owner=inboxOwner,epoch=inboxEpoch;
-  // Invalidate an in-flight list request before updating read status.
+  if(!inboxCurrent()||inboxWriting||!inboxReady)return;const owner=inboxOwner;
+  const positions=ids===null?annInboxPositions.slice():[];
   inboxEpoch++;const writeEpoch=inboxEpoch;inboxLoading=false;inboxWriting=true;inboxPaint();
-  let failed=false;try{await inboxRPC('hmu_pilot_inbox_read',{p_ids:ids},owner,writeEpoch);}
-  catch{if(writeEpoch===inboxEpoch&&inboxCurrent()){failed=true;inboxError='Could not mark notifications as read. Try again.';}}
-  finally{if(writeEpoch===inboxEpoch){inboxWriting=false;inboxPaint();if(!failed)refreshInbox();}}
+  try{
+    const results=await Promise.allSettled([inboxRPC('hmu_pilot_inbox_read',{p_ids:ids},owner,writeEpoch),...positions.map(p=>inboxRPC('hmu_ann_pilot_mark_read',{p_channel_id:p.channel_id,p_seen_message_id:p.message_id},owner,writeEpoch).then(v=>{if(v!==true)throw Error('Read failed');}))]);
+    if(results.some(x=>x.status==='rejected'))throw Error('Some notifications could not be marked as read');
+  }catch{if(writeEpoch===inboxEpoch&&inboxCurrent())inboxError='Could not mark every notification as read. Try again.';}
+  finally{if(writeEpoch===inboxEpoch){inboxWriting=false;inboxPaint();refreshInbox();}}
+}
+async function inboxOpenAnnouncement(n){
+  if(!inboxCurrent()||!inboxRows.includes(n)||!validAnnPosition(n))return;
+  const owner=inboxOwner,epoch=inboxEpoch;
+  if(!annApproved)await annCheck();
+  if(owner!==inboxOwner||epoch!==inboxEpoch||!inboxCurrent()||!annApproved)return;
+  closePush();annOpen(n.channel_id);
 }
 function inboxOpenLecture(n){
   if(!inboxCurrent()||!inboxRows.includes(n))return;
@@ -5292,14 +5315,14 @@ const adminTools=toolsLink();adminTools.className='hp-smallbtn';adminTools.textC
 // Integrated announcements: share only a current access token on demand with our exact same-origin child frame.
 // No second password, refresh-token copy, public message cache or changes to lecture authorization.
 const annDialog=el('hp-ann-dialog'),annButton=el('hp-ann-open'),annSlot=el('hp-ann-frame-slot');
-const ANN_HASH='#announcements';let annFrame=null,annOwner=null,annEpoch=0,annApproved=false,annCheckPending=false;
+const ANN_HASH='#announcements';let annFrame=null,annOwner=null,annEpoch=0,annApproved=false,annCheckPending=false,annRequestedChannel=null;
 function annEligible(){return !!(account&&auth?.user?.id&&(isSuper()||scope.some(x=>x.college==='medicine')));}
-function annHide(){annFrame?.remove();annFrame=null;annOwner=null;if(annDialog.open)annDialog.close();document.body.classList.remove('hp-ann-open');}
+function annHide(){const wasOpen=!!annFrame;annFrame?.remove();annFrame=null;annOwner=null;annRequestedChannel=null;if(annDialog.open)annDialog.close();document.body.classList.remove('hp-ann-open');if(wasOpen&&annApproved&&inboxCurrent())void refreshInbox();}
 function annClearHash(){if(location.hash===ANN_HASH){const state={...(history.state||{})};delete state.hpAnnEntry;history.replaceState(state,'',location.pathname+location.search);}}
 function annClose(){annHide();if(location.hash===ANN_HASH){if(history.state?.hpAnnEntry===true)history.back();else annClearHash();}annButton.focus();}
-function annShow(){if(!annEligible()||!annApproved||annFrame)return;closeProfile();closePush();closeNav();annOwner=auth.user.id;const frame=document.createElement('iframe');frame.title='HMU Announcements';frame.referrerPolicy='no-referrer';frame.src='./hmu-announcements-integrated.html';annFrame=frame;annDialog.showModal();document.body.classList.add('hp-ann-open');annSlot.replaceChildren(frame);}
+function annShow(){if(!annEligible()||!annApproved||annFrame)return;closeProfile();closePush();closeNav();annOwner=auth.user.id;const frame=document.createElement('iframe');frame.title='HMU Announcements';frame.referrerPolicy='no-referrer';const target=new URL('./hmu-announcements-integrated.html',location.href);target.searchParams.set('v','25');if(annRequestedChannel)target.searchParams.set('channel',annRequestedChannel);annRequestedChannel=null;frame.src=target.href;annFrame=frame;annDialog.showModal();document.body.classList.add('hp-ann-open');annSlot.replaceChildren(frame);}
 function annRoute(){if(location.hash===ANN_HASH&&annApproved&&annEligible())annShow();else if(location.hash!==ANN_HASH)annHide();}
-function annOpen(){if(!annApproved||!annEligible())return;if(location.hash!==ANN_HASH)history.pushState({...history.state,hpAnnEntry:true},'',ANN_HASH);annRoute();}
+function annOpen(channel){if(!annApproved||!annEligible())return;annRequestedChannel=typeof channel==='string'&&inboxChannel.test(channel)?channel:null;if(location.hash!==ANN_HASH)history.pushState({...history.state,hpAnnEntry:true},'',ANN_HASH);annRoute();}
 function annValid(caller,owner){return !!(annFrame&&caller===annFrame.contentWindow&&annDialog.open&&annEligible()&&annApproved&&annOwner===auth.user.id&&(!owner||owner===annOwner));}
 window.__hmuAnnouncementsBridge=Object.freeze({
   identity(caller){if(!annValid(caller))throw Error('Portal session unavailable');return {id:annOwner};},
