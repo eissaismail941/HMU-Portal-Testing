@@ -5294,7 +5294,7 @@ async function refreshInbox(){
   try{
     const [lecture,ann]=await Promise.allSettled([
       inboxRPC('hmu_pilot_inbox_list',{},owner,epoch),
-      inboxRPC('hmu_ann_pilot_inbox_list',{},owner,epoch)
+      inboxRPC('hmu_ann_pilot_inbox_list_v2',{},owner,epoch)
     ]);
     if(epoch!==inboxEpoch||!inboxCurrent())return;
     const valid=x=>x.status==='fulfilled'&&Array.isArray(x.value?.items)&&Number.isSafeInteger(x.value.unread)&&x.value.unread>=0;
@@ -5338,7 +5338,7 @@ async function markInbox(ids,explicitPositions=null,optimistic=false){
   inboxPaint();let failed=false;
   try{
     const jobs=ids===null||ids.length?[inboxRPC('hmu_pilot_inbox_read',{p_ids:ids},owner,writeEpoch)]:[];
-    jobs.push(...positions.map(p=>inboxRPC('hmu_ann_pilot_mark_read',{p_channel_id:p.channel_id,p_seen_message_id:p.message_id},owner,writeEpoch).then(v=>{if(v!==true)throw Error('Read failed');})));
+    jobs.push(...positions.map(p=>inboxRPC('hmu_ann_pilot_mark_notification_read',{p_channel_id:p.channel_id,p_seen_message_id:p.message_id},owner,writeEpoch).then(v=>{if(v!==true)throw Error('Read failed');})));
     const results=await Promise.allSettled(jobs);
     if(results.some(x=>x.status==='rejected'))throw Error('Some notifications could not be marked as read');
   }catch{if(writeEpoch===inboxEpoch&&inboxCurrent()){
