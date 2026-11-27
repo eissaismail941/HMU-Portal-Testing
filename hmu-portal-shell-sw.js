@@ -1,7 +1,7 @@
 /* HMU test portal: public shell only. Never cache credentials, API data or PDFs. */
 'use strict';
 const PREFIX = 'hmu-test-public-shell-';
-const CACHE = PREFIX + 'v42';
+const CACHE = PREFIX + 'v43';
 const SHELL = new URL('./hmu-unified-test-v3-fast-refresh.html', self.location.href).href;
 const LOGO = new URL('./hmu-reference-logo.png', self.location.href).href;
 const ICON = new URL('./hmu-icon-192.png', self.location.href).href;
