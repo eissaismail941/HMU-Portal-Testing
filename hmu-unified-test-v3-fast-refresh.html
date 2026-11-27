@@ -5019,7 +5019,20 @@ async function monCfLoad(){
  try{const t=await token();if(!current())return;timer=setTimeout(()=>c.abort(),32000);
  const r=await fetch(MON_CF_URL,{method:'GET',headers:{Authorization:'Bearer '+t,Accept:'application/json'},cache:'no-store',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',signal:c.signal});
  const data=await r.json().catch(()=>null);if(!current())return;
- if(r.ok||(r.status===502&&data?.metrics)){monCfPaint(data);}else{throw Error(r.status===401||r.status===403?'Super admin authorization was rejected.':r.status===503?'Worker configuration or authorization service unavailable.':'Monitoring endpoint returned HTTP '+r.status+'.');}
+ if(r.ok||(r.status===502&&data?.metrics)){monCfPaint(data);}else{
+   if(r.status===503){
+     if(data?.error==='Worker configuration incomplete')throw Error('CF-01: Worker configuration incomplete. Verify all four production variables, their names and values.');
+     if(data?.error==='Authorization service unavailable'){
+       let diagnosis;
+       try{const result=await api('/rest/v1/rpc/hmu_mon_is_super_admin_v1',{method:'POST',body:{},token:t});diagnosis=result===true?'Direct Supabase permission check passed; verify Worker Supabase URL and publishable key.':'Direct Supabase permission check did not return true.';}
+       catch(err){const http=Number.isInteger(err?.status)?' HTTP '+err.status:'';const code=typeof err?.code==='string'&&/^[A-Z0-9]{5,12}$/.test(err.code)?' ('+err.code+')':'';diagnosis='Direct Supabase permission check failed'+http+code+'.';}
+       if(!current())return;
+       throw Error('CF-02: Worker authorization service unavailable. '+diagnosis);
+     }
+     throw Error('CF-03: Worker returned HTTP 503 without a recognized diagnostic.');
+   }
+   throw Error(r.status===401||r.status===403?'Super admin authorization was rejected.':'Monitoring endpoint returned HTTP '+r.status+'.');
+ }
  }catch(e){if(current()){monCfResetValues();status.textContent='Unavailable';status.dataset.state='error';el('mon-cf-note').textContent=(e?.name==='AbortError'?'Cloudflare monitoring request timed out.':e instanceof TypeError?'Could not reach the monitoring Worker.':e.message||'Could not load provider metrics.')+' Refresh metrics to retry.';}}
  finally{clearTimeout(timer);if(monCfController===c)monCfController=null;}
 }
