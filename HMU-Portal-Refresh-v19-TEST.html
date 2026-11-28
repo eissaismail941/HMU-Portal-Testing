@@ -3448,6 +3448,14 @@ html[data-hp-refresh-panel] body.hp-student-sidebar #hp-panel-refresh-placeholde
  body.hp-student-sidebar:not(.hp-tt-open):not(.hp-ann-open) #hps-topbar:has(#hp-profile-menu:not([hidden]),#hp-push-panel:not([hidden]),:focus-visible){top:0}
 }
 </style>
+<style id="hmu-mobile-academic-spacing-v20">
+/* The student header is in normal flow; remove the old floating-profile offset. */
+@media (max-width: 767px) {
+  body.hp-student-sidebar :is(#home-page,#stage2-page,#s2block-page,#subject-page,#split-page,#resources-page) {
+    padding-top: 20px !important;
+  }
+}
+</style>
 </head>
 
 <body class="hp-lock">
