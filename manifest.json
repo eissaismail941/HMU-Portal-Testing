@@ -3,7 +3,7 @@
   "name": "HMU Academic Portal",
   "short_name": "HMU Portal",
   "description": "HMU academic portal \u2014 controlled testing environment.",
-  "start_url": "./hmu-unified-test-v3-fast-refresh.html",
+  "start_url": "./HMU-Portal-Refresh-v19-TEST.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f8fbff",
